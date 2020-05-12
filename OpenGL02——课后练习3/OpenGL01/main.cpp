@@ -26,12 +26,19 @@ const char *vertexShaderSource = "#version 330 core\n"
     " gl_Position = vec4(aPos.x,aPos.y,aPos.z,1.0);\n"
     "}\0";
 
-const char *fragmentShaderSource = "#version 330 core\n"
+const char *fragmentShader1Source = "#version 330 core\n"
     "out vec4 FragColor;\n"
     "void main()\n"
     "{\n"
-    "   FragColor = vec4(1.0f,0.5f,0.2f,1.0f);\n"
-    "}\0";
+    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+    "}\n\0";
+const char *fragmentShader2Source = "#version 330 core\n"
+    "out vec4 FragColor;\n"
+    "void main()\n"
+    "{\n"
+    "   FragColor = vec4(1.0f, 1.0f, 0.0f, 1.0f);\n"
+    "}\n\0";
+
 
 
 int main()
@@ -66,65 +73,64 @@ int main()
     int vertexShader = glad_glCreateShader(GL_VERTEX_SHADER);
     glad_glShaderSource(vertexShader,1,&vertexShaderSource,nullptr);
     glad_glCompileShader(vertexShader);
-    int success;
-    char infoLog[512];
-    glad_glGetShaderiv(vertexShader,GL_COMPILE_STATUS,&success);
-    if (!success) {
-        glad_glGetShaderInfoLog(vertexShader,512,NULL,infoLog);
-        cout<<"ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"<<infoLog<<endl;
-    }
     
-    //创建片段着色器
-    int fragmentShader = glad_glCreateShader(GL_FRAGMENT_SHADER);
-    glad_glShaderSource(fragmentShader,1,&fragmentShaderSource,NULL);
-    glad_glCompileShader(fragmentShader);
-    glad_glGetShaderiv(fragmentShader,GL_COMPILE_STATUS,&success);
-    if (!success) {
-        glad_glGetShaderInfoLog(fragmentShader,512,NULL,infoLog);
-        cout<<"ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"<<infoLog<<endl;
-    }
     
+    //创建橘色片段着色器
+    int fragmentShaderOrange = glad_glCreateShader(GL_FRAGMENT_SHADER);
+    glad_glShaderSource(fragmentShaderOrange,1,&fragmentShader1Source,NULL);
+    glad_glCompileShader(fragmentShaderOrange);
+    
+    //创建黄色片段着色器
+    int fragmentShaderYellow = glad_glCreateShader(GL_FRAGMENT_SHADER);
+    glad_glShaderSource(fragmentShaderYellow,1,&fragmentShader2Source,NULL);
+    glad_glCompileShader(fragmentShaderYellow);
+
     //将着色器连接(Link)为着色器程序
-    int shaderProgram = glad_glCreateProgram();
-    glad_glAttachShader(shaderProgram,vertexShader);
-    glad_glAttachShader(shaderProgram,fragmentShader);
-    glad_glLinkProgram(shaderProgram);
+    int shaderProgramOrange = glad_glCreateProgram();
+    glad_glAttachShader(shaderProgramOrange,vertexShader);
+    glad_glAttachShader(shaderProgramOrange,fragmentShaderOrange);
+    glad_glLinkProgram(shaderProgramOrange);
     
-    glad_glGetProgramiv(shaderProgram,GL_LINK_STATUS,&success);
-    if (!success) {
-        glad_glGetProgramInfoLog(shaderProgram,512,NULL,infoLog);
-        cout<<"ERROR::SHADER::PROGRAM::LINKING_FAILED\n"<<infoLog<<endl;
-    }
+    int shaderProgramYellow = glad_glCreateProgram();
+    glad_glAttachShader(shaderProgramYellow,vertexShader);
+    glad_glAttachShader(shaderProgramYellow,fragmentShaderYellow);
+    glad_glLinkProgram(shaderProgramYellow);
+    
+  
     glad_glDeleteShader(vertexShader);
-    glad_glDeleteShader(fragmentShader);
+    glad_glDeleteShader(fragmentShaderOrange);
+    glad_glDeleteShader(fragmentShaderYellow);
     
-/**  画三角形  start
+
     
-    float vertices[] = {
-        -0.5f, -0.5f, 0.0f, // left
-         0.5f, -0.5f, 0.0f, // right
-         0.0f,  0.5f, 0.0f  // top
+    float firstTriangle[] = {
+        -0.9f, -0.5f, 0.0f,  // left
+        -0.0f, -0.5f, 0.0f,  // right
+        -0.45f, 0.5f, 0.0f,  // top
     };
-    unsigned int VBO ,VAO;
-    glad_glGenVertexArrays(1,&VAO);
-    glad_glGenBuffers(1,&VBO);
-    glad_glBindVertexArray(VAO);
+    float secondTriangle[] = {
+        0.0f, -0.5f, 0.0f,  // left
+        0.9f, -0.5f, 0.0f,  // right
+        0.45f, 0.5f, 0.0f   // top
+    };
+    unsigned  int VBOs[2] ,VAOs[2];
+    glad_glGenVertexArrays(2,VAOs);
+    glad_glGenBuffers(2,VBOs);
     
-    glad_glBindBuffer(GL_ARRAY_BUFFER,VBO);
-    glad_glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
-    
+    glad_glBindVertexArray(VAOs[0]);
+    glad_glBindBuffer(GL_ARRAY_BUFFER,VBOs[0]);
+    glad_glBufferData(GL_ARRAY_BUFFER,sizeof(firstTriangle),firstTriangle,GL_STATIC_DRAW);
     glad_glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(float),(void*)0);
     glad_glEnableVertexAttribArray(0);
     
-       // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-//     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glad_glBindVertexArray(VAOs[1]);
+    glad_glBindBuffer(GL_ARRAY_BUFFER,VBOs[1]);
+    glad_glBufferData(GL_ARRAY_BUFFER,sizeof(secondTriangle),secondTriangle,GL_STATIC_DRAW);
+    glad_glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(float),(void*)0);
+    glad_glEnableVertexAttribArray(0);
 
-     // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-//     glBindVertexArray(0);
 
-
- 画三角形  end */
+ 
     
    /**
     索引缓冲对象
@@ -176,19 +182,22 @@ int main()
         glClearColor(0.2f, 0.3f, 0.11f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glad_glUseProgram(shaderProgram);
-        glad_glBindVertexArray(VAO);
-//        glad_glDrawArrays(GL_TRIANGLES,0,3);
-        glad_glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glad_glUseProgram(shaderProgramOrange);
+        glad_glBindVertexArray(VAOs[0]);
+        glad_glDrawArrays(GL_TRIANGLES,0,3);
+        
+        glad_glUseProgram(shaderProgramYellow);
+        glad_glBindVertexArray(VAOs[1]);
+        glad_glDrawArrays(GL_TRIANGLES,0,3);
         
         
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    glad_glDeleteVertexArrays(1,&VAO);
-    glad_glDeleteBuffers(1,&VBO);
-    glad_glDeleteBuffers(1,&EBO);
-    glad_glDeleteProgram(shaderProgram);
+    glad_glDeleteVertexArrays(2,VAOs);
+    glad_glDeleteBuffers(2,VBOs);
+    glad_glDeleteProgram(shaderProgramOrange);
+    glad_glDeleteProgram(shaderProgramYellow);
 
    //正确释放/删除之前的分配的所有资源
     glfwTerminate();
