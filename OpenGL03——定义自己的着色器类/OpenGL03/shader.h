@@ -98,7 +98,7 @@ private:
                 cout<<type<<"类型的着色器编译错误\n"<<endl;
             }
         }else {
-            glad_glGetProgramiv(shader,GL_COMPILE_STATUS,&success);
+            glad_glGetProgramiv(shader,GL_LINK_STATUS,&success);
             if (!success) {
                 glad_glGetProgramInfoLog(shader,1024,NULL,infoLog);
                 cout<<type<<"类型的着色器编译错误\n"<<endl;

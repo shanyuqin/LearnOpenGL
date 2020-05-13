@@ -1,10 +1,4 @@
-//
-//  main.cpp
-//  OpenGL01
-//
-//  Created by ShanYuQin on 2020/5/12.
-//  Copyright © 2020 ShanYuQin. All rights reserved.
-//
+
 #include <glad/glad.h>
 #include <glfw3.h>
 
