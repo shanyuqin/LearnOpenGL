@@ -34,6 +34,8 @@ void processInput(GLFWwindow *window);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+float mixValue = 0.2f;
+
 
 int main()
 {
@@ -63,7 +65,7 @@ int main()
     
 //使用着色器类创建一个着色器程序shaderProgram
     
-    Shader ourShader("/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL04——纹理/OpenGL04/shader.vs","/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL04——纹理/OpenGL04/shader.fs");
+    Shader ourShader("/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL04——练习4/OpenGL04/shader.vs","/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL04——练习4/OpenGL04/shader.fs");
     
 
 //    练习2
@@ -78,10 +80,10 @@ int main()
 //    练习3
     float vertices[] = {
         //     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
-         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   0.55f, 0.55f,   // 右上
-         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   0.55f, 0.45f,   // 右下
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.45f, 0.45f,   // 左下
-        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.45f, 0.55f    // 左上
+         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
+         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // 右下
+        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // 左下
+        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // 左上
     };
     
     
@@ -128,7 +130,7 @@ int main()
     //加载并生成纹理
     int width,height,nrChannels;
     stbi_set_flip_vertically_on_load(true);
-    unsigned char *data = stbi_load("/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL04——纹理/OpenGL04/container.jpg", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL04——练习4/OpenGL04/container.jpg", &width, &height, &nrChannels, 0);
     
     if (data) {
         //生成纹理 当前绑定的纹理对象就会被附加上纹理图像
@@ -150,7 +152,7 @@ int main()
     glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     
-    data = stbi_load("/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL04——纹理/OpenGL04/awesomeface.png", &width, &height, &nrChannels, 0);
+    data = stbi_load("/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL04——练习4/OpenGL04/awesomeface.png", &width, &height, &nrChannels, 0);
     if (data) {
         //生成纹理 当前绑定的纹理对象就会被附加上纹理图像
         glad_glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,data);
@@ -167,7 +169,6 @@ int main()
     glad_glUniform1i(glad_glGetUniformLocation(ourShader.ID, "texture1"), 0);//手动设置
     ourShader.setInt("texture2", 1);//使用着色器类设置
     
-    
     while (!glfwWindowShouldClose(window))
     {
         
@@ -181,6 +182,8 @@ int main()
         glad_glBindTexture(GL_TEXTURE_2D, texture1);
         glad_glActiveTexture(GL_TEXTURE1);
         glad_glBindTexture(GL_TEXTURE_2D, texture2);
+        
+        ourShader.setFloat("mixValue", mixValue);
 //        激活着色器程序
         ourShader.use();
         
@@ -215,9 +218,23 @@ void processInput(GLFWwindow *window)
 //    GLFW_KEY_ESCAPE  是 ESC按键的key。
 //    glfwGetKey的返回值为GLFW_PRESS代表当前按下了ESC键
 //    下边写出按下esc后做什么处理
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
         glfwSetWindowShouldClose(window, true);
 //        cout<<"按下了ESC"<<endl;
+    }
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+        mixValue += 0.01f;
+        if (mixValue > 1.0f) {
+            mixValue = 1.0f;
+        }
+    }
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+           mixValue -= 0.01f;
+           if (mixValue <= 0.0f) {
+               mixValue = 0.0f;
+           }
+    }
+    
 }
 
 
