@@ -15,6 +15,5 @@
 ### OpenGL04——纹理
     对于纹理渲染使用的图片，要想达到官网上的例子效果，那么图片必须是无alpha通道。
     有alpha通道的情况是这样的
-![image](https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/4-0.png)
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/4-0.png" width="50%">
     
