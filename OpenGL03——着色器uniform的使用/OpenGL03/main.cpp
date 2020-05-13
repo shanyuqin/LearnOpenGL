@@ -1,6 +1,6 @@
 //
 //  main.cpp
-//  OpenGL01
+//  OpenGL03
 //
 //  Created by ShanYuQin on 2020/5/12.
 //  Copyright © 2020 ShanYuQin. All rights reserved.
@@ -9,6 +9,7 @@
 #include <glfw3.h>
 
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -21,16 +22,21 @@ const unsigned int SCR_HEIGHT = 600;
 //着色器源代码
 const char *vertexShaderSource = "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
+//    "out vec4 vertexColor;\n"
     "void main()\n"
     "{\n"
-    " gl_Position = vec4(aPos.x,aPos.y,aPos.z,1.0);\n"
+    " gl_Position = vec4(aPos,1.0);\n"
+//    " vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n"
     "}\0";
 
 const char *fragmentShaderSource = "#version 330 core\n"
     "out vec4 FragColor;\n"
+//    "in vec4 vertexColor;\n"
+    "uniform vec4 ourColor;\n"
     "void main()\n"
     "{\n"
-    "   FragColor = vec4(1.0f,0.5f,0.2f,1.0f);\n"
+//    "   FragColor = vertexColor;\n"
+    "   FragColor = ourColor;\n"
     "}\0";
 
 
@@ -116,56 +122,7 @@ int main()
     glad_glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(float),(void*)0);
     glad_glEnableVertexAttribArray(0);
     
-       // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-//     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-     // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-//     glBindVertexArray(0);
-
-
- 
-    
-   /**
-    索引缓冲对象
-    当我们需要画一个矩形的时候其实需要四个顶点，而openGL通过画两个三角形来处理，两个三角形需要6个顶点，而其中有两个顶点重复了两次，当需要画成千个三角形这势必会产生浪费。
-    更好的解决方案是只储存不同的顶点，并设定绘制这些顶点的顺序。之后只要指定绘制的顺序就行了
-    索引缓冲对象的工作方式正是这样的
-    */
-
-/**  画矩形  start
-    float vertices[] = {
-         0.5f,  0.5f, 0.0f,   // 右上角 0
-         0.5f, -0.5f, 0.0f,   // 右下角 1
-        -0.5f, -0.5f, 0.0f,   // 左下角 2
-        -0.5f,  0.5f, 0.0f    // 左上角 3
-    };
-
-    unsigned int indices[] = { // 注意索引从0开始!
-        0, 1, 3, // 第一个三角形
-        1, 2, 3  // 第二个三角形
-    };
-    
-    
-    
-    unsigned int VBO, VAO, EBO;
-    glad_glGenVertexArrays(1, &VAO);
-    glad_glGenBuffers(1, &VBO);
-    glad_glGenBuffers(1, &EBO);
-    glad_glBindVertexArray(VAO);
-    
-    
-    glad_glBindBuffer(GL_ARRAY_BUFFER,VBO);
-    glad_glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
-    
-    glad_glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,EBO);
-    glad_glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(indices),indices,GL_STATIC_DRAW);
-    
-    glad_glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(float),(void*)0);
-    glad_glEnableVertexAttribArray(0);
-
-画矩形  end */
-    
     
     while (!glfwWindowShouldClose(window))
     {
@@ -173,13 +130,23 @@ int main()
         processInput(window);
 
         
-        glClearColor(0.2f, 0.3f, 0.11f, 1.0f);
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+//        激活着色器程序
         glad_glUseProgram(shaderProgram);
+        
+//        更新uniform颜色
+//        更新一个uniform之前你必须先使用程序（调用glUseProgram)，因为它是在当前激活的着色器程序中设置uniform的。
+        float timeValue = glfwGetTime();
+        float greenValue = (sin(timeValue)/2.0f) + 0.5f;
+        int vertexColorLocation = glad_glGetUniformLocation(shaderProgram,"ourColor");
+        glad_glUniform4f(vertexColorLocation,0.0f,greenValue,0.0f,1.0f);
+        
+        
         glad_glBindVertexArray(VAO);
         glad_glDrawArrays(GL_TRIANGLES,0,3);
-//        glad_glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
         
         
         glfwSwapBuffers(window);
@@ -187,7 +154,7 @@ int main()
     }
     glad_glDeleteVertexArrays(1,&VAO);
     glad_glDeleteBuffers(1,&VBO);
-//    glad_glDeleteBuffers(1,&EBO);
+
     glad_glDeleteProgram(shaderProgram);
 
    //正确释放/删除之前的分配的所有资源
