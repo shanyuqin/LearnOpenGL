@@ -2,7 +2,85 @@
 [LearnOpenGL CN](https://learnopengl-cn.github.io)的学习笔记
 
 ### OpenGL01——环境搭建并创建一个窗口
-### OpenGL02——画一个橙色三角形
+下边的逻辑保证我们的程序在我们主动关闭之前，能够不断的绘制图像，接受用户输入。这个while循环能在我们让GLFW退出之前一直保持运行。
+```
+while(!glfwWindowShouldClose(window))
+{
+    glfwSwapBuffers(window);
+    glfwPollEvents();    
+}
+```
+glfwWindowShouldClose函数在我们每次循环的开始前检查一次GLFW是否被要求退出
+glfwPollEvents函数检查有没有触发什么事件（比如键盘输入、鼠标移动等）、更新窗口状态，并调用对应的回调函数（可以通过回调方法手动设置）。
+glfwSwapBuffers函数会交换颜色缓冲（它是一个储存着GLFW窗口每一个像素颜色值的大缓冲），它在这一迭代中被用来绘制，并且将会作为输出显示在屏幕上。
+### OpenGL02——画一个橙色三角形 
+[参考](https://learnopengl-cn.github.io/01%20Getting%20started/04%20Hello%20Triangle/)
+>顶点数组对象：Vertex Array Object，VAO
+>顶点缓冲对象：Vertex Buffer Object，VBO
+>索引缓冲对象：Element Buffer Object，EBO
+
+##### VBO
+顶点数据（float vertices[]={...};）作为输入发送给图形渲染管线的第一个处理阶段：顶点着色器。顶点着色器源文件中的layout (location = 0) in vec3 aPos;就是负责接收这个顶点数据的。
+顶点着色器会在GPU上创建内存用于储存我们的顶点数据。而VBO就是用来管理这个内存的。
+```
+//生成VBO，这个缓冲有一个独一无二的ID，这里将ID设为1
+unsigned int VBO;
+glGenBuffers(1, &VBO); 
+//绑定缓冲类型，顶点缓冲对象的缓冲类型是GL_ARRAY_BUFFER
+glBindBuffer(GL_ARRAY_BUFFER, VBO); 
+//把之前定义的顶点数据vertices复制到缓冲的内存中：
+glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+```
+[链接顶点属性](https://learnopengl-cn.github.io/01%20Getting%20started/04%20Hello%20Triangle/)
+```
+//第一个参数代表顶点着色器中layout (location = 0) in vec3 aPos;中的location，代表一个位置
+//第二个参数代表这个aPos参数占多少位 XYZ  占了三位。
+//第五个参数叫做步长(Stride)，其实就是一个顶点数据占用的内存大小
+//最后一个个参数实际上就是一个偏移量，因为添加了颜色之后每一个顶点 包括6个属性 XYZ RGB ，对于每一个顶点来说，位置在前，所以偏移量为0，
+//而颜色属性紧随位置数据之后，所以偏移量是3*sizeof(float)。
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+//顶点属性默认是禁用的，需要手动启用顶点数据
+glEnableVertexAttribArray(0);
+```
+举个例子
+```
+main.cpp
+
+float vertices[] = {
+     //     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
+      0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
+      0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // 右下
+     -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // 左下
+     -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // 左上
+ };
+ 
+ glad_glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,8*sizeof(float),(void*)0);
+ glad_glEnableVertexAttribArray(0);
+ 
+ glad_glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,8*sizeof(float),(void*)(3*sizeof(float)));
+ glad_glEnableVertexAttribArray(1);
+ 
+ glad_glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,8*sizeof(float),(void*)(6*sizeof(float)));
+ glad_glEnableVertexAttribArray(2);
+ 
+ 
+ shader.vs
+ 
+ layout (location = 0) in vec3 aPos;
+ layout (location = 1) in vec3 aColor;
+ layout (location = 2) in vec2 aTexCoord;
+```
+
+上边示例中每个顶点包含三块数据，所以顶点着色器有三个参数，相对位置为0，1，2.
+链接顶点属性的时候先后对三个属性进行了链接。
+aPos,位置为0，需要3个float来表示，步长为8*sizeof(float)，每次都是从位置0的内存位置来读取数据。
+aColor,位置为1，需要3个float来表示，步长为8*sizeof(float)，每次都是从位置(3*sizeof(float))的内存位置来读取数据。
+aTexCoord,位置为2，需要2个float来表示，步长为8*sizeof(float)，每次都是从位置(6*sizeof(float))的内存位置来读取数据。
+
+
+##### VAO
+它其实是一个数组里边存储多个VBO。要想使用VAO，要做的只是使用glBindVertexArray绑定VAO。
+
 ### OpenGL03——着色器uniform的使用
 主要介绍uniform的使用。
 ### OpenGL03——为着色器添加更多属性
@@ -40,3 +118,5 @@ trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
 trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 ```
 线性代数的内容可以参考[【官方双语/合集】线性代数的本质 - ](https://www.bilibili.com/video/BV1ys411472E)
+### OpenGL06——坐标系统
+

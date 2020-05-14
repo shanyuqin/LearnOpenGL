@@ -1,15 +1,3 @@
-//
-//  main.cpp
-//  OpenGL04
-//
-//  Created by ShanYuQin on 2020/5/13.
-//  Copyright © 2020 ShanYuQin. All rights reserved.
-//
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "警告标识符"
-
-
 
 #include <glad/glad.h>
 #include <glfw3.h>
@@ -66,63 +54,92 @@ int main()
         cout<<"初始化glad失败"<<endl;
         return -1;
     }
+//    启用深度测试
+    glad_glEnable(GL_DEPTH_TEST);
     
 //使用着色器类创建一个着色器程序shaderProgram
     
-    Shader ourShader("/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL05——矩阵变换向量/OpenGL04/shader.vs","/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL05——矩阵变换向量/OpenGL04/shader.fs");
+    Shader ourShader("/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL06/OpenGL06/shader.vs","/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL06/OpenGL06/shader.fs");
     
 
-//    练习2
-//    float vertices[] = {
-//        // 0.5f    ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
-//         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   2.0f, 2.0f,   // 右上
-//         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   2.0f, 0.0f,   // 右下
-//        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // 左下
-//        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 2.0f    // 左上
-//    };
-    
-//    练习3
     float vertices[] = {
-        //     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
-         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
-         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // 右下
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // 左下
-        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // 左上
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
     
-    
-    unsigned int indices[] = {
-        0,1,3,
-        1,2,3
+    //创建更多的立方体，这里设置了10个cube在 世界空间的位置
+    glm::vec3 cubePositions[] = {
+      glm::vec3( 0.0f,  0.0f,  0.0f),
+      glm::vec3( 2.0f,  5.0f, -15.0f),
+      glm::vec3(-1.5f, -2.2f, -2.5f),
+      glm::vec3(-3.8f, -2.0f, -12.3f),
+      glm::vec3( 2.4f, -0.4f, -3.5f),
+      glm::vec3(-1.7f,  3.0f, -7.5f),
+      glm::vec3( 1.3f, -2.0f, -2.5f),
+      glm::vec3( 1.5f,  2.0f, -2.5f),
+      glm::vec3( 1.5f,  0.2f, -1.5f),
+      glm::vec3(-1.3f,  1.0f, -1.5f)
     };
     
-    unsigned int VBO ,VAO,EBO;
+    unsigned int VBO ,VAO;
     glad_glGenVertexArrays(1,&VAO);
     glad_glGenBuffers(1,&VBO);
-    glad_glGenBuffers(1,&EBO);
     
     glad_glBindVertexArray(VAO);
     
     glad_glBindBuffer(GL_ARRAY_BUFFER,VBO);
     glad_glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
     
-    glad_glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,EBO);
-    glad_glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(indices),indices,GL_STATIC_DRAW);
-    
-    //    第四个参数实际上就是一个偏移量，因为添加了颜色之后每一个顶点 包括6个属性 XYZ RGB ，对于每一个顶点来说，位置在前，所以偏移量为0，
-    //    而颜色属性紧随位置数据之后，所以偏移量是3*sizeof(float)。
-    glad_glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,8*sizeof(float),(void*)0);
+//    最后一个参数实际上就是一个偏移量，因为添加了颜色之后每一个顶点 包括6个属性 XYZ RGB ，对于每一个顶点来说，位置在前，所以偏移量为0，
+//    而颜色属性紧随位置数据之后，所以偏移量是3*sizeof(float)。
+    glad_glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,5*sizeof(float),(void*)0);
     glad_glEnableVertexAttribArray(0);
     
-    glad_glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,8*sizeof(float),(void*)(3*sizeof(float)));
+    glad_glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,5*sizeof(float),(void*)(3*sizeof(float)));
     glad_glEnableVertexAttribArray(1);
+       
     
-    glad_glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,8*sizeof(float),(void*)(6*sizeof(float)));
-    glad_glEnableVertexAttribArray(2);
-
-   
-    //创建纹理
     unsigned int texture1,texture2;
+    //创建纹理1
     glad_glGenTextures(1,&texture1);
     glad_glBindTexture(GL_TEXTURE_2D,texture1);
     // 为当前绑定的纹理对象设置环绕、过滤方式
@@ -134,7 +151,7 @@ int main()
     //加载并生成纹理
     int width,height,nrChannels;
     stbi_set_flip_vertically_on_load(true);
-    unsigned char *data = stbi_load("/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL05——矩阵变换向量/OpenGL04/container.jpg", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL06/OpenGL06/container.jpg", &width, &height, &nrChannels, 0);
     
     if (data) {
         //生成纹理 当前绑定的纹理对象就会被附加上纹理图像
@@ -147,7 +164,7 @@ int main()
     //生成纹理后释放图像内存
     stbi_image_free(data);
     
-    
+    //创建纹理2
     glad_glGenTextures(1,&texture2);
     glad_glBindTexture(GL_TEXTURE_2D,texture2);
     
@@ -156,21 +173,18 @@ int main()
     glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     
-    data = stbi_load("/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL05——矩阵变换向量/OpenGL04/awesomeface.png", &width, &height, &nrChannels, 0);
+    data = stbi_load("/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL06/OpenGL06/awesomeface.png", &width, &height, &nrChannels, 0);
     if (data) {
-        //生成纹理 当前绑定的纹理对象就会被附加上纹理图像
         glad_glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,data);
-        //自动生成所有需要的多级渐远纹理。
         glad_glGenerateMipmap(GL_TEXTURE_2D);
     }else {
         cout<<"创建纹理失败"<<endl;
     }
-    //生成纹理后释放图像内存
     stbi_image_free(data);
     
-    // 别忘记在设置uniform前先激活着色器
-//    ourShader.use();
-    glad_glUniform1i(glad_glGetUniformLocation(ourShader.ID, "texture1"), 0);//手动设置
+    // 别忘记在设置uniform前先激活着色器,因为纹理
+    ourShader.use();
+    ourShader.setInt("texture1", 0);//使用着色器类设置
     ourShader.setInt("texture2", 1);//使用着色器类设置
     
     while (!glfwWindowShouldClose(window))
@@ -179,8 +193,8 @@ int main()
         processInput(window);
 
         
-        glad_glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-        glad_glClear(GL_COLOR_BUFFER_BIT);
+        glad_glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // 在绑定纹理之前先激活纹理单元
         glad_glActiveTexture(GL_TEXTURE0);
         glad_glBindTexture(GL_TEXTURE_2D, texture1);
@@ -190,43 +204,46 @@ int main()
         ourShader.setFloat("mixValue", mixValue);
         
         
-        glm::mat4 trans = glm::mat4(1.0f);
-//        trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
-//        trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
-        
-        
-//        平移将箱子放到右下角 然后 随着时间转动
-        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-        trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-
-        
+        glm::mat4 view = glm::mat4(1.0f);
+        glm::mat4 projection = glm::mat4(1.0f);
+         
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
+        projection = glm::perspective(glm::radians(100.0f), (float)SCR_WIDTH/(float)SCR_WIDTH, 0.1f , 100.f);
+                
 //        激活着色器程序
         ourShader.use();
         
-        unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
-        glad_glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+        
+        
+        ourShader.setMatrix4fv("view", view);
+        ourShader.setMatrix4fv("projection", projection);
         
         glad_glBindVertexArray(VAO);
-        glad_glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
         
         
-        trans = glm::mat4(1.0f);
-        trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
-        float scaleAmount = sin(glfwGetTime());
-        trans = glm::scale(trans, glm::vec3(scaleAmount, scaleAmount, scaleAmount));
-        glad_glUniformMatrix4fv(transformLoc, 1, GL_FALSE, &trans[0][0]);
         
-//        glm::value_ptr(trans)  和   &trans[0][0] 两种方式
+        for (int i = 0; i < 10; i++) {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, cubePositions[i]);
+            float angle = 20.0f * (float)glfwGetTime();
+//             model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            
+//            if (i%3 == 0) {
+//                angle = (float)glfwGetTime() * 25;
+//            }
+            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            
+            ourShader.setMatrix4fv("model", model);
+            glad_glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
         
-        glad_glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
         
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
     glad_glDeleteVertexArrays(1,&VAO);
     glad_glDeleteBuffers(1,&VBO);
-    glad_glDeleteBuffers(1, &EBO);
+    
     
 
    //正确释放/删除之前的分配的所有资源
