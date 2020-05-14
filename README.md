@@ -1,6 +1,7 @@
 # LearnOpenGL
 [LearnOpenGL CN](https://learnopengl-cn.github.io)的学习笔记
 
+## 入门
 ### OpenGL01——环境搭建并创建一个窗口
 下边的逻辑保证我们的程序在我们主动关闭之前，能够不断的绘制图像，接受用户输入。这个while循环能在我们让GLFW退出之前一直保持运行。
 ```
@@ -119,4 +120,33 @@ trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 ```
 线性代数的内容可以参考[【官方双语/合集】线性代数的本质 - ](https://www.bilibili.com/video/BV1ys411472E)
 ### OpenGL06——坐标系统
+### OpenGL07——摄像机
+关于[自由移动](https://learnopengl-cn.github.io/01%20Getting%20started/09%20Camera/)通过下边的方式生成了一个lookAt矩阵
+```
+glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
+//生成lookat
+view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+```
+原文中有如下解释
+>我们首先将摄像机位置设置为之前定义的cameraPos。方向是当前的位置加上我们刚刚定义的方向向量。这样能保证无论我们怎么移动，摄像机都会注视着目标方向。
+而在它上边说生成lookAt的时候需要的三个矩阵如下
+>glm::LookAt函数需要一个位置、目标和上向量。它会创建一个和在上一节使用的一样的观察矩阵
+
+当我们按WASD改变摄像机位置的时候，为了保证无论怎么移动摄像机都会注释目标方向，那么这个生成lookAt的第二个参数目标向量 就必须也是要随着摄像机位置来变化的。可以想象一下CS或者CF游戏按着WASD进行移动时候的场景，你的准星始终和你的眼睛保持了一个固定的距离。
+这里通过cameraPos + cameraFront就是来保证了这一点。初始的时候 相加结果为`(0.0f, 0.0f, 2.0f)`，那么也就是说，无论摄像机位置如何移动，我的观察目标始终在摄像机位置关于Z轴向前移动1个单位。（摄像机是003，观察目标是002，所以你在003的位置观察002，就是摄像机向Z轴负方向移动了1个单位）。
+
+#### 视角移动
+想想一下CS/CF添加了鼠标的操作。其实原理就是通过鼠标的操作改变了前边的`cameraFront`向量。
+
+#### 欧拉角
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/7-0.png" width="50%">
+俯仰角是描述我们如何往上或往下看的角，即围绕X轴转动
+偏航角表示我们往左和往右看的程度，即围绕Y轴转动。
+滚转角代表我们如何翻滚摄像机，即围绕Z轴转动。（想象下拍抖音，旋转手机屏幕，呈现人物头部由上到下的运镜效果）。
+每个欧拉角都有一个值来表示，把三个角结合起来我们就能够计算3D空间中任何的旋转向量了。
+
+
+## 光照
 
