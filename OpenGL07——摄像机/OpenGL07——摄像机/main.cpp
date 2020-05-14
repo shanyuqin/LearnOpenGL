@@ -17,11 +17,11 @@
 
 #include<filesystem>
 using namespace std;
-//using namespace std::__fs::filesystem;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 // 屏幕宽高
 const unsigned int SCR_WIDTH = 800;
@@ -70,6 +70,7 @@ int main()
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 //    鼠标一移动mouse_callback函数就会被调用
     glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
     
     
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -209,7 +210,7 @@ int main()
     ourShader.setInt("texture1", 0);//使用着色器类设置
     ourShader.setInt("texture2", 1);//使用着色器类设置
     
-    glm::mat4 projection = glm::perspective(glm::radians(100.0f), (float)SCR_WIDTH/(float)SCR_WIDTH, 0.1f , 100.f);
+    glm::mat4 projection = glm::perspective(glm::radians(fov), (float)SCR_WIDTH/(float)SCR_WIDTH, 0.1f , 100.f);
     ourShader.setMatrix4fv("projection", projection);
     
     while (!glfwWindowShouldClose(window))
@@ -356,4 +357,12 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     front.y = sin(glm::radians(pitch));
     front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     cameraFront = glm::normalize(front);
+}
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+  if(fov >= 1.0f && fov <= 45.0f)
+    fov -= yoffset;
+  if(fov <= 1.0f)
+    fov = 1.0f;
+  if(fov >= 45.0f)
+    fov = 45.0f;
 }
