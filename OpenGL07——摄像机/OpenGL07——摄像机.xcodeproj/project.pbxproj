@@ -37,6 +37,7 @@
 		94AA20A4246DA6B200F2BF66 /* shader.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = shader.fs; sourceTree = "<group>"; };
 		94AA20A7246DA6F800F2BF66 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		94AA20A9246DA70500F2BF66 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../usr/local/Cellar/glfw/3.3.2/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
+		94AA20AB246DC42800F2BF66 /* Camera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +81,7 @@
 				94AA209F246DA6B100F2BF66 /* shader.h */,
 				94AA20A0246DA6B200F2BF66 /* shader.vs */,
 				94AA20A3246DA6B200F2BF66 /* stb_image.h */,
+				94AA20AB246DC42800F2BF66 /* Camera.h */,
 			);
 			path = "OpenGL07——摄像机";
 			sourceTree = "<group>";

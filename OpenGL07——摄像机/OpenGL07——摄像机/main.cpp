@@ -9,6 +9,7 @@
 #include <iostream>
 #include <cmath>
 #include "shader.h"
+#include "Camera.h"
 
 //通过定义STB_IMAGE_IMPLEMENTATION，预处理器会修改头文件，让其只包含相关的函数定义源码，等于是将这个头文件变为一个 .cpp 文件了。
 //现在只需要在你的程序中包含stb_image.h并编译就可以了。
@@ -35,12 +36,10 @@ glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f,  -1.0f);
 glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 bool firstMouse = true;
-float yaw   = -90.0f;
-float pitch =  0.0f;
 float lastX =  800.0f / 2.0;
 float lastY =  600.0 / 2.0;
-float fov   =  45.0f;
 
 float deltaTime = 0.0f; // 当前帧与上一帧的时间差
 float lastFrame = 0.0f; // 上一帧的时间
@@ -210,17 +209,14 @@ int main()
     ourShader.setInt("texture1", 0);//使用着色器类设置
     ourShader.setInt("texture2", 1);//使用着色器类设置
     
-    glm::mat4 projection = glm::perspective(glm::radians(fov), (float)SCR_WIDTH/(float)SCR_WIDTH, 0.1f , 100.f);
-    ourShader.setMatrix4fv("projection", projection);
-    
     while (!glfwWindowShouldClose(window))
     {
         
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+        
         processInput(window);
-
         
         glad_glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -231,39 +227,27 @@ int main()
         glad_glBindTexture(GL_TEXTURE_2D, texture2);
         
         ourShader.setFloat("mixValue", mixValue);
-        
-        
-//        glm::mat4 view = glm::mat4(1.0f);
-//        view = glm::translate(view, glm::vec3(1.0f, 0.0f, -3.0f));
-
                 
 //        激活着色器程序
         ourShader.use();
         
         
-//         float radius = 10.0f;
-//         float camX = sin(glfwGetTime()) * radius;
-//         float camZ = cos(glfwGetTime()) * radius;
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH/(float)SCR_WIDTH, 0.1f , 100.f);
+        ourShader.setMatrix4fv("projection", projection);
+        
         glm::mat4 view = glm::mat4(1.0f);
-         view = glm::lookAt(cameraPos, cameraFront+cameraPos, cameraUp);
-         
-        
-        
+        view = camera.GetViewMatrix();
         ourShader.setMatrix4fv("view", view);
 
-        
         glad_glBindVertexArray(VAO);
-        
-        
         
         for (int i = 0; i < 10; i++) {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
             float angle = 20.0f * (i+1);
-             model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-            
+            model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
             ourShader.setMatrix4fv("model", model);
+            
             glad_glDrawArrays(GL_TRIANGLES, 0, 36);
         }
         
@@ -273,8 +257,6 @@ int main()
     }
     glad_glDeleteVertexArrays(1,&VAO);
     glad_glDeleteBuffers(1,&VBO);
-    
-    
 
    //正确释放/删除之前的分配的所有资源
     glfwTerminate();
@@ -310,18 +292,18 @@ void processInput(GLFWwindow *window)
                mixValue = 0.0f;
            }
     }
-    float cameraSpeed = 2.5f * deltaTime;
+    
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        cameraPos += cameraSpeed * cameraFront;
+        camera.ProcessKeyboard(FORWARD, deltaTime);
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        cameraPos -= cameraSpeed * cameraFront;
+        camera.ProcessKeyboard(BACKWARD, deltaTime);
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        camera.ProcessKeyboard(LEFT, deltaTime);
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        camera.ProcessKeyboard(RIGHT, deltaTime);
     }
     
     
@@ -340,29 +322,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     lastX = xpos;
     lastY = ypos;
 
-    float sensitivity = 0.05;
-    xoffset *= sensitivity;
-    yoffset *= sensitivity;
-
-    yaw   += xoffset;
-    pitch += yoffset;
-
-    if(pitch > 89.0f)
-        pitch = 89.0f;
-    if(pitch < -89.0f)
-        pitch = -89.0f;
-
-    glm::vec3 front;
-    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front.y = sin(glm::radians(pitch));
-    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    cameraFront = glm::normalize(front);
+    camera.ProcessMouseMovement(xoffset, yoffset);
 }
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-  if(fov >= 1.0f && fov <= 45.0f)
-    fov -= yoffset;
-  if(fov <= 1.0f)
-    fov = 1.0f;
-  if(fov >= 45.0f)
-    fov = 45.0f;
+  camera.ProcessMouseScroll(yoffset);
 }
