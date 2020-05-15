@@ -129,10 +129,12 @@ int main()
     glad_glEnableVertexAttribArray(0);
    
     unsigned int diffuseMap = loadTexture("container2.png");
+    unsigned int specularMap = loadTexture("container2_specular.png");
     lightingShader.use();
     
     //只有一个纹理单元不赋值也没关系，纹理单元0默认激活
     lightingShader.setInt("material.diffuse", 0);
+    lightingShader.setInt("material.specular", 1);
 
     
 //    渲染循环
@@ -154,17 +156,13 @@ int main()
         lightingShader.setVec3("viewPos", camera.Position);
         lightingShader.setVec3("light.position", lightPos);
     
-
         //光的属性
         lightingShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
          lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
          lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
         
         //材质的属性
-        lightingShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
         lightingShader.setFloat("material.shininess", 64.0f);
-
-        
         
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH/(float)SCR_HEIGHT, 0.1f, 100.f);
         glm::mat4 view = camera.GetViewMatrix();
@@ -174,9 +172,11 @@ int main()
         glm::mat4 model = glm::mat4(1.0f);
         lightingShader.setMatrix4fv("model", model);
         
-        //只有一个纹理单元不赋值也没关系，纹理单元0默认激活 
+        //多个纹理单元需要进行先激活后绑定
         glad_glActiveTexture(GL_TEXTURE0);
         glad_glBindTexture(GL_TEXTURE_2D,diffuseMap);
+        glad_glActiveTexture(GL_TEXTURE1);
+        glad_glBindTexture(GL_TEXTURE_2D,specularMap);
         
         //渲染cube
         glad_glBindVertexArray(cubeVAO);
@@ -185,8 +185,7 @@ int main()
         lampShader.use();
         lampShader.setMatrix4fv("projection", projection);
         lampShader.setMatrix4fv("view", view);
-        //可以让光源的立方体颜色也随tip2的时间变化
-//        lampShader.setVec3("lampColor", lightColor);
+       
         model = glm::mat4(1.0f);
         model = glm::translate(model, lightPos);
 
