@@ -59,7 +59,7 @@ int main()
     
 //使用着色器类创建一个着色器程序shaderProgram
     
-    Shader ourShader("shader.vs","/shader.fs");
+    Shader ourShader("shader.vs","shader.fs");
     
 
     float vertices[] = {

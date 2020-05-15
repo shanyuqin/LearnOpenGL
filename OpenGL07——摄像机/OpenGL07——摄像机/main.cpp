@@ -19,6 +19,10 @@
 #include<filesystem>
 using namespace std;
 
+GLFWwindow *initWindow();
+bool initSomething(GLFWwindow * window);
+
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -48,36 +52,15 @@ float lastFrame = 0.0f; // 上一帧的时间
 int main()
 {
     
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    
-    
-    //创建一个窗口对象
-    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+       GLFWwindow *window = initWindow();
     if (window == NULL) {
-        cout<<"创建 GLFW Window 失败"<<endl;
-        glfwTerminate();
         return -1;
     }
     
-    glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-//    隐藏光标，并捕捉(Capture)它
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-//    鼠标一移动mouse_callback函数就会被调用
-    glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetScrollCallback(window, scroll_callback);
-    
-    
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        cout<<"初始化glad失败"<<endl;
+    if (!initSomething(window)) {
         return -1;
     }
-//    启用深度测试
-    glad_glEnable(GL_DEPTH_TEST);
+
     
 //使用着色器类创建一个着色器程序shaderProgram
     
@@ -326,4 +309,39 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 }
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
   camera.ProcessMouseScroll(yoffset);
+}
+
+
+
+GLFWwindow *initWindow() {
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
+       
+    GLFWwindow *window = glfwCreateWindow( SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL",NULL,NULL);
+    if (window == NULL) {
+        cout<<"创建GLFW 窗口失败"<<endl;
+    }
+    
+    return window;
+}
+
+bool initSomething(GLFWwindow * window) {
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+   glfwSetCursorPosCallback(window, mouse_callback);
+   glfwSetScrollCallback(window, scroll_callback);
+//    进入窗口隐藏鼠标，捕获鼠标移动
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    
+//    使用gl的API之前要先加载GLAD
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        cout<<"failed to initialize glad"<<endl;
+        return false;
+    }
+    //    开启深度测试
+    glad_glEnable(GL_DEPTH_TEST);
+    return true;
 }
