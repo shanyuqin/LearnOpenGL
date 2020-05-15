@@ -91,6 +91,11 @@ aTexCoord,位置为2，需要2个float来表示，步长为8*sizeof(float)，每
 ### OpenGL03——定义自己的着色器类
 通过字符串编写着色器的源代码，然后在进行编译和管理，比较麻烦，这里写了一个类来从硬盘中读取着色器，然后编译并链接他们，以及进行错误检查。
 但是对于ifstream的文件读取这里只能使用绝对路径么？这里是一个疑问
+补充：
+Product > Scheme > Edit Scheme > Run> Options Use custom working directory打勾，然后设置你放文知件的位置，这样就不需要添加绝对路道径了
+但是也看到通过自己写相关类进行处理的方式但是我没有编译成功，有看明白的希望能联系我[连接](https://www.jianshu.com/p/749a781fef94)
+
+
 ### OpenGL04——纹理
 对于纹理渲染使用的图片，要想达到官网上的例子效果，那么图片必须是无alpha通道。
 有alpha通道的情况是这样的

@@ -69,7 +69,7 @@ int main()
     
 //使用着色器类创建一个着色器程序shaderProgram
     
-    Shader ourShader("/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL05——矩阵变换向量/OpenGL04/shader.vs","/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL05——矩阵变换向量/OpenGL04/shader.fs");
+    Shader ourShader("shader.vs","shader.fs");
     
 
 //    练习2
@@ -134,7 +134,7 @@ int main()
     //加载并生成纹理
     int width,height,nrChannels;
     stbi_set_flip_vertically_on_load(true);
-    unsigned char *data = stbi_load("/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL05——矩阵变换向量/OpenGL04/container.jpg", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
     
     if (data) {
         //生成纹理 当前绑定的纹理对象就会被附加上纹理图像
@@ -156,7 +156,7 @@ int main()
     glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     
-    data = stbi_load("/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL05——矩阵变换向量/OpenGL04/awesomeface.png", &width, &height, &nrChannels, 0);
+    data = stbi_load("awesomeface.png", &width, &height, &nrChannels, 0);
     if (data) {
         //生成纹理 当前绑定的纹理对象就会被附加上纹理图像
         glad_glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,data);
@@ -169,7 +169,7 @@ int main()
     stbi_image_free(data);
     
     // 别忘记在设置uniform前先激活着色器
-//    ourShader.use();
+    ourShader.use();
     glad_glUniform1i(glad_glGetUniformLocation(ourShader.ID, "texture1"), 0);//手动设置
     ourShader.setInt("texture2", 1);//使用着色器类设置
     

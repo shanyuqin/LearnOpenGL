@@ -50,7 +50,7 @@ int main()
     
 //使用着色器类创建一个着色器程序shaderProgram
     
-    Shader ourShader("/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL03——定义自己的着色器类/OpenGL03/shader.vs","/Users/shanyuqin/Desktop/LearnOpenGL/OpenGL03——定义自己的着色器类/OpenGL03/shader.fs");
+    Shader ourShader("shader.vs","shader.fs");
     
 
     
