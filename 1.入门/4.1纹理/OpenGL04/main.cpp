@@ -65,7 +65,13 @@ int main()
     
     Shader ourShader("shader.vs","shader.fs");
     
-
+    float vertices[] = {
+        //     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
+         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
+         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // 右下
+        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // 左下
+        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // 左上
+    };
 //    练习2
 //    float vertices[] = {
 //        // 0.5f    ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
@@ -76,13 +82,13 @@ int main()
 //    };
     
 //    练习3
-    float vertices[] = {
-        //     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
-         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   0.55f, 0.55f,   // 右上
-         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   0.55f, 0.45f,   // 右下
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.45f, 0.45f,   // 左下
-        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.45f, 0.55f    // 左上
-    };
+//    float vertices[] = {
+//        //     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
+//         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   0.55f, 0.55f,   // 右上
+//         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   0.55f, 0.45f,   // 右下
+//        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.45f, 0.45f,   // 左下
+//        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.45f, 0.55f    // 左上
+//    };
     
     
     unsigned int indices[] = {
@@ -126,7 +132,7 @@ int main()
     glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     
     //加载并生成纹理
-    int width,height,nrChannels;
+    int width,height,nrChannels; //颜色通道
     stbi_set_flip_vertically_on_load(true);
     unsigned char *data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
     
@@ -164,6 +170,7 @@ int main()
     
     // 别忘记在设置uniform前先激活着色器
     ourShader.use();
+    //后边的0，1对应的是纹理单元，每一个
     glad_glUniform1i(glad_glGetUniformLocation(ourShader.ID, "texture1"), 0);//手动设置
     ourShader.setInt("texture2", 1);//使用着色器类设置
     
