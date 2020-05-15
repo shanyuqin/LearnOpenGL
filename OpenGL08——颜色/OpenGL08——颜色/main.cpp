@@ -140,14 +140,14 @@ int main()
         glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         //练习1
-        lightPos.x = 1.0f + sin(glfwGetTime()) * 2.0f;
-        lightPos.y = sin(glfwGetTime() / 2.0f) * 1.0f;
+//        lightPos.x = 1.0f + sin(glfwGetTime()) * 2.0f;
+//        lightPos.y = sin(glfwGetTime() / 2.0f) * 1.0f;
         //渲染逻辑 start ——————————————————————————————————————————
         lightingShader.use();
         lightingShader.setVec3("objectColor", 1.0f,0.5f,0.31f);
         lightingShader.setVec3("lightColor", 1.0f,1.0f,1.0f);
         lightingShader.setVec3("lightPos", lightPos);
-        lightingShader.setVec3("viewPos", camera.Position);
+//        lightingShader.setVec3("viewPos", camera.Position);
         
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH/(float)SCR_HEIGHT, 0.1f, 100.f);
         glm::mat4 view = camera.GetViewMatrix();
