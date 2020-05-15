@@ -170,4 +170,8 @@ view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 结果你看到的其实是一个深绿色的颜色。
 >glm::vec3 result = lightColor * toyColor; // = (0.0f, 0.5f, 0.0f);
 
-
+### OpenGL09——材质
+对于颜色的计算是基于一个光照模型，这些光照模型都是基于我们对光的物理特性的理解。
+上一节颜色讲了冯氏光照模型(Phong Lighting Model)。
+冯氏光照模型的主要结构由3个分量组成：环境(Ambient)、漫反射(Diffuse)和镜面(Specular)光照。
+除了光源可以从这三方面考虑。一个物体的材质也是需要从这三方面考虑的。
