@@ -310,4 +310,23 @@ FragColor = vec4((ambient + diffuse + specular) * objectColor, 1.0);
 
 
 # 模型加载
-## 14.
+## 14 网格
+### Assimp
+模型文件文件格式有很多，它们之间通常并没有一个通用的结构。所以如果我们想从这些文件格式中导入模型的话，我们必须要去自己对每一种需要导入的文件格式写一个导入器。
+Assimp（一个模型导入库）这个库就是专门处理这个问题的。
+
+将导入的整个模型加载进一个场景（Scene）对象，它保健科导入的模型/场景中的所有数据。
+Assimp将场景载入为一些列的结点（Node），每个节点包含了场景对象中存储数据的索引。
+
+编译流程：`brew install assimp`
+执行完后打开下边文件目录进行查看。
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/14-0.png" width="50%">
+在工程中添加自定义路径${assmip_header}和${assmip_lib}，然后在build setting>header search 和 library search 中添加相应路径
+
+### 网格类Mesh编写
+
+## 15
+
+
+
+
