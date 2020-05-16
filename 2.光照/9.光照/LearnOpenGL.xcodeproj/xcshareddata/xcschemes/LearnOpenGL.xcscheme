@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "94AA20B4246E64D000F2BF66"
-               BuildableName = "OpenGL08&#x2014;&#x2014;&#x989c;&#x8272;"
-               BlueprintName = "OpenGL08&#x2014;&#x2014;&#x989c;&#x8272;"
-               ReferencedContainer = "container:OpenGL08&#x2014;&#x2014;&#x989c;&#x8272;.xcodeproj">
+               BlueprintIdentifier = "94AA20F6246EC2BD00F2BF66"
+               BuildableName = "LearnOpenGL"
+               BlueprintName = "LearnOpenGL"
+               ReferencedContainer = "container:LearnOpenGL.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -36,7 +36,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "YES"
-      customWorkingDirectory = "/Users/shanyuqin/Desktop/LearnOpenGL/2.&#x5149;&#x7167;/8.&#x989c;&#x8272;/OpenGL08&#x2014;&#x2014;&#x989c;&#x8272;"
+      customWorkingDirectory = "/Users/shanyuqin/Desktop/LearnOpenGL/2.&#x5149;&#x7167;/9.&#x5149;&#x7167;/LearnOpenGL"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
@@ -45,10 +45,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "94AA20B4246E64D000F2BF66"
-            BuildableName = "OpenGL08&#x2014;&#x2014;&#x989c;&#x8272;"
-            BlueprintName = "OpenGL08&#x2014;&#x2014;&#x989c;&#x8272;"
-            ReferencedContainer = "container:OpenGL08&#x2014;&#x2014;&#x989c;&#x8272;.xcodeproj">
+            BlueprintIdentifier = "94AA20F6246EC2BD00F2BF66"
+            BuildableName = "LearnOpenGL"
+            BlueprintName = "LearnOpenGL"
+            ReferencedContainer = "container:LearnOpenGL.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,10 +62,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "94AA20B4246E64D000F2BF66"
-            BuildableName = "OpenGL08&#x2014;&#x2014;&#x989c;&#x8272;"
-            BlueprintName = "OpenGL08&#x2014;&#x2014;&#x989c;&#x8272;"
-            ReferencedContainer = "container:OpenGL08&#x2014;&#x2014;&#x989c;&#x8272;.xcodeproj">
+            BlueprintIdentifier = "94AA20F6246EC2BD00F2BF66"
+            BuildableName = "LearnOpenGL"
+            BlueprintName = "LearnOpenGL"
+            ReferencedContainer = "container:LearnOpenGL.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -38,10 +38,6 @@
 		94AA210D246EC35900F2BF66 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		94AA210F246EC76700F2BF66 /* Material.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Material.vs; sourceTree = "<group>"; };
 		94AA2110246EC77900F2BF66 /* Material.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Material.fs; sourceTree = "<group>"; };
-		94AA2111246EEBF100F2BF66 /* container2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = container2.png; sourceTree = "<group>"; };
-		94AA2114246F02AD00F2BF66 /* container2_specular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = container2_specular.png; sourceTree = "<group>"; };
-		94AA2115246F052500F2BF66 /* container2_specular_colored.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = container2_specular_colored.png; sourceTree = "<group>"; };
-		94AA2116246F069600F2BF66 /* matrix.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = matrix.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,10 +74,6 @@
 			isa = PBXGroup;
 			children = (
 				94AA210D246EC35900F2BF66 /* Camera.h */,
-				94AA2111246EEBF100F2BF66 /* container2.png */,
-				94AA2114246F02AD00F2BF66 /* container2_specular.png */,
-				94AA2115246F052500F2BF66 /* container2_specular_colored.png */,
-				94AA2116246F069600F2BF66 /* matrix.jpg */,
 				94AA210F246EC76700F2BF66 /* Material.vs */,
 				94AA2110246EC77900F2BF66 /* Material.fs */,
 				94AA2109246EC35800F2BF66 /* glad.c */,

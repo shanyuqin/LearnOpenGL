@@ -174,7 +174,7 @@ view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
 
 ## 光照
-### 8.颜色
+### 8.颜色 和 基础光照
 ##### 对于你能看到的颜色的理解。
 我们在现实生活中看到某一物体的颜色并不是这个物体真正拥有的颜色，而是它所反射的(Reflected)颜色。换句话说，那些不能被物体所吸收(Absorb)的颜色（被拒绝的颜色）就是我们能够感知到的物体的颜色。
 
@@ -197,3 +197,5 @@ view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 除了光源可以从这三方面考虑。一个物体的材质也是需要从这三方面考虑的。
 
 ### 10.光照贴图
+
+### 11.投光物
