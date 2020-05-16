@@ -142,6 +142,12 @@ glm::mat4 trans = glm::mat4(1.0f);
 trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
 trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 ```
+这里需要记住向量相乘的两个概念点乘和叉乘
+点乘v¯⋅k¯ 计算的是两个向量夹角的余弦值。（v,k都是单位向量）
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/5-0.png" width="50%">
+叉乘v¯ x k¯ 只在3D空间中有定义，它需要两个不平行向量作为输入，生成一个正交于两个输入向量的第三个向量
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/5-1.png" width="50%">
+
 线性代数的内容可以参考[【官方双语/合集】线性代数的本质 - ](https://www.bilibili.com/video/BV1ys411472E)
 ### 6.坐标系统
 理解局部空间，世界空间，观察空间，裁剪空间，屏幕空间
@@ -174,7 +180,7 @@ view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
 
 ## 光照
-### 8.颜色 和 基础光照
+### 8.颜色 
 ##### 对于你能看到的颜色的理解。
 我们在现实生活中看到某一物体的颜色并不是这个物体真正拥有的颜色，而是它所反射的(Reflected)颜色。换句话说，那些不能被物体所吸收(Absorb)的颜色（被拒绝的颜色）就是我们能够感知到的物体的颜色。
 
@@ -190,12 +196,99 @@ view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 结果你看到的其实是一个深绿色的颜色。
 >glm::vec3 result = lightColor * toyColor; // = (0.0f, 0.5f, 0.0f);
 
-### 9.材质
+### 9.基础光照
 对于颜色的计算是基于一个光照模型，这些光照模型都是基于我们对光的物理特性的理解。
-上一节颜色讲了冯氏光照模型(Phong Lighting Model)。
+这里主要讲了冯氏光照模型(Phong Lighting Model)。
 冯氏光照模型的主要结构由3个分量组成：环境(Ambient)、漫反射(Diffuse)和镜面(Specular)光照。
+环境光照(Ambient Lighting)：即使在黑暗的情况下，世界上通常也仍然有一些光亮（月亮、远处的光），所以物体几乎永远不会是完全黑暗的。为了模拟这个，我们会使用一个环境光照常量，它永远会给物体一些颜色。
+漫反射光照(Diffuse Lighting)：模拟光源对物体的方向性影响(Directional Impact)。它是冯氏光照模型中视觉上最显著的分量。物体的某一部分越是正对着光源，它就会越亮。
+镜面光照(Specular Lighting)：模拟有光泽物体上面出现的亮点。镜面光照的颜色相比于物体的颜色会更倾向于光的颜色。
+
+##### 环境光照
+把环境光照添加到场景里非常简单。我们用光的颜色乘以一个很小的常量环境因子，再乘以物体的颜色，然后将最终结果作为片段的颜色，
+```
+void main() {
+    //常量环境因子
+    float ambientStrength = 0.1;
+    //lightColor 为光的颜色
+    vec3 ambient = ambientStrength * lightColor;
+    //再乘以物体的颜色就是我们看到的颜色
+    FragColor = vec4(ambient * objectColor, 1.0);
+}
+```
+##### 漫反射光照
+漫反射光照使物体上与光线方向越接近的片段能从光源处获得更多的亮。
+法向量的概念：垂直于平面的直线所表示的向量为该平面的法向量。即下图的黄色箭头向量N，它是垂直于平面向外的。
+当我们的光源按照法向量的反方向照射物体的时候反射光更亮，而垂直于法向量照射的时候反射光基本上看不到，也就是说θ越大，反射光的影响越小。
+下图中的FragPos是当前光照射到物体的某一个片段上的位置。
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/9-0.png" width="50%">
+
+如何计算？
+先获取光的方向和法向量，这里法向量是通过顶点数据传给顶点着色器，然后顶点着色器又传给偏远着色器来用于计算。
+光的方向向量，是指`片段位置`指向`光源位置`的向量。所以使用光源位置向量减去片段位置向量。
+计算光照我们只关心方向，不关心大小，可以通过normalize进行标准化。
+```
+vec3 norm = normalize(Normal);
+vec3 lightDir = normalize(lightPos - FragPos);
+```
+对norm和lightDir向量进行点乘，计算光源对当前片段实际的漫反射影响。
+两个向量之间的角度越大，漫反射分量就会越小，参考 chapter 5中向量的点乘，两个向量点乘的结果是夹角的余弦值，夹角越小，反射分量越大，反之越小。
+如果两个向量之间的角度大于90度，点乘的结果就会变成负数，负数颜色的光照是没有定义的，可以通过MAX函数保证取值不为负数。
+结果值再乘以光的颜色，得到漫反射分量。
+```
+float diff = max(dot(norm, lightDir), 0.0);
+vec3 diffuse = diff * lightColor;
+```
+现在我们有了环境光分量和漫反射分量，我们把它们相加，然后把结果乘以物体的颜色，来获得片段最后的输出颜色。
+```
+FragColor = vec4((ambient + diffuse) * objectColor, 1.0);
+```
+
+>最后对于法向量还需要进行一个处理
+在片段着色器中，如果进行了不等比缩放，法向量就不会再垂直于对应的表面了，这样光照就会被破坏。
+这里一个修复的技巧是使用法线矩阵，它使用了一些线性代数的操作来移除对法向量错误缩放的影响。
+这里只说下需要调用的函数
+```
+void main() {
+    Normal = mat3(transpose(inverse(model))) * aNormal;
+    ...
+}
+```
+##### 镜面光照
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/9-1.png" width="50%">
+镜面光照也是依据光的方向向量和物体的法向量来决定的，但是它也依赖于观察方向，例如玩家是从什么方向看着这个片段的。它的作用效果就是，当我们去看光被物体所反射的那个方向的时候，我们会看到一个高光。
+上图中 的橙色R就是通过光的方向向量和法向量来计算出来的，光源和法向量N的夹角 ，R和N的夹角是一样的。观察位置和反射向量R的夹角越小，那么镜面光的影响就会越大。
+
+在fragmentShader中添加viewPos，这里我们通过之前的FPS摄像机 的位置向量作为了观察向量。
+```
+uniform vec3 viewPos;
+```
+我们定义一个镜面强度(Specular Intensity)变量，给镜面高光一个中等亮度颜色，让它不要产生过度的影响。
+```
+float specularStrength = 0.5;
+```
+视线方向向量就是片段位置指向观察位置的向量。
+reflect函数要求第一个向量是从光源指向片段位置的向量,而之前计算`lightDir = normalize(lightPos - FragPos)`是片段位置指向光源位置的向量，所以进行了取反。
+将对应的沿着法线轴的反射向量和观察向量进行点乘，使用MAX保证不为负值。
+不同的物体，有不同的反光度，比如木头和镜子，木头基本上看不到高光，而镜子高光很强烈。这里设置了32。pow是结果的32次幂。
+```
+vec3 viewDir = normalize(viewPos-FragPos);
+vec3 reflectDir = reflect(-lightDir, norm);
+float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32); //32代表的是一个物体的反光度，越高，反光能力越强。
+```
+现在我们有了环境光分量和漫反射分量和镜面反射分量，我们把它们相加，然后把结果乘以物体的颜色，来获得片段最后的输出颜色。
+```
+FragColor = vec4((ambient + diffuse + specular) * objectColor, 1.0);
+```
+下边显示了不同反光度显示的结果。
+一个物体的反光度越高，反射光的能力越强，散射得越少，高光点就会越小
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/9-2.png" width="50%">
+
+### 10.材质
+基础光照中讲了一个光照模型，也就是冯氏光照模型。
+它的主要结构由3个分量组成：环境(Ambient)、漫反射(Diffuse)和镜面(Specular)光照。
 除了光源可以从这三方面考虑。一个物体的材质也是需要从这三方面考虑的。
 
-### 10.光照贴图
+### 11.光照贴图
 
-### 11.投光物
+### 12.投光物

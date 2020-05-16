@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		94AA20FB246EC2BD00F2BF66 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94AA20FA246EC2BD00F2BF66 /* main.cpp */; };
 		94AA2103246EC32D00F2BF66 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94AA2102246EC32D00F2BF66 /* OpenGL.framework */; };
 		94AA2105246EC34000F2BF66 /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 94AA2104246EC34000F2BF66 /* libglfw.3.3.dylib */; };
-		94AA210E246EC35900F2BF66 /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = 94AA2109246EC35800F2BF66 /* glad.c */; };
+		94AA2121246FD6B200F2BF66 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94AA211C246FD6B100F2BF66 /* main.cpp */; };
+		94AA2122246FD6B200F2BF66 /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = 94AA211F246FD6B200F2BF66 /* glad.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,17 +27,17 @@
 
 /* Begin PBXFileReference section */
 		94AA20F7246EC2BD00F2BF66 /* LearnOpenGL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LearnOpenGL; sourceTree = BUILT_PRODUCTS_DIR; };
-		94AA20FA246EC2BD00F2BF66 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		94AA2102246EC32D00F2BF66 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		94AA2104246EC34000F2BF66 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../usr/local/Cellar/glfw/3.3.2/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
-		94AA2106246EC35800F2BF66 /* lamp.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = lamp.vs; sourceTree = "<group>"; };
-		94AA2107246EC35800F2BF66 /* shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader.h; sourceTree = "<group>"; };
-		94AA2108246EC35800F2BF66 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
-		94AA2109246EC35800F2BF66 /* glad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = glad.c; sourceTree = "<group>"; };
-		94AA210B246EC35900F2BF66 /* lamp.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = lamp.fs; sourceTree = "<group>"; };
-		94AA210D246EC35900F2BF66 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
-		94AA210F246EC76700F2BF66 /* Material.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Material.vs; sourceTree = "<group>"; };
-		94AA2110246EC77900F2BF66 /* Material.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Material.fs; sourceTree = "<group>"; };
+		94AA2118246FD6B100F2BF66 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
+		94AA2119246FD6B100F2BF66 /* shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader.h; sourceTree = "<group>"; };
+		94AA211A246FD6B100F2BF66 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
+		94AA211B246FD6B100F2BF66 /* colors.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = colors.fs; sourceTree = "<group>"; };
+		94AA211C246FD6B100F2BF66 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		94AA211D246FD6B100F2BF66 /* lamp.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = lamp.vs; sourceTree = "<group>"; };
+		94AA211E246FD6B200F2BF66 /* colors.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = colors.vs; sourceTree = "<group>"; };
+		94AA211F246FD6B200F2BF66 /* glad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = glad.c; sourceTree = "<group>"; };
+		94AA2120246FD6B200F2BF66 /* lamp.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = lamp.fs; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,15 +73,15 @@
 		94AA20F9246EC2BD00F2BF66 /* LearnOpenGL */ = {
 			isa = PBXGroup;
 			children = (
-				94AA210D246EC35900F2BF66 /* Camera.h */,
-				94AA210F246EC76700F2BF66 /* Material.vs */,
-				94AA2110246EC77900F2BF66 /* Material.fs */,
-				94AA2109246EC35800F2BF66 /* glad.c */,
-				94AA210B246EC35900F2BF66 /* lamp.fs */,
-				94AA2106246EC35800F2BF66 /* lamp.vs */,
-				94AA2107246EC35800F2BF66 /* shader.h */,
-				94AA2108246EC35800F2BF66 /* stb_image.h */,
-				94AA20FA246EC2BD00F2BF66 /* main.cpp */,
+				94AA2118246FD6B100F2BF66 /* Camera.h */,
+				94AA211B246FD6B100F2BF66 /* colors.fs */,
+				94AA211E246FD6B200F2BF66 /* colors.vs */,
+				94AA211F246FD6B200F2BF66 /* glad.c */,
+				94AA2120246FD6B200F2BF66 /* lamp.fs */,
+				94AA211D246FD6B100F2BF66 /* lamp.vs */,
+				94AA211C246FD6B100F2BF66 /* main.cpp */,
+				94AA2119246FD6B100F2BF66 /* shader.h */,
+				94AA211A246FD6B100F2BF66 /* stb_image.h */,
 			);
 			path = LearnOpenGL;
 			sourceTree = "<group>";
@@ -152,8 +152,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				94AA20FB246EC2BD00F2BF66 /* main.cpp in Sources */,
-				94AA210E246EC35900F2BF66 /* glad.c in Sources */,
+				94AA2121246FD6B200F2BF66 /* main.cpp in Sources */,
+				94AA2122246FD6B200F2BF66 /* glad.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
