@@ -14,6 +14,11 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 
+//#include <stb_image.h>
+//#include <assimp/Importer.hpp>
+//#include <assimp/scene.h>
+//#include <assimp/postprocess.h>
+
 #include "shader.h"
 
 #include <string>
@@ -28,6 +33,11 @@ struct Vertex {
     glm::vec3 Normal;
     //纹理坐标
     glm::vec2 TexCoords;
+    //后边两个在文章中并没有做解释
+    // tangent 切线
+    glm::vec3 Tangent;
+    // bitangent  双切线
+    glm::vec3 Bitangent;
 };
 
 struct Texture {
@@ -104,16 +114,22 @@ private:
         glad_glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glad_glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
         
-        // set the vertex attribute pointers
+        // 重新配置顶点属性指针
         // vertex Positions
         glad_glEnableVertexAttribArray(0);
         glad_glVertexAttribPointer(0 ,3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
         // vertex normals
-        glad_glEnableVertexAttribArray(0);
-        glad_glVertexAttribPointer(0 ,3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+        glad_glEnableVertexAttribArray(1);
+        glad_glVertexAttribPointer(1 ,3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
         // vertex texture coords
-        glad_glEnableVertexAttribArray(0);
-        glad_glVertexAttribPointer(0 ,3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+        glad_glEnableVertexAttribArray(2);
+        glad_glVertexAttribPointer(2 ,2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+        // vertex texture coords
+        glad_glEnableVertexAttribArray(3);
+        glad_glVertexAttribPointer(3 ,3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+        // vertex texture coords
+        glad_glEnableVertexAttribArray(4);
+        glad_glVertexAttribPointer(4 ,3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
         
     }
 };

@@ -7,21 +7,18 @@
 
 #include <iostream>
 #include <cmath>
+
 #include "Camera.h"
-#include "mesh.h"
 #include "shader.h"
+#include "model.h"
 
 //通过定义STB_IMAGE_IMPLEMENTATION，预处理器会修改头文件，让其只包含相关的函数定义源码，等于是将这个头文件变为一个 .cpp 文件了。
-//现在只需要在你的程序中包含stb_image.h并编译就可以了。
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 
 #include<filesystem>
 using namespace std;
 
 GLFWwindow *initWindow();
 bool initSomething(GLFWwindow * window);
-unsigned int loadTexture( char const * path);
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -32,7 +29,6 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 bool firstMouse = true;
 float lastX =  SCR_WIDTH / 2.0f;
@@ -40,10 +36,6 @@ float lastY =  SCR_HEIGHT / 2.0f;
 
 float deltaTime = 0.0f; // 当前帧与上一帧的时间差
 float lastFrame = 0.0f; // 上一帧的时间
-
-
-//lighiting
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 int main()
 {
@@ -56,7 +48,8 @@ int main()
         return -1;
     }
     
-   
+    Shader ourShader("model.vs","model.fs");
+    Model ourModel("nanosuit/nanosuit.obj");
 
     
 //    渲染循环
@@ -70,13 +63,20 @@ int main()
         processInput(window);
         
         
-        glad_glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
+        glad_glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-    
         //渲染逻辑 start ——————————————————————————————————————————
+        ourShader.use();
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+        ourShader.setMatrix4fv("projection", projection);
+        ourShader.setMatrix4fv("view", view);
         
-        
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+        ourShader.setMatrix4fv("model", model);
+        ourModel.Draw(ourShader);
         //渲染逻辑 end ——————————————————————————————————————————
         
         glfwSwapBuffers(window);
@@ -120,42 +120,9 @@ bool initSomething(GLFWwindow * window) {
     }
 //    开启深度测试
     glad_glEnable(GL_DEPTH_TEST);
+//    解决stb_image加载纹理的时候Y轴取反的问题。
+    stbi_set_flip_vertically_on_load(true);
     return true;
-}
-
-
-unsigned int loadTexture( char const * path)
-{
-    unsigned int textureID;
-    glad_glGenTextures(1 ,&textureID);
-    
-    int width,height,nrComponents;
-    unsigned char * data = stbi_load(path, &width, &height, &nrComponents, 0);
-    if (data) {
-        
-        GLenum format;
-        if (nrComponents == 1)
-            format = GL_RED;
-        else if (nrComponents == 3)
-            format = GL_RGB;
-        else if (nrComponents == 4)
-            format = GL_RGBA;
-        
-        glad_glBindTexture(GL_TEXTURE_2D,textureID);
-        glad_glTexImage2D(GL_TEXTURE_2D,0,format,width,height,0,format,GL_UNSIGNED_BYTE,data);
-        glad_glGenerateMipmap(GL_TEXTURE_2D);
-        // 为当前绑定的纹理对象设置环绕、过滤方式
-        glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
-        glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
-        glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-        glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-        
-    }else {
-        cout<<"创建纹理失败"<<endl;
-    }
-    
-    stbi_image_free(data);
-    return textureID;;
 }
 
 
