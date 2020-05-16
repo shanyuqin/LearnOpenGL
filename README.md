@@ -290,5 +290,24 @@ FragColor = vec4((ambient + diffuse + specular) * objectColor, 1.0);
 除了光源可以从这三方面考虑。一个物体的材质也是需要从这三方面考虑的。
 
 ## 11.光照贴图
-
+其实就是添加了纹理
 ## 12.投光物
+### 定向光
+也叫平行光（太阳）。假设光源处于无限远处的模型时，看起来好像所有的光都来自于同一个方向。
+### 点光源。
+从它的光源位置开始朝着所有方向散射光线。存在一个衰减的定义：随着光线传播距离的增长逐渐削减光的强度。
+计算公式：
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/12-0.png" width="50%">
+每一个光照模型的计算结果需要乘以这个衰减因子。
+常数项Kc(一般为1.0)、一次项Kl和二次项Kq。 d为片段位置到光源位置的距离通过`length(light.position - fragPos)`函数来计算。
+下边的表提供了一些模拟取值
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/12-1.png" width="50%">
+### 聚光
+聚光是位于环境中某个位置的光源，它只朝一个特定方向而不是所有方向照射光线。这样的结果就是只有在聚光方向的特定半径内的物体才会被照亮，其它的物体都会保持黑暗。聚光很好的例子就是路灯或手电筒。
+聚光需要对边缘部分进行平缓/软化的处理。[参考](https://learnopengl-cn.github.io/02%20Lighting/05%20Light%20casters/)
+## 13.多光源
+其实就是对多个光源的光照模型的结果进行相加（影响的因子是相乘如衰减，多个光源的叠加结果是相加）。
+
+
+# 模型加载
+## 14.
