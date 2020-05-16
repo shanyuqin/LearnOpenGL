@@ -142,12 +142,11 @@ int main()
     glad_glEnableVertexAttribArray(0);
    
     unsigned int diffuseMap = loadTexture("container2.png");
-    unsigned int specularMap = loadTexture("container2_specular_colored.png");
     lightingShader.use();
     
     //只有一个纹理单元不赋值也没关系，纹理单元0默认激活
     lightingShader.setInt("material.diffuse", 0);
-    lightingShader.setInt("material.specular", 1);
+    
 
     
 //    渲染循环
@@ -188,8 +187,6 @@ int main()
         //多个纹理单元需要进行先激活后绑定
         glad_glActiveTexture(GL_TEXTURE0);
         glad_glBindTexture(GL_TEXTURE_2D,diffuseMap);
-        glad_glActiveTexture(GL_TEXTURE1);
-        glad_glBindTexture(GL_TEXTURE_2D,specularMap);
         
         for (int i = 0; i < 10 ; i++) {
             glm::mat4 model = glm::mat4(1.0f);
