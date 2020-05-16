@@ -165,12 +165,13 @@ int main()
     
         //渲染逻辑 start ——————————————————————————————————————————
         lightingShader.use();
+        lightingShader.setVec3("light.position",  camera.Position);
+        lightingShader.setVec3("light.direction", camera.Front);
+        lightingShader.setFloat("light.cutOff",   glm::cos(glm::radians(12.5f)));
         lightingShader.setVec3("viewPos", camera.Position);
-        lightingShader.setVec3("light.position", lightPos);
-    
         //光的属性
-        lightingShader.setVec3("light.ambient", 0.5f, 0.5f, 0.5f);
-        lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
+        lightingShader.setVec3("light.ambient", 0.1f, 0.1f, 0.1f);
+        lightingShader.setVec3("light.diffuse", 0.8f, 0.8f, 0.8f);
         lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
         lightingShader.setFloat("light.constant",  1.0f);
         lightingShader.setFloat("light.linear",    0.09f);
@@ -178,7 +179,7 @@ int main()
 
         
         //材质的属性
-        lightingShader.setFloat("material.shininess", 64.0f);
+        lightingShader.setFloat("material.shininess", 32.0f);
         
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH/(float)SCR_HEIGHT, 0.1f, 100.f);
         glm::mat4 view = camera.GetViewMatrix();
@@ -206,19 +207,19 @@ int main()
         }
         
         
-        lampShader.use();
-        lampShader.setMatrix4fv("projection", projection);
-        lampShader.setMatrix4fv("view", view);
-      
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, lightPos);
-
-        model = glm::scale(model, glm::vec3(0.2f));
-        lampShader.setMatrix4fv("model", model);
-       
-       
-        glad_glBindVertexArray(lightVAO);
-        glad_glDrawArrays(GL_TRIANGLES, 0, 36);
+//        lampShader.use();
+//        lampShader.setMatrix4fv("projection", projection);
+//        lampShader.setMatrix4fv("view", view);
+//
+//        model = glm::mat4(1.0f);
+//        model = glm::translate(model, lightPos);
+//
+//        model = glm::scale(model, glm::vec3(0.2f));
+//        lampShader.setMatrix4fv("model", model);
+//
+//
+//        glad_glBindVertexArray(lightVAO);
+//        glad_glDrawArrays(GL_TRIANGLES, 0, 36);
         
         //渲染逻辑 end ——————————————————————————————————————————
         

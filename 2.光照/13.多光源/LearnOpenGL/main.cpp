@@ -55,7 +55,7 @@ int main()
         return -1;
     }
     
-    Shader lightingShader("Material.vs","Material.fs");
+    Shader lightingShader("multiple_lights.vs","multiple_lights.fs");
     Shader lampShader("lamp.vs","lamp.fs");
     
     float vertices[] = {
@@ -116,7 +116,13 @@ int main()
         glm::vec3(-1.3f,  1.0f, -1.5f)
     };
     
-    
+    //四个点光源的位置
+    glm::vec3 pointLightPositions[] = {
+        glm::vec3( 0.7f,  0.2f,  2.0f),
+        glm::vec3( 2.3f, -3.3f, -4.0f),
+        glm::vec3(-4.0f,  2.0f, -12.0f),
+        glm::vec3( 0.0f,  0.0f, -3.0f)
+    };
     unsigned int VBO, cubeVAO , lightVAO;
     glad_glGenVertexArrays(1,&cubeVAO);
     glad_glGenBuffers(1,&VBO);
@@ -159,41 +165,85 @@ int main()
         //      键盘输入
         processInput(window);
         
-        glad_glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glad_glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
         glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
     
         //渲染逻辑 start ——————————————————————————————————————————
         lightingShader.use();
         lightingShader.setVec3("viewPos", camera.Position);
-        lightingShader.setVec3("light.position", lightPos);
-    
-        //光的属性
-        lightingShader.setVec3("light.ambient", 0.5f, 0.5f, 0.5f);
-        lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-        lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-        lightingShader.setFloat("light.constant",  1.0f);
-        lightingShader.setFloat("light.linear",    0.09f);
-        lightingShader.setFloat("light.quadratic", 0.032f);
-
-        
         //材质的属性
-        lightingShader.setFloat("material.shininess", 64.0f);
+        lightingShader.setFloat("material.shininess", 32.0f);
+    
+        //定向光的属性
+        lightingShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+        lightingShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+        lightingShader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+        lightingShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
         
+        // 点光源1的属性
+        lightingShader.setVec3("pointLights[0].position", pointLightPositions[0]);
+        lightingShader.setVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
+        lightingShader.setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
+        lightingShader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
+        lightingShader.setFloat("pointLights[0].constant", 1.0f);
+        lightingShader.setFloat("pointLights[0].linear", 0.09);
+        lightingShader.setFloat("pointLights[0].quadratic", 0.032);
+        // 点光源2的属性
+        lightingShader.setVec3("pointLights[1].position", pointLightPositions[1]);
+        lightingShader.setVec3("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
+        lightingShader.setVec3("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
+        lightingShader.setVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
+        lightingShader.setFloat("pointLights[1].constant", 1.0f);
+        lightingShader.setFloat("pointLights[1].linear", 0.09);
+        lightingShader.setFloat("pointLights[1].quadratic", 0.032);
+        // 点光源3的属性
+        lightingShader.setVec3("pointLights[2].position", pointLightPositions[2]);
+        lightingShader.setVec3("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
+        lightingShader.setVec3("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
+        lightingShader.setVec3("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
+        lightingShader.setFloat("pointLights[2].constant", 1.0f);
+        lightingShader.setFloat("pointLights[2].linear", 0.09);
+        lightingShader.setFloat("pointLights[2].quadratic", 0.032);
+        // 点光源4的属性
+        lightingShader.setVec3("pointLights[3].position", pointLightPositions[3]);
+        lightingShader.setVec3("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
+        lightingShader.setVec3("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
+        lightingShader.setVec3("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
+        lightingShader.setFloat("pointLights[3].constant", 1.0f);
+        lightingShader.setFloat("pointLights[3].linear", 0.09);
+        lightingShader.setFloat("pointLights[3].quadratic", 0.032);
+        
+        //手电筒的属性
+        lightingShader.setVec3("spotLight.position", camera.Position);
+        lightingShader.setVec3("spotLight.direction", camera.Front);
+        lightingShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+        lightingShader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+        lightingShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+        lightingShader.setFloat("spotLight.constant", 1.0f);
+        lightingShader.setFloat("spotLight.linear", 0.09);
+        lightingShader.setFloat("spotLight.quadratic", 0.032);
+        lightingShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+        lightingShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+        
+        //裁剪空间和观察空间的变换
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH/(float)SCR_HEIGHT, 0.1f, 100.f);
         glm::mat4 view = camera.GetViewMatrix();
         lightingShader.setMatrix4fv("projection", projection);
         lightingShader.setMatrix4fv("view", view);
         
+        //世界空间的变换
         glm::mat4 model = glm::mat4(1.0f);
         lightingShader.setMatrix4fv("model", model);
         
-        //多个纹理单元需要进行先激活后绑定
+        //纹理单元的激活和绑定
         glad_glActiveTexture(GL_TEXTURE0);
         glad_glBindTexture(GL_TEXTURE_2D,diffuseMap);
         glad_glActiveTexture(GL_TEXTURE1);
         glad_glBindTexture(GL_TEXTURE_2D,specularMap);
         
+        //渲染灯的位置
+        glad_glBindVertexArray(cubeVAO); // VAO的绑定逻辑还是不明白，不知道到底该写在哪里， 多个物体绘制的时候 写在for循环外边。
         for (int i = 0; i < 10 ; i++) {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
@@ -201,7 +251,6 @@ int main()
             model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
             lightingShader.setMatrix4fv("model", model);
             //渲染cube
-            glad_glBindVertexArray(cubeVAO);
             glad_glDrawArrays(GL_TRIANGLES,0,36);
         }
         
@@ -210,15 +259,14 @@ int main()
         lampShader.setMatrix4fv("projection", projection);
         lampShader.setMatrix4fv("view", view);
       
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, lightPos);
-
-        model = glm::scale(model, glm::vec3(0.2f));
-        lampShader.setMatrix4fv("model", model);
-       
-       
         glad_glBindVertexArray(lightVAO);
-        glad_glDrawArrays(GL_TRIANGLES, 0, 36);
+        for (int i = 0; i < 4; i++) {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, pointLightPositions[i]);
+            model = glm::scale(model, glm::vec3(0.2f));
+            lampShader.setMatrix4fv("model", model);
+            glad_glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
         
         //渲染逻辑 end ——————————————————————————————————————————
         
