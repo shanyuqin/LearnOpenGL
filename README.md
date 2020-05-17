@@ -350,6 +350,18 @@ Assimp将场景载入为一些列的结点（Node），每个节点包含了场�
 ### 导入3D模型
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/14-1.png" width="50%">
 
+# 高级OpenGL
+## 15.深度测试
+通过`glad_glEnable(GL_DEPTH_TEST)`开启深度测试，深度测试可以通过`glDepthFunc(GL_ALWAYS);`设置判断条件。
+默认为GL_LESS 在片段深度值小于缓冲的深度值时通过测试.
+当这是为GL_ALWAYS的时候，深度测试将会永远通过，所以最后绘制的片段总是会渲染在 之前绘制的片段的上面。比如我们绘制两个箱子，放在地板上，因为我们是最后绘制地板，如果参数为GL_ALWAYS，那么地板的片段将会覆盖所有的箱子片段。
+GL_LESS:
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/15-0.png" width="50%">
+GL_ALWAYS：
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/15-1.png" width="50%">
+
+
+对于深度值精度的计算这里概念还是很模糊
 
 
 
