@@ -7,11 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		94AA217E2471527100F2BF66 /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = 94AA217D2471527100F2BF66 /* glad.c */; };
+		94AA2180247152A300F2BF66 /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 94AA217F247152A300F2BF66 /* libglfw.3.3.dylib */; };
 		94DFC823246BE414002629B6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94DFC822246BE414002629B6 /* main.cpp */; };
-		94DFC82A246BE421002629B6 /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = 94DFC829246BE421002629B6 /* glad.c */; };
 		94DFC82D246BE427002629B6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94DFC82C246BE427002629B6 /* OpenGL.framework */; };
-		94DFC82F246BE437002629B6 /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 94DFC82E246BE437002629B6 /* libglfw.3.3.dylib */; };
-		94DFC830246BE437002629B6 /* libglfw.3.3.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 94DFC82E246BE437002629B6 /* libglfw.3.3.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -30,7 +29,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				94DFC830246BE437002629B6 /* libglfw.3.3.dylib in Embed Libraries */,
 			);
 			name = "Embed Libraries";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -38,12 +36,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		94AA217C2471527100F2BF66 /* shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader.h; sourceTree = "<group>"; };
+		94AA217D2471527100F2BF66 /* glad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = glad.c; sourceTree = "<group>"; };
+		94AA217F247152A300F2BF66 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../usr/local/Cellar/glfw/3.3.2/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
 		94DFC81F246BE414002629B6 /* OpenGL04 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = OpenGL04; sourceTree = BUILT_PRODUCTS_DIR; };
 		94DFC822246BE414002629B6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		94DFC829246BE421002629B6 /* glad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = glad.c; path = "../../OpenGL03——定义自己的着色器类/OpenGL03/glad.c"; sourceTree = "<group>"; };
 		94DFC82C246BE427002629B6 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		94DFC82E246BE437002629B6 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../usr/local/Cellar/glfw/3.3.2/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
-		94DFC834246BE9EF002629B6 /* shader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = shader.h; path = "../../OpenGL03——定义自己的着色器类/OpenGL03/shader.h"; sourceTree = "<group>"; };
 		94DFC835246BEF3A002629B6 /* stb_image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
 		94DFC836246BF787002629B6 /* container.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = container.jpg; sourceTree = "<group>"; };
 		94DFC837246BFB66002629B6 /* shader.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = shader.fs; sourceTree = "<group>"; };
@@ -57,7 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				94DFC82F246BE437002629B6 /* libglfw.3.3.dylib in Frameworks */,
+				94AA2180247152A300F2BF66 /* libglfw.3.3.dylib in Frameworks */,
 				94DFC82D246BE427002629B6 /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -85,9 +83,9 @@
 		94DFC821246BE414002629B6 /* OpenGL04 */ = {
 			isa = PBXGroup;
 			children = (
-				94DFC834246BE9EF002629B6 /* shader.h */,
-				94DFC829246BE421002629B6 /* glad.c */,
 				94DFC83E246C0BA7002629B6 /* awesomeface.png */,
+				94AA217D2471527100F2BF66 /* glad.c */,
+				94AA217C2471527100F2BF66 /* shader.h */,
 				94DFC841246C0F1D002629B6 /* awesomefacehaveAlpha.png */,
 				94DFC822246BE414002629B6 /* main.cpp */,
 				94DFC835246BEF3A002629B6 /* stb_image.h */,
@@ -101,7 +99,7 @@
 		94DFC82B246BE426002629B6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				94DFC82E246BE437002629B6 /* libglfw.3.3.dylib */,
+				94AA217F247152A300F2BF66 /* libglfw.3.3.dylib */,
 				94DFC82C246BE427002629B6 /* OpenGL.framework */,
 			);
 			name = Frameworks;
@@ -166,7 +164,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				94DFC823246BE414002629B6 /* main.cpp in Sources */,
-				94DFC82A246BE421002629B6 /* glad.c in Sources */,
+				94AA217E2471527100F2BF66 /* glad.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
