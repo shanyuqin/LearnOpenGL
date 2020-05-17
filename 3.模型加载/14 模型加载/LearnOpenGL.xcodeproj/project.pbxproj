@@ -75,6 +75,8 @@
 		94AA21702470882500F2BF66 /* back.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = back.jpg; sourceTree = "<group>"; };
 		94AA21712470882500F2BF66 /* front.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = front.jpg; sourceTree = "<group>"; };
 		94AA21722470882500F2BF66 /* hand_dif.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hand_dif.png; sourceTree = "<group>"; };
+		94AA21772470F86200F2BF66 /* lamp.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = lamp.vs; sourceTree = "<group>"; };
+		94AA21782470F86200F2BF66 /* lamp.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = lamp.fs; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,8 @@
 				94AA21512470882500F2BF66 /* nanosuit */,
 				94AA213A2470858800F2BF66 /* model.fs */,
 				94AA21392470858800F2BF66 /* model.vs */,
+				94AA21782470F86200F2BF66 /* lamp.fs */,
+				94AA21772470F86200F2BF66 /* lamp.vs */,
 				94AA212A2470516200F2BF66 /* glad.c */,
 				94AA2130247051AE00F2BF66 /* stb_image.h */,
 				94AA212E247051AE00F2BF66 /* Camera.h */,

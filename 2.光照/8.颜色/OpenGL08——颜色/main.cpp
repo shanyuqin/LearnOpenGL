@@ -41,7 +41,7 @@ float lastFrame = 0.0f; // 上一帧的时间
 
 
 //lighiting
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f); 
 
 int main()
 {

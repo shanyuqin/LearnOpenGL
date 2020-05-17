@@ -70,7 +70,9 @@ public:
         unsigned int diffuseNr = 1;
         unsigned int specularNr = 1;
         unsigned int normalNr = 1;
-        unsigned int heightNr = 1;
+        unsigned int ambientNr = 1;
+        unsigned int shininessNr = 1;
+        
         
         for (unsigned int i = 0; i < textures.size(); i++) {
             glad_glActiveTexture(GL_TEXTURE0+i);
@@ -82,9 +84,11 @@ public:
                 number = to_string(specularNr++);
             else if(name == "texture_normal")
                 number = to_string(normalNr++);
-            else if(name == "texture_height")
-                number = to_string(heightNr++);
-            
+            else if(name == "texture_ambient")
+                number = to_string(ambientNr++);
+            else if(name == "texture_shininess")
+                number = to_string(shininessNr++);
+
             shader.setInt(name+number, i);
             glad_glBindTexture(GL_TEXTURE_2D, textures[i].id);
         }
@@ -124,12 +128,12 @@ private:
         // vertex texture coords
         glad_glEnableVertexAttribArray(2);
         glad_glVertexAttribPointer(2 ,2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
-        // vertex texture coords
+        // vertex tangent
         glad_glEnableVertexAttribArray(3);
-        glad_glVertexAttribPointer(3 ,3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
-        // vertex texture coords
+        glad_glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
+        // vertex bitangent
         glad_glEnableVertexAttribArray(4);
-        glad_glVertexAttribPointer(4 ,3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+        glad_glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
         
     }
 };

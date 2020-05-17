@@ -135,12 +135,15 @@ private:
         //镜面光贴图
         vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+        //镜面光贴图
+        vector<Texture> shininessMaps = loadMaterialTextures(material, aiTextureType_SHININESS, "texture_shininess");
+        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
         
-//        vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_NORMALS, "texture_normal");
-//        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-//
-//        vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_height");
-//        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+        vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_NORMALS, "texture_normal");
+        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+
+        vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_ambient");
+        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
         
         return Mesh(vertices, indices, textures);
     }
