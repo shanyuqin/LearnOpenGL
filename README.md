@@ -352,7 +352,13 @@ Assimp将场景载入为一些列的结点（Node），每个节点包含了场�
 
 # 高级OpenGL
 ## 15.深度测试
-通过`glad_glEnable(GL_DEPTH_TEST)`开启深度测试，深度测试可以通过`glDepthFunc(GL_ALWAYS);`设置判断条件。
+通过`glad_glEnable(GL_DEPTH_TEST)`开启深度测试。
+如果你启用了深度缓冲，你还应该每个渲染迭代之前使用`GL_DEPTH_BUFFER_BIT`来清除深度缓冲，否则你会仍在使用上一次渲染迭代中的写入的深度值：
+```
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+```
+可以通过`glDepthFunc(GL_ALWAYS);`设置深度测试函数，后边的参数可选如下
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/15-2.png" width="50%">
 默认为GL_LESS 在片段深度值小于缓冲的深度值时通过测试.
 当这是为GL_ALWAYS的时候，深度测试将会永远通过，所以最后绘制的片段总是会渲染在 之前绘制的片段的上面。比如我们绘制两个箱子，放在地板上，因为我们是最后绘制地板，如果参数为GL_ALWAYS，那么地板的片段将会覆盖所有的箱子片段。
 GL_LESS:
@@ -361,7 +367,79 @@ GL_ALWAYS：
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/15-1.png" width="50%">
 
 
-对于深度值精度的计算这里概念还是很模糊
+⚠️对于深度值精度的计算这里概念还是很模糊。
 
+## 16.模板测试
+对于一个3D物体，我们在不同的视角看去，它都会有一个边缘,如下面两个图片中绿色所示：
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/16-0.png" width="30%"><img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/16-1.png" width="30%">
+举一个我们最常见的关于它的使用场景，当我们玩儿一些RPG游戏的时候，用鼠标去点击一个NPC，这个NPC是一个选中状态，它周边会包围一个光圈，这个光圈一定是包围了当前这个3D的NPC所有的部分。其实就是所谓的物体轮廓。
 
+上述就是模板测试的概念了。那么具体如何使用？
+和深度测试一样通过`glad_glEnable(GL_STENCIL_TEST);`来开启模板测试。同样也要在每个渲染迭代之前使用`GL_STENCIL_BUFFER_BIT`来清楚模板缓冲。
+```
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+```
+除此之外还可通过另外两个函数，对模板缓冲应该通过还是失败，以及它应该如何影响模板缓冲，来进行一定控制。
+>glStencilFunc(GLenum func, GLint ref, GLuint mask)
+(*) func 设置模板测试函数 ，对已存储的模板值和后边的`ref`进行比较，可用选项和深度测试中的glDepthFunc方法的参数是一样的。
+(*) ref 设置了模板测试的参考值(Reference Value)。模板缓冲的内容将会与这个值进行比较
+(*) mask  设置一个掩码，它将会与参考值和储存的模板值在测试比较它们之前进行与(AND)运算。初始情况下所有位都为1。
+
+比如下边这个简单的例子：
+通过`glStencilFunc(GL_EQUAL, 1, 0xFF);`就可以进行控制，他会告诉OenGL，只要一个片段的模板值等于参考值1，片段就会通过测试并显示，否则丢弃。
+>因为一个模板值是8位的，一共有256种模板值， 用十六进制表示就是0x00 ~ 0xFF，这里设置掩码为0xFF。当设置为0x00的时候没以为写入模板缓冲时都会变成0，等于禁用了写入。默认为0xFF。
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/16-2.png" width="50%">
+
+`glStencilFunc`描述了OpenGL应该对模板缓冲内容做什么，而`glStencilOp`描述了应该如何更新缓冲。
+>glStencilOp(GLenum sfail, GLenum dpfail, GLenum dppass)
+(*) sfail 模板测试失败时采取的行为。
+(*) dpfail 模板测试通过，但深度测试失败时采取的行为。
+(*) dppass 模板测试和深度测试都通过时采取的行为。
+参数的可选值如下：
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/16-3.png" width="50%">
+默认情况下，三个参数都为`GL_KEEP`。即不修改模板缓冲。
+
+下面简单说了下箱子加上边框的整体过程，请结合代码观看。
+首先进行关于模板测试的初始配置，其实glad_glStencilFunc函数在这里的设置注释掉并没有影响整体运行后的效果，个人猜测该函数默认的设置也是GL_NOTEQUAL和1，0xFF为默认是知道的。
+```
+//    设置OpenGL的全局配置
+//深度测试
+glad_glEnable(GL_DEPTH_TEST);
+glad_glDepthFunc(GL_LESS);//默认就为GL_LESS
+//模板测试
+glad_glEnable(GL_STENCIL_TEST);
+glad_glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+//如果其中的一个测试失败了，我们什么都不做，我们仅仅保留当前储存在模板缓冲中的值。
+//如果模板测试和深度测试都通过了，那么我们希望将储存的模板值设置为参考值
+glad_glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+```
+这里我们调整了绘制的顺序，先来绘制了地板。
+因为我们只对两个箱子加上边框,地板还是正常绘制，所以需要让地板禁用模板缓冲的写入，通过设置掩码0x00来实现。
+```
+glad_glStencilMask(0x00);
+[绘制地板的代码]
+```
+这里开始进行边框绘制，这里可能会有人误以为我们只是单独绘制了边框，那么是不是需要一套边框的顶点坐标等等。。。其实这里的实现方式，也是绘制了一个立方体，只不过将这个立方体稍微放大了一点，然后这个边框立方体的 原点和箱子的原点是一样的，如果不做任何处理，我们可以想像一下我们是将一个小箱子放到了一个大箱子里了。
+先来绘制我们的箱子,绘制之前进行模板测试的设置，让箱子整体都通过模板测试。ref为1,缓冲的更新策略为GL_REPLACE,所以只要深度和模板都通过测试，就将模板值设为了1，启动模板缓冲写入。
+```
+glad_glStencilFunc(GL_ALWAYS, 1, 0xFF);
+glad_glStencilMask(0xFF);
+【绘制两个箱子的代码】
+```
+>启动/关闭写入 你其实可以想象成对箱子的一个采样过程，后边绘制边框立方体是需要这个采样结果，并不需要再次采样。
+绘制边框的立方体，因为之前对整个的箱子设置了模板缓冲，并将模板值设为了1，接下来只要模板值不为1才对边框立方体 进行绘制。
+绘制完之后 还需要将一些设置还原为初始值。
+```
+glad_glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+glad_glStencilMask(0x00);
+//关闭深度测试来绘制边框，
+glad_glDisable(GL_DEPTH_TEST);
+【绘制边框的立方体】
+//还原模板掩码的初始值
+glad_glStencilMask(0xFF);
+//重新允许深度测试
+glad_glEnable(GL_DEPTH_TEST);
+```
+这里在绘制边框立方体的时候，因为对立方体进行了放大，那么对于底部的边框绘制一定会在地板下面，这时，我们在绘制之前先关闭深度测试，绘制之后再还原，就解决了这个问题。
+#
 
