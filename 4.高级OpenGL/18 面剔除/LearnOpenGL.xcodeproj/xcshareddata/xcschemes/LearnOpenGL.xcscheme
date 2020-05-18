@@ -36,7 +36,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "YES"
-      customWorkingDirectory = "/Users/shanyuqin/Desktop/LearnOpenGL/4.&#x9ad8;&#x7ea7;OpenGL/17.2 &#x6df7;&#x5408;_&#x6e32;&#x67d3;&#x534a;&#x900f;&#x660e;/LearnOpenGL"
+      customWorkingDirectory = "/Users/shanyuqin/Desktop/LearnOpenGL/4.&#x9ad8;&#x7ea7;OpenGL/18 &#x9762;&#x5254;&#x9664;/LearnOpenGL"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"

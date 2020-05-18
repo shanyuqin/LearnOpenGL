@@ -484,3 +484,11 @@ glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
 排序透明物体的一种方法是，从观察者视角获取物体的距离。这可以通过计算摄像机位置向量和物体的位置向量之间的距离所获得。接下来我们把距离和它对应的位置向量存储到一个STL库的map数据结构中。map会自动根据键值(Key)对它的值排序，所以只要我们添加了所有的位置，并以它的距离作为键，它们就会自动根据距离值排序了。
 
 ## 18.面剔除
+只需要通过`glad_glEnable(GL_CULL_FACE);`开启
+`glCullFace`改变需要剔除的面的类型。初始值为GL_BACK
+(*)GL_BACK：只剔除背向面。
+(*)GL_FRONT：只剔除正向面。
+(*)GL_FRONT_AND_BACK：剔除正向面和背向面。
+`glFrontFace`改变正向面三角形的环绕方式，默认为逆时针环绕顺序
+(*)GL_CCW：逆时针环绕顺序。
+(*)GL_CW：顺时针环绕顺序。

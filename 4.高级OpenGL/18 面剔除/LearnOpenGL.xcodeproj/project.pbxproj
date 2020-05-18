@@ -36,6 +36,8 @@
 		94AA219C2471569700F2BF66 /* shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader.h; sourceTree = "<group>"; };
 		94AA21A12471812400F2BF66 /* marble.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = marble.jpg; sourceTree = "<group>"; };
 		94AA21A22471812400F2BF66 /* metal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = metal.png; sourceTree = "<group>"; };
+		94F9FB122472F99A00415852 /* cull_face.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = cull_face.vs; sourceTree = "<group>"; };
+		94F9FB132472F9A600415852 /* cull_face.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = cull_face.fs; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,8 @@
 			isa = PBXGroup;
 			children = (
 				94AA218D247155D200F2BF66 /* main.cpp */,
+				94F9FB122472F99A00415852 /* cull_face.vs */,
+				94F9FB132472F9A600415852 /* cull_face.fs */,
 				94AA219A2471569700F2BF66 /* Camera.h */,
 				94AA219B2471569700F2BF66 /* glad.c */,
 				94AA219C2471569700F2BF66 /* shader.h */,
