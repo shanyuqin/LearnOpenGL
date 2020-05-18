@@ -51,6 +51,11 @@ int main()
         return -1;
     }
     
+    //    开启深度测试
+    glad_glEnable(GL_DEPTH_TEST);
+
+    glad_glDepthFunc(GL_ALWAYS);
+    
     Shader shader("depth_test.vs","depth_test.fs");
     float cubeVertices[] = {
         // positions          // texture Coords
@@ -155,7 +160,7 @@ int main()
         shader.use();
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 5.0f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         shader.setMatrix4fv("view", view);
         shader.setMatrix4fv("projection", projection);
         // cubes
@@ -222,10 +227,6 @@ bool initSomething(GLFWwindow * window) {
         cout<<"failed to initialize glad"<<endl;
         return false;
     }
-//    开启深度测试
-    glad_glEnable(GL_DEPTH_TEST);
-    
-    glad_glDepthFunc(GL_LESS);
 
     return true;
 }
