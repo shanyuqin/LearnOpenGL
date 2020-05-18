@@ -447,5 +447,38 @@ glad_glEnable(GL_DEPTH_TEST);
 因为这里有两个shader，你之前绘制箱子和地板用的shader，通过glad_glUseProgram进行了激活，当你绘制边框箱子的时候你又激活了另外一个shaderSingleColor。着色器源代码更换了。
 
 ## 17.混合
+混合其实就是细线物体透明度的一种技术。
+### 1.部分片段全透明 
+有些图片并不需要半透明，它的alpha通道在某一个片段就是透明的，我们可以直接在片段着色器中通过alpha通道值的判断，然后使用`discard`直接丢弃该片段，不再对它进行处理。
+注意，当采样纹理的边缘的时候，OpenGL会对边缘的值和纹理下一个重复的值进行插值（因为我们将它的环绕方式设置为了GL_REPEAT。这通常是没问题的，但是由于我们使用了透明值，纹理图像的顶部将会与底部边缘的纯色值进行插值。这样的结果是一个半透明的有色边框，你可能会看见它环绕着你的纹理四边形。要想避免这个，每当你alpha纹理的时候，请将纹理的环绕方式设置为GL_CLAMP_TO_EDGE。下图就是未设置的结果
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/17-0.png" width="50%">
 
+### 2.1 半透明。
+首先需要开启混合 `glad_glEnable(GL_BLEND)` 。
+它的计算方法如下：
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/17-2.png" width="50%">
+混合也有一些相关函数。
+>glBlendFunc(GLenum sfactor, GLenum dfactor)
+(*)sfactor 源因子值。指定了alpha值对源颜色的影响。
+(*)dfactor 目标因子值。指定了alpha值对目标颜色的影响。
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/17-1.png" width="50%">
+注意：常数颜色向量C¯constant可以通过glBlendColor函数来另外设置。
 
+也可以使用`glBlendFuncSeparate`函数为RGB和alpha通道分别设置不同的选项。如：
+```
+glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+```
+除此之外`glBlendEquation(GLenum mode)`函数还可以设置运算符
+(*)GL_FUNC_ADD：默认选项，将两个分量相加：C¯result=Src+Dst。
+(*)GL_FUNC_SUBTRACT：将两个分量相减： C¯result=Src−Dst。
+(*)GL_FUNC_REVERSE_SUBTRACT：将两个分量相减，但顺序相反：C¯result=Dst−Src。
+通常我们都可以省略调用glBlendEquation，因为GL_FUNC_ADD对大部分的操作来说都是我们希望的混合方程
+
+### 2.2 绘制顺序
+
+绘制一个有不透明和透明物体的场景的时候，大体原则：
+1. 先绘制所有不透明的物体。
+2. 对所有透明的物体排序，先绘制最远，再绘制最近。
+3. 按顺序绘制所有透明的物体。
+
+排序透明物体的一种方法是，从观察者视角获取物体的距离。这可以通过计算摄像机位置向量和物体的位置向量之间的距离所获得。接下来我们把距离和它对应的位置向量存储到一个STL库的map数据结构中。map会自动根据键值(Key)对它的值排序，所以只要我们添加了所有的位置，并以它的距离作为键，它们就会自动根据距离值排序了。

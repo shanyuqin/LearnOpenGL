@@ -36,9 +36,9 @@
 		94AA219C2471569700F2BF66 /* shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader.h; sourceTree = "<group>"; };
 		94AA21A12471812400F2BF66 /* marble.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = marble.jpg; sourceTree = "<group>"; };
 		94AA21A22471812400F2BF66 /* metal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = metal.png; sourceTree = "<group>"; };
-		94F9FB082472637F00415852 /* stencil_test.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = stencil_test.fs; sourceTree = "<group>"; };
-		94F9FB092472639100415852 /* stencil_test.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = stencil_test.vs; sourceTree = "<group>"; };
-		94F9FB0A247263A000415852 /* stencil_single_color.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = stencil_single_color.fs; sourceTree = "<group>"; };
+		94F9FB0E2472D50600415852 /* blend_sort.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = blend_sort.vs; sourceTree = "<group>"; };
+		94F9FB0F2472D51200415852 /* blend_sort.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = blend_sort.fs; sourceTree = "<group>"; };
+		94F9FB102472D5BB00415852 /* window.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = window.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,11 +79,11 @@
 				94AA219B2471569700F2BF66 /* glad.c */,
 				94AA219C2471569700F2BF66 /* shader.h */,
 				94AA21992471569700F2BF66 /* stb_image.h */,
-				94F9FB082472637F00415852 /* stencil_test.fs */,
-				94F9FB092472639100415852 /* stencil_test.vs */,
-				94F9FB0A247263A000415852 /* stencil_single_color.fs */,
+				94F9FB0E2472D50600415852 /* blend_sort.vs */,
+				94F9FB0F2472D51200415852 /* blend_sort.fs */,
 				94AA21A12471812400F2BF66 /* marble.jpg */,
 				94AA21A22471812400F2BF66 /* metal.png */,
+				94F9FB102472D5BB00415852 /* window.png */,
 			);
 			path = LearnOpenGL;
 			sourceTree = "<group>";
@@ -274,7 +274,6 @@
 		94AA2192247155D200F2BF66 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				HEADER_SEARCH_PATHS = (
 					"${glm_header}",
@@ -292,7 +291,6 @@
 		94AA2193247155D200F2BF66 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				HEADER_SEARCH_PATHS = (
 					"${glm_header}",

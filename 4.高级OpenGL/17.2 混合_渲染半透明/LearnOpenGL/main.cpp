@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <map>
 #include "shader.h"
 #include "Camera.h"
 
@@ -51,19 +52,13 @@ int main()
         return -1;
     }
     
-    //    设置OpenGL的全局配置
-    //深度测试
+    //    开启深度测试
     glad_glEnable(GL_DEPTH_TEST);
-    glad_glDepthFunc(GL_LESS);//默认就为GL_LESS
-    //模板测试
-    glad_glEnable(GL_STENCIL_TEST);
-//    glad_glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-    //如果其中的一个测试失败了，我们什么都不做，我们仅仅保留当前储存在模板缓冲中的值。
-    //如果模板测试和深度测试都通过了，那么我们希望将储存的模板值设置为参考值
-    glad_glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+    // 开启混合
+    glad_glEnable(GL_BLEND);
+    glad_glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
-    Shader shader("stencil_test.vs","stencil_test.fs");
-    Shader shaderSingleColor("stencil_test.vs","stencil_single_color.fs");
+    Shader shader("blend_sort.vs","blend_sort.fs");
     float cubeVertices[] = {
         // positions          // texture Coords
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -119,6 +114,16 @@ int main()
         -5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
          5.0f, -0.5f, -5.0f,  2.0f, 2.0f
     };
+    float transparentVertices[] = {
+         // positions         // texture Coords
+         0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+         0.0f, -0.5f,  0.0f,  0.0f,  1.0f,
+         1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+
+         0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+         1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+         1.0f,  0.5f,  0.0f,  1.0f,  0.0f
+     };
     
     unsigned int cubeVAO, cubeVBO;
     glad_glGenVertexArrays(1, &cubeVAO);
@@ -131,7 +136,6 @@ int main()
     glad_glEnableVertexAttribArray(1);
     glad_glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glad_glBindVertexArray(0);
-    
     // plane VAO
     unsigned int planeVAO, planeVBO;
     glad_glGenVertexArrays(1, &planeVAO);
@@ -144,10 +148,35 @@ int main()
     glad_glEnableVertexAttribArray(1);
     glad_glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glad_glBindVertexArray(0);
-  
+    // transparent VAO
+    unsigned int transparentVAO, transparentVBO;
+    glad_glGenVertexArrays(1, &transparentVAO);
+    glad_glGenBuffers(1, &transparentVBO);
+    glad_glBindVertexArray(transparentVAO);
+    glad_glBindBuffer(GL_ARRAY_BUFFER, transparentVBO);
+    glad_glBufferData(GL_ARRAY_BUFFER, sizeof(transparentVertices), transparentVertices, GL_STATIC_DRAW);
+    glad_glEnableVertexAttribArray(0);
+    glad_glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glad_glEnableVertexAttribArray(1);
+    glad_glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glad_glBindVertexArray(0);
+
     unsigned int cubeTexture  = loadTexture("marble.jpg");
     unsigned int floorTexture = loadTexture("metal.png");
+    unsigned int transparentTexture = loadTexture("window.png");
 
+    
+    vector<glm::vec3> windows
+    {
+        glm::vec3(-1.5f, 0.0f, -0.48f),
+        glm::vec3( 1.5f, 0.0f, 0.51f),
+        glm::vec3( 0.0f, 0.0f, 0.7f),
+        glm::vec3(-0.3f, 0.0f, -2.3f),
+        glm::vec3( 0.5f, 0.0f, -0.6f)
+    };
+
+
+    
     shader.use();
     shader.setInt("texture1", 0);
     
@@ -161,37 +190,23 @@ int main()
         //      键盘输入
         processInput(window);
         
+        std::map<float,glm::vec3>sorted;
+        for (unsigned int i = 0; i < windows.size(); i++) {
+            float distance = glm::length(camera.Position - windows[i]);
+            sorted[distance] = windows[i];
+        }
+        
         
         glad_glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //渲染逻辑 start ——————————————————————————————————————————
-        //设置坐标空间的变换
-        shaderSingleColor.use();
+        shader.use();
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        shaderSingleColor.setMatrix4fv("view", view);
-        shaderSingleColor.setMatrix4fv("projection", projection);
-        
-        shader.use();
         shader.setMatrix4fv("view", view);
         shader.setMatrix4fv("projection", projection);
-        
-        //因为我们只对两个箱子加上边框,地板还是正常绘制，所以需要让地板禁用模板缓冲的写入，通过设置掩码0x00来实现
-        glad_glStencilMask(0x00);
-        // 绘制地板
-        glad_glBindVertexArray(planeVAO);
-        glad_glBindTexture(GL_TEXTURE_2D, floorTexture);
-        shader.setMatrix4fv("model", glm::mat4(1.0f));
-        glad_glDrawArrays(GL_TRIANGLES, 0, 6);
-        glad_glBindVertexArray(0);
-       
-        //第一步
-        //让箱子整体都通过模板测试。ref为1,缓冲的更新策略为GL_REPLACE,所以只要深度和模板都通过测试，就将模板值设为了1.
-        glad_glStencilFunc(GL_ALWAYS, 1, 0xFF);
-        //启动模板缓冲写入
-        glad_glStencilMask(0xFF);
-        // 绘制箱子
+        // cubes
         glad_glBindVertexArray(cubeVAO);
         glad_glActiveTexture(GL_TEXTURE0);
         glad_glBindTexture(GL_TEXTURE_2D, cubeTexture);
@@ -203,34 +218,21 @@ int main()
         model = glm::translate(model, glm::vec3(2.0f, 0.0001f, 0.0f));//0.0001是为了防止深度冲突
         shader.setMatrix4fv("model", model);
         glad_glDrawArrays(GL_TRIANGLES, 0, 36);
-      
-        //第二步
-        //GL_NORMAL保证了我们只会绘制箱子上模板值不为1的部分
-        glad_glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-        //禁止模板缓冲写入，并且需要在边框绘制之后重新启动深度测试
-        glad_glStencilMask(0x00);
-        //关闭深度测试来绘制边框，
-        glad_glDisable(GL_DEPTH_TEST);
-        shaderSingleColor.use();
-        float scale = 1.1;
-        //绘制边框
-        glad_glBindVertexArray(cubeVAO);
-        glad_glBindTexture(GL_TEXTURE_2D, cubeTexture);
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
-        model = glm::scale(model, glm::vec3(scale, scale, scale));
-        shaderSingleColor.setMatrix4fv("model", model);
-        glad_glDrawArrays(GL_TRIANGLES, 0, 36);
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(scale, scale, scale));
-        shaderSingleColor.setMatrix4fv("model", model);
-        glad_glDrawArrays(GL_TRIANGLES, 0, 36);
+        // floor
+        glad_glBindVertexArray(planeVAO);
+        glad_glBindTexture(GL_TEXTURE_2D, floorTexture);
+        shader.setMatrix4fv("model", glm::mat4(1.0f));
+        glad_glDrawArrays(GL_TRIANGLES, 0, 6);
         glad_glBindVertexArray(0);
-        //还原模板掩码的初始值
-        glad_glStencilMask(0xFF);
-        //重新允许深度测试
-        glad_glEnable(GL_DEPTH_TEST);
+        //windows
+        glad_glBindVertexArray(transparentVAO);
+        glad_glBindTexture(GL_TEXTURE_2D,transparentTexture);
+        for (std::map<float, glm::vec3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it) {
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, it->second);
+            shader.setMatrix4fv("model", model);
+            glad_glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
         
         //渲染逻辑 end ——————————————————————————————————————————
         
@@ -277,6 +279,7 @@ bool initSomething(GLFWwindow * window) {
         cout<<"failed to initialize glad"<<endl;
         return false;
     }
+
     return true;
 }
 
