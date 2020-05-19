@@ -28,7 +28,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 // 屏幕宽高
-const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_WIDTH = 1200;
 const unsigned int SCR_HEIGHT = 600;
 
 
@@ -182,20 +182,20 @@ int main()
     glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     //2.附加一个深度和模板缓冲纹理到帧缓冲对象中
-    unsigned int textureDepthbuffer;
-    glad_glGenTextures(1, &textureDepthbuffer);
-    glad_glBindTexture(GL_TEXTURE_2D, textureDepthbuffer);
-    glad_glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
-    glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, textureDepthbuffer, 0);
-    glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-    glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+//    unsigned int textureDepthbuffer;
+//    glad_glGenTextures(1, &textureDepthbuffer);
+//    glad_glBindTexture(GL_TEXTURE_2D, textureDepthbuffer);
+//    glad_glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
+//    glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, textureDepthbuffer, 0);
+//    glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+//    glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     
     //3.为深度和模板创建一个渲染缓冲 将这一部分注释掉其实图像就是一个没有开启深度测试的样子
-//    unsigned int rbo;
-//    glad_glGenRenderbuffers(1, &rbo);
-//    glad_glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-//    glad_glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
-//    glad_glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+    unsigned int rbo;
+    glad_glGenRenderbuffers(1, &rbo);
+    glad_glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glad_glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
+    glad_glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
     
     //准备工作做完，现在来check一下帧缓冲的完整性
     if (glad_glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
@@ -253,7 +253,7 @@ int main()
         //将帧缓冲中的内容作为纹理渲染到屏幕中
         glad_glBindFramebuffer(GL_FRAMEBUFFER,0);
         glad_glDisable(GL_DEPTH_TEST);
-        glad_glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glad_glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glad_glClear(GL_COLOR_BUFFER_BIT);
         
         screenShader.use();

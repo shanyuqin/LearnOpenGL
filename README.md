@@ -660,3 +660,7 @@ glad_glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_
 glad_glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 ```
 此时注释掉上图中的2，就可以得到正常的效果了。
+
+我发现我的并不和不使用帧缓冲的效果完全一样，下边两张图上图为使用帧缓冲后的结果，有点儿斜啊。。。。
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/19-1.png" width="40%">
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/19-2.png" width="40%">

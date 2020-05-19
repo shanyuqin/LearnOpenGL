@@ -40,6 +40,7 @@
 		94F9FB392473CD9E00415852 /* container.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = container.jpg; sourceTree = "<group>"; };
 		94F9FB782474221000415852 /* frameBuffers_screen.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = frameBuffers_screen.vs; sourceTree = "<group>"; };
 		94F9FB792474222200415852 /* frameBuffers_screen.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = frameBuffers_screen.fs; sourceTree = "<group>"; };
+		94F9FB7B2474493400415852 /* marble.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = marble.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +85,7 @@
 				94AA21A02471805700F2BF66 /* frameBuffers.fs */,
 				94F9FB782474221000415852 /* frameBuffers_screen.vs */,
 				94F9FB792474222200415852 /* frameBuffers_screen.fs */,
+				94F9FB7B2474493400415852 /* marble.jpg */,
 				94AA21A22471812400F2BF66 /* metal.png */,
 				94F9FB392473CD9E00415852 /* container.jpg */,
 			);
