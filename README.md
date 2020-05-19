@@ -564,4 +564,13 @@ glEnableVertexAttribArray(0);
 
 >除此之外，对于VAO的使用也是OpenGL core模式要求的。
 以上就是对缓冲内容的一个总结吧，也是过了一段时间之后的重新理解。接下来是一些书籍中得到的补充。
+首先来看一个缓冲类型的表:
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/补充1-1.png" width="50%">
+OpenGL使用数据的时候其实就是根据这些类型，去找当前绑定到这些类型的数据的。
 
+有绑定就有解绑，解绑的方式就是将`0`作为你想要绑定到当前类型的数据，其实就是等于解绑了，之前看到15.深度测试那里进行绑定的时候为什么会有`glad_glBindVertexArray(0);`这种操作了。其实就是对其他数据进行操作的时候 ，仍然需要对当前这种类型进行重新绑定，所以先将之前的数据进行解绑了。但我们并不需要这么麻烦，可以在下一次操作其他数据的时候直接进行新数据的绑定`glad_glBindVertexArray(newVAO)`，`0`这个步骤只是先进行了一个清零的操作。
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/补充1-2.png" width="50%">
+对于这个缓冲类型我觉得说成缓冲目标更好，因为很多物体都有类型，有种n对1的感觉，类型是物体的属性。而说成目标，我觉得是1对1，获取当前目标，就是当前目标存放的数据，后续使用缓冲目标来代替。
+
+不同的缓冲目标可能在使用时有不同的附加操作，比如之前的纹理在使用纹理的时候需要通过`glad_glglad_glActiveTexture(GL_TEXTURE0)`来激活对应的纹理单元，就好像使用顶点数据需要通过 `glad_glEnableVertexAttribArray(0)`来启用。
+>蓝宝书第八章讲了几种缓冲对象的使用。如像素缓冲PBO，纹理缓冲txBO，帧缓冲FBO
