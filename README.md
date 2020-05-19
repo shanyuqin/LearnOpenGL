@@ -552,18 +552,18 @@ glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 glEnableVertexAttribArray(0);
 ```
 我们会发现这个函数并没有传入顶点缓冲对象（VBO）的参数，那它是如何知道从哪个VBO获取数据的呢？
-这就在`glVertexAttribPointer`调用之前，我们通过`glBindBuffer`绑定的`GL_ARRAY_BUFFER`类型的缓冲VBO来决定的。现在我们已经定义了OpenGL该如何解释顶点数据，接下来需要使用这些顶点数据。而使用的之后我们需要进行顶点属性的启用。即通过`glEnableVertexAttribArray`,参数是顶点数据的位置，即顶点着色器中入参的layout(position = 0)这个`position`,
+这就在`glVertexAttribPointer`调用之前，我们通过`glBindBuffer`绑定的`GL_ARRAY_BUFFER`类型的缓冲VBO来决定的。现在我们已经定义了OpenGL该如何解释顶点数据，接下来需要使用这些顶点数据。而使用的之后我们需要进行顶点属性的启用。即通过`glEnableVertexAttribArray`,参数是顶点数据的位置，即顶点着色器中入参的layout(location = 0)这个`location`,
 
 >顶点数组对象VAO，到底是用来做什么的？
 从字面上看，它是一个数组，它会按照在CPU中定义的顶点数据，按照顺序去存储相对应的VBO。就是就是提供指定顶点属性数据的一种高效，灵活的手段。
-而我们只需要做的就是在对VBO进行第一步操作之前 先进行绑定`glad_glBindVertexArray(VAO)`。
+而我们只需要做的就是在生成VBO（`glad_glGenBuffers(1, &VBO);`）之后，进行VAO绑定`glad_glBindVertexArray(VAO)`,后续进行VBO的操作，那么相应的数据就保存在了VAO上。
 绑定之后一个VAO会存储以下内容：
 (*)glEnableVertexAttribArray和glDisableVertexAttribArray的调用。
 (*)通过glVertexAttribPointer设置的顶点属性配置。
 (*)通过glVertexAttribPointer调用与顶点属性关联的顶点缓冲对象。
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/补充1-0.png" width="50%">
 
-从图中的VBO2我们可以理解`glEnableVertexAttribArray`对于参数也就是那个`position`取值的理解。顶点数据是按照每一种的每一个来去存储的，比如有位置，纹理，那么VAO[0]存储的就是位置，VAO[1]存储的就是纹理。
+从图中的VBO2我们可以理解`glEnableVertexAttribArray`对于参数也就是那个`location`取值的理解。顶点数据是按照每一种的每一个来去存储的，比如有位置，纹理，那么VAO[0]存储的就是位置，VAO[1]存储的就是纹理。
 
 之前我有过疑问，就是为什么好多地方都进行了`glad_glBindVertexArray(VAO)`的调用，现在明白了，比如你会在渲染循环中看到它被调用，因为当你渲染一个箱子和一个地板，他们都有各自不同的VAO，当你去进行绘制物体之前，你必须要绑定对应的VAO，来获取正确的数据。
 

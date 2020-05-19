@@ -38,6 +38,8 @@
 		94AA21A02471805700F2BF66 /* frameBuffers.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = frameBuffers.fs; sourceTree = "<group>"; };
 		94AA21A22471812400F2BF66 /* metal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = metal.png; sourceTree = "<group>"; };
 		94F9FB392473CD9E00415852 /* container.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = container.jpg; sourceTree = "<group>"; };
+		94F9FB782474221000415852 /* frameBuffers_screen.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = frameBuffers_screen.vs; sourceTree = "<group>"; };
+		94F9FB792474222200415852 /* frameBuffers_screen.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = frameBuffers_screen.fs; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,8 @@
 				94AA21992471569700F2BF66 /* stb_image.h */,
 				94AA219F24717FF600F2BF66 /* frameBuffers.vs */,
 				94AA21A02471805700F2BF66 /* frameBuffers.fs */,
+				94F9FB782474221000415852 /* frameBuffers_screen.vs */,
+				94F9FB792474222200415852 /* frameBuffers_screen.fs */,
 				94AA21A22471812400F2BF66 /* metal.png */,
 				94F9FB392473CD9E00415852 /* container.jpg */,
 			);

@@ -55,6 +55,7 @@ int main()
     glad_glEnable(GL_DEPTH_TEST);
     
     Shader shader("frameBuffers.vs","frameBuffers.fs");
+    Shader screenShader("frameBuffers_screen.vs","frameBuffers_screen.fs");
     float cubeVertices[] = {
         // positions          // texture Coords
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -101,7 +102,7 @@ int main()
     };
     
     float planeVertices[] = {
-        
+        // positions          // texture Coords
          5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
         -5.0f, -0.5f,  5.0f,  0.0f, 0.0f,
         -5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
@@ -110,7 +111,19 @@ int main()
         -5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
          5.0f, -0.5f, -5.0f,  2.0f, 2.0f
     };
+    //一个使用标准化设备坐标填充屏幕的四边形的顶点属性，
+    float quadVertices[] = {
+        // positions   // texCoords
+        -1.0f,  1.0f,  0.0f, 1.0f,
+        -1.0f, -1.0f,  0.0f, 0.0f,
+         1.0f, -1.0f,  1.0f, 0.0f,
+
+        -1.0f,  1.0f,  0.0f, 1.0f,
+         1.0f, -1.0f,  1.0f, 0.0f,
+         1.0f,  1.0f,  1.0f, 1.0f
+    };
     
+    // cube VAO
     unsigned int cubeVAO, cubeVBO;
     glad_glGenVertexArrays(1, &cubeVAO);
     glad_glGenBuffers(1, &cubeVBO);
@@ -121,7 +134,7 @@ int main()
     glad_glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glad_glEnableVertexAttribArray(1);
     glad_glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glad_glBindVertexArray(0);
+    
     // plane VAO
     unsigned int planeVAO, planeVBO;
     glad_glGenVertexArrays(1, &planeVAO);
@@ -133,13 +146,54 @@ int main()
     glad_glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glad_glEnableVertexAttribArray(1);
     glad_glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glad_glBindVertexArray(0);
+    
+    //screen quad VAO
+    unsigned int quadVAO,quadVBO;
+    glad_glGenVertexArrays(1, &quadVAO);
+    glad_glGenBuffers(1,&quadVBO);
+    glad_glBindVertexArray(quadVAO);
+    glad_glBindBuffer(GL_ARRAY_BUFFER,quadVBO);
+    glad_glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+    glad_glEnableVertexAttribArray(0);
+    glad_glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glad_glEnableVertexAttribArray(1);
+    glad_glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
   
     unsigned int cubeTexture  = loadTexture("container.jpg");
     unsigned int floorTexture = loadTexture("metal.png");
 
     shader.use();
     shader.setInt("texture1", 0);
+    
+    screenShader.use();
+    screenShader.setInt("screenTexture", 0);
+    /**********************  本节重点 start ******************************/
+    //生成帧缓冲并绑定
+    unsigned int framebuffer;
+    glad_glGenFramebuffers(1, &framebuffer);
+    glad_glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    //创建一个颜色附件
+    unsigned int textureColorbuffer;
+    glad_glGenTextures(1, &textureColorbuffer);
+    glad_glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
+    glad_glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
+    //为深度和模板创建一个渲染缓冲
+    unsigned int rbo;
+    glad_glGenRenderbuffers(1, &rbo);
+    glad_glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glad_glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
+    glad_glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+    //准备工作做完，现在来check一下帧缓冲的完整性
+    if (glad_glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        cout<<"ERROR::FRAMEBUFFER:: 帧缓冲不完整!"<<endl;
+    }
+    //清除了帧缓冲的绑定，其实可以不写，类似于glad_glBindVertexArray(0)
+    glad_glBindFramebuffer(GL_FRAMEBUFFER,0);
+    
+    /**********************  本节重点  end  ******************************/
     
 //    渲染循环
     while (!glfwWindowShouldClose(window)) {
@@ -151,10 +205,14 @@ int main()
         //      键盘输入
         processInput(window);
         
+        //绑定帧缓冲，来保证后续的渲染，是渲染到帧缓冲中的
+        glad_glBindFramebuffer(GL_FRAMEBUFFER,framebuffer);
+        glad_glEnable(GL_DEPTH_TEST);//开启深度测试，这是一个循环，后边对帧缓冲的颜色纹理需要关闭深度测试，这里不开启的话，下一次渲染箱子和立方体的时候就不会进行深度测试了。
         
         glad_glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //渲染逻辑 start ——————————————————————————————————————————
+        //像以前一样处理箱子和地板，将其绘制到帧缓冲framebuffer中
         shader.use();
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = camera.GetViewMatrix();
@@ -180,6 +238,17 @@ int main()
         glad_glDrawArrays(GL_TRIANGLES, 0, 6);
         glad_glBindVertexArray(0);
         
+        //将帧缓冲中的内容作为纹理渲染到屏幕中
+        glad_glBindFramebuffer(GL_FRAMEBUFFER,0);
+        glad_glDisable(GL_DEPTH_TEST);
+        glad_glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glad_glClear(GL_COLOR_BUFFER_BIT);
+        
+        screenShader.use();
+        glad_glBindVertexArray(quadVAO);
+        glad_glBindTexture(GL_TEXTURE_2D,textureColorbuffer);
+        glad_glDrawArrays(GL_TRIANGLES, 0, 6);
+        
         //渲染逻辑 end ——————————————————————————————————————————
         
         glfwSwapBuffers(window);
@@ -188,8 +257,10 @@ int main()
     
     glad_glDeleteVertexArrays(1, &cubeVAO);
     glad_glDeleteVertexArrays(1, &planeVAO);
+    glad_glDeleteVertexArrays(1, &quadVAO);
     glad_glDeleteBuffers(1, &cubeVBO);
     glad_glDeleteBuffers(1, &planeVBO);
+    glad_glDeleteBuffers(1, &quadVBO);
 
     
     glfwTerminate();
