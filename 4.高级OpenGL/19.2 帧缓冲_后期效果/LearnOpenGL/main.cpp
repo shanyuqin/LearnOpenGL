@@ -52,6 +52,7 @@ int main()
     
     //    开启深度测试
     glad_glEnable(GL_DEPTH_TEST);
+    glad_glEnable(GL_DITHER);
     
     Shader shader("frameBuffers.vs","frameBuffers.fs");
     Shader screenShader("frameBuffers_screen.vs","frameBuffers_screen.fs");
@@ -205,7 +206,8 @@ int main()
     glad_glBindFramebuffer(GL_FRAMEBUFFER,0);
     
     /**********************  本节重点  end  ******************************/
-    
+    //线框模式
+//    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 //    渲染循环
     while (!glfwWindowShouldClose(window)) {
 
@@ -252,7 +254,7 @@ int main()
         //将帧缓冲中的内容作为纹理渲染到屏幕中
         glad_glBindFramebuffer(GL_FRAMEBUFFER,0);
         glad_glDisable(GL_DEPTH_TEST);
-        glad_glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glad_glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glad_glClear(GL_COLOR_BUFFER_BIT);
         
         screenShader.use();

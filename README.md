@@ -664,3 +664,4 @@ glad_glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_R
 我发现我的并不和不使用帧缓冲的效果完全一样，下边两张图上图为使用帧缓冲后的结果，有点儿斜啊。。。。
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/19-1.png" width="40%">
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/19-2.png" width="40%">
+这个问题通过查阅相关书籍，涉及到抖动和抗锯齿的一些概念，应该是可以解决的。但是单独通过`glad_glEnable(GL_DITHER);`开启抖动没有解决。目前先不管了，后续看到抗锯齿的时候再来处理
