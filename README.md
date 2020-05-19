@@ -1,6 +1,6 @@
 # LearnOpenGL
 [LearnOpenGL CN](https://learnopengl-cn.github.io)的学习笔记
-
+##### <a href="1">关于缓冲区知识的总结和补充</a>
 # 入门
 ## 1.环境搭建并创建一个窗口
 下边的逻辑保证我们的程序在我们主动关闭之前，能够不断的绘制图像，接受用户输入。这个while循环能在我们让GLFW退出之前一直保持运行。
@@ -36,6 +36,8 @@ glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 ```
 //第一个参数代表顶点着色器中layout (location = 0) in vec3 aPos;中的location，代表一个位置
 //第二个参数代表这个aPos参数占多少位 XYZ  占了三位。
+//第三个参数是数据类型
+//第四个参数定义了我们是否希望数据呗标准化，即无符号数的标准化是在0到1，有符号数的标准化是-1到1之间
 //第五个参数叫做步长(Stride)，其实就是一个顶点数据占用的内存大小
 //最后一个个参数实际上就是一个偏移量，因为添加了颜色之后每一个顶点 包括6个属性 XYZ RGB ，对于每一个顶点来说，位置在前，所以偏移量为0，
 //而颜色属性紧随位置数据之后，所以偏移量是3*sizeof(float)。
@@ -492,3 +494,52 @@ glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
 `glFrontFace`改变正向面三角形的环绕方式，默认为逆时针环绕顺序
 (*)GL_CCW：逆时针环绕顺序。
 (*)GL_CW：顺时针环绕顺序。
+
+
+##  <a name="1">关于缓冲区知识的总结和补充</a>
+
+首先从我们熟悉的顶点缓冲对象（VBO）作为入口吧。
+在CPU定了顶点数据之后，我们需要将它发送给图形管线的第一个处理阶段：顶点着色器，用于在`GPU`上创建`内存`来存储我们的顶点数据。VBO就是负责管理这个内存，他会在GPU内存（显存）中储存大量顶点。使用缓冲对象的优点在于，我们可以一次性的发送一大批数据到显卡上，而顶点着色器对于显卡内存中的顶点访问是个非常快的过程。而CPU把数据发送到显卡相对来说比较慢。
+通常我们使用`glGenBuffers`函数来配合一个缓冲ID生成一个缓冲对象。
+```
+unsigned int VBO;
+glGenBuffers(1, &VBO);
+```
+再通过`glBindBuffer`来绑定缓冲的类型，比如这里生成的是一个顶点缓冲对象，它对应的类型`GL_ARRAY_BUFFER`
+```
+glBindBuffer(GL_ARRAY_BUFFER, VBO);  
+```
+这一刻起，我们我们使用的任何`GL_ARRAY_BUFFER`类型的缓冲都是在对VBO来进行操作，除非后边又有了新的绑定。
+然后再调用`glBufferData`函数，它是专门用来把用户定义的数据复制到当前绑定缓冲的函数。
+```
+glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+```
+第一个参数是类型，第二个是传输数据的大小，第三个是数据的内存位置，第四个参数指定了我们希望显卡如何管理给定的数据，有三种形式：
+(*)GL_STATIC_DRAW ：数据不会或几乎不会改变。
+(*)GL_DYNAMIC_DRAW：数据会被改变很多。
+(*)GL_STREAM_DRAW ：数据每次绘制时都会改变。
+
+此时顶点缓冲对象中已经有了对象，接下来顶点着色器对数据进行解析，使用的函数如下，对于参数的定义之前已经有写过了
+```
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+glEnableVertexAttribArray(0);
+```
+我们会发现这个函数并没有传入顶点缓冲对象（VBO）的参数，那它是如何知道从哪个VBO获取数据的呢？
+这就在`glVertexAttribPointer`调用之前，我们通过`glBindBuffer`绑定的`GL_ARRAY_BUFFER`类型的缓冲VBO来决定的。现在我们已经定义了OpenGL该如何解释顶点数据，接下来需要使用这些顶点数据。而使用的之后我们需要进行顶点属性的启用。即通过`glEnableVertexAttribArray`,参数是顶点数据的位置，即顶点着色器中入参的layout(position = 0)这个`position`,
+
+>顶点数组对象VAO，到底是用来做什么的？
+从字面上看，它是一个数组，它会按照在CPU中定义的顶点数据，按照顺序去存储相对应的VBO。
+而我们只需要做的就是在对VBO进行第一步操作之前 先进行绑定`glad_glBindVertexArray(VAO)`。
+绑定之后一个VAO会存储以下内容：
+(*)glEnableVertexAttribArray和glDisableVertexAttribArray的调用。
+(*)通过glVertexAttribPointer设置的顶点属性配置。
+(*)通过glVertexAttribPointer调用与顶点属性关联的顶点缓冲对象。
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/补充1-0.png" width="50%">
+
+从图中的VBO2我们可以理解`glEnableVertexAttribArray`对于参数也就是那个`position`取值的理解。顶点数据是按照每一种的每一个来去存储的，比如有位置，纹理，那么VAO[0]存储的就是位置，VAO[1]存储的就是纹理。
+
+之前我有过疑问，就是为什么好多地方都进行了`glad_glBindVertexArray(VAO)`的调用，现在明白了，比如你会在渲染循环中看到它被调用，因为当你渲染一个箱子和一个地板，他们都有各自不同的VAO，当你去进行绘制物体之前，你必须要绑定对应的VAO，来获取正确的数据。
+
+>除此之外，对于VAO的使用也是OpenGL core模式要求的。
+以上就是对缓冲内容的一个总结吧，也是过了一段时间之后的重新理解。接下来是一些书籍中得到的补充。
+
