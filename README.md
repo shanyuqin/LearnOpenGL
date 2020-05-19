@@ -1,8 +1,28 @@
 # LearnOpenGL
 [LearnOpenGL CN](https://learnopengl-cn.github.io)的学习笔记
-##### <a href="#1">关于缓冲区知识的总结和补充</a>
+##### <a href="#1"></a>
+##### <a href="#1">1.环境搭建并创建一个窗口</a>
+##### <a href="#2">2.画一个橙色三角形 </a>
+##### <a href="#3">3.着色器</a>
+##### <a href="#4">4.纹理</a>
+##### <a href="#5">5.矩阵/变换/向量/GLM</a>
+##### <a href="#6">6.坐标系统</a>
+##### <a href="#7">7.FPS摄像机</a>
+##### <a href="#8">8.颜色</a>
+##### <a href="#9">9.基础光照</a>
+##### <a href="#10">10.材质</a>
+##### <a href="#11">11.光照贴图</a>
+##### <a href="#12">12.投光物</a>
+##### <a href="#13">13.多光源</a>
+##### <a href="#14">14.模型加载</a>
+##### <a href="#15">15.深度测试</a>
+##### <a href="#16">16.模板测试</a>
+##### <a href="#17">17.混合</a>
+##### <a href="#18">18.面剔除</a>
+##### <a href="#19">关于缓冲区知识的总结和补充</a> 
+
 # 入门
-## 1.环境搭建并创建一个窗口
+## <a href="#1">1.环境搭建并创建一个窗口</a> 
 下边的逻辑保证我们的程序在我们主动关闭之前，能够不断的绘制图像，接受用户输入。这个while循环能在我们让GLFW退出之前一直保持运行。
 ```
 while(!glfwWindowShouldClose(window))
@@ -13,8 +33,8 @@ while(!glfwWindowShouldClose(window))
 ```
 glfwWindowShouldClose函数在我们每次循环的开始前检查一次GLFW是否被要求退出
 glfwPollEvents函数检查有没有触发什么事件（比如键盘输入、鼠标移动等）、更新窗口状态，并调用对应的回调函数（可以通过回调方法手动设置）。
-glfwSwapBuffers函数会交换颜色缓冲（它是一个储存着GLFW窗口每一个像素颜色值的大缓冲），它在这一迭代中被用来绘制，并且将会作为输出显示在屏幕上。
-## 2.画一个橙色三角形 
+glfwSwapBuffers函数会交换颜色缓冲（它是一个储存着GLFW窗口每一个像素颜色值的大缓冲），它在这一迭代中被用来绘制，并且将会作为输出显示在屏幕上。 
+##  <a name="2">2.画一个橙色三角形</a>
 [参考](https://learnopengl-cn.github.io/01%20Getting%20started/04%20Hello%20Triangle/)
 >顶点数组对象：Vertex Array Object，VAO
 >顶点缓冲对象：Vertex Buffer Object，VBO
@@ -84,13 +104,14 @@ aTexCoord,位置为2，需要2个float来表示，步长为8*sizeof(float)，每
 #### VAO
 它其实是一个数组里边存储多个VBO。要想使用VAO，要做的只是使用glBindVertexArray绑定VAO。
 
-## 3.1着色器uniform的使用
+##  <a name="3">3.着色器</a>
+### 3.1着色器uniform的使用
 主要介绍uniform的使用。
-## 3.2为着色器添加更多属性
+### 3.2为着色器添加更多属性
 为顶点着色器添加了一个颜色属性。每一个顶点就包括了六个数据分别是 XYZRGB
 定义顶点着色器的时候看到的layout （location = 0） in vec3 XXX;这里的location其实就是这个顶点向量的一个相对位置。
 具体可以看代码中顶点着色器源代码的注释。
-## 3.3定义自己的着色器类
+### 3.3定义自己的着色器类
 通过字符串编写着色器的源代码，然后在进行编译和管理，比较麻烦，这里写了一个类来从硬盘中读取着色器，然后编译并链接他们，以及进行错误检查。
 但是对于ifstream的文件读取这里只能使用绝对路径么？这里是一个疑问
 补充：
@@ -98,7 +119,7 @@ Product > Scheme > Edit Scheme > Run> Options Use custom working directory打勾
 但是也看到通过自己写相关类进行处理的方式但是我没有编译成功，有看明白的希望能联系我[连接](https://www.jianshu.com/p/749a781fef94)
 
 
-## 4.纹理
+##  <a name="4">4.纹理</a>
 ### 纹理单元
 当我们只使用一个模板的纹理时，我们在片段着色器源文件中声明了uniform 的采样器(sampler2D)变量，但是我们并没有使用glUniform对其进行赋值。原因是什么？
 一个纹理的位置值通常成为一个纹理单元。一个纹理的默认纹理单元是0，它是默认已经被激活的。所以只使用一个纹理的时候不需要进行赋值和激活。
@@ -122,7 +143,7 @@ glad_glBindTexture(GL_TEXTURE_2D, texture2);
 有alpha通道的情况是这样的
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/4-0.png" width="50%">
 
-## 5.矩阵/变换/向量/GLM
+##  <a name="5">5.矩阵/变换/向量/GLM</a>
 主要是一些线性代数的内容，矩阵和向量。然后还有GLM库的使用。
 安装glm
 `brew install glm`
@@ -151,7 +172,8 @@ trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/5-1.png" width="50%">
 
 线性代数的内容可以参考[【官方双语/合集】线性代数的本质 - ](https://www.bilibili.com/video/BV1ys411472E)
-## 6.坐标系统
+
+##  <a name="6">6.坐标系统 </a>
 理解局部空间，世界空间，观察空间，裁剪空间，屏幕空间
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/6-0.png" width="50%">
 ### 局部空间
@@ -174,7 +196,7 @@ view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), //摄像机位置
 裁剪空间实际上就是通过 投影矩阵 做了一下处理，给了一个透视的效果。
 
 
-## 7.FPS摄像机
+##  <a name="7">7.FPS摄像机 </a>
 关于[自由移动](https://learnopengl-cn.github.io/01%20Getting%20started/09%20Camera/)通过下边的方式生成了一个lookAt矩阵
 ```
 glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
@@ -203,7 +225,7 @@ view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
 
 # 光照
-## 8.颜色 
+##  <a name="8">8.颜色 </a>
 #### 对于你能看到的颜色的理解。
 我们在现实生活中看到某一物体的颜色并不是这个物体真正拥有的颜色，而是它所反射的(Reflected)颜色。换句话说，那些不能被物体所吸收(Absorb)的颜色（被拒绝的颜色）就是我们能够感知到的物体的颜色。
 
@@ -219,7 +241,7 @@ view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 结果你看到的其实是一个深绿色的颜色。
 >glm::vec3 result = lightColor * toyColor; // = (0.0f, 0.5f, 0.0f);
 
-## 9.基础光照
+##  <a name="9">9.基础光照</a>
 对于颜色的计算是基于一个光照模型，这些光照模型都是基于我们对光的物理特性的理解。
 这里主要讲了冯氏光照模型(Phong Lighting Model)。
 冯氏光照模型的主要结构由3个分量组成：环境(Ambient)、漫反射(Diffuse)和镜面(Specular)光照。
@@ -308,14 +330,14 @@ FragColor = vec4((ambient + diffuse + specular) * objectColor, 1.0);
 一个物体的反光度越高，反射光的能力越强，散射得越少，高光点就会越小
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/9-2.png" width="50%">
 
-## 10.材质
+##  <a name="10">10.材质</a>
 基础光照中讲了一个光照模型，也就是冯氏光照模型。
 它的主要结构由3个分量组成：环境(Ambient)、漫反射(Diffuse)和镜面(Specular)光照。
 除了光源可以从这三方面考虑。一个物体的材质也是需要从这三方面考虑的。
 
-## 11.光照贴图
+##  <a name="11">11.光照贴图</a>
 其实就是添加了纹理
-## 12.投光物
+##  <a name="12">12.投光物</a>
 ### 定向光
 也叫平行光（太阳）。假设光源处于无限远处的模型时，看起来好像所有的光都来自于同一个方向。
 ### 点光源。
@@ -329,12 +351,12 @@ FragColor = vec4((ambient + diffuse + specular) * objectColor, 1.0);
 ### 聚光
 聚光是位于环境中某个位置的光源，它只朝一个特定方向而不是所有方向照射光线。这样的结果就是只有在聚光方向的特定半径内的物体才会被照亮，其它的物体都会保持黑暗。聚光很好的例子就是路灯或手电筒。
 聚光需要对边缘部分进行平缓/软化的处理。[参考](https://learnopengl-cn.github.io/02%20Lighting/05%20Light%20casters/)
-## 13.多光源
+##  <a name="13">13.多光源</a>
 其实就是对多个光源的光照模型的结果进行相加（影响的因子是相乘如衰减，多个光源的叠加结果是相加）。
 
 
 # 模型加载
-## 14.模型加载
+##  <a name="14">14.模型加载</a>
 ### Assimp
 模型文件文件格式有很多，它们之间通常并没有一个通用的结构。所以如果我们想从这些文件格式中导入模型的话，我们必须要去自己对每一种需要导入的文件格式写一个导入器。
 Assimp（一个模型导入库）这个库就是专门处理这个问题的。
@@ -353,7 +375,7 @@ Assimp将场景载入为一些列的结点（Node），每个节点包含了场�
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/14-1.png" width="50%">
 
 # 高级OpenGL
-## 15.深度测试
+##  <a name="15">15.深度测试</a>
 通过`glad_glEnable(GL_DEPTH_TEST)`开启深度测试。
 如果你启用了深度缓冲，你还应该每个渲染迭代之前使用`GL_DEPTH_BUFFER_BIT`来清除深度缓冲，否则你会仍在使用上一次渲染迭代中的写入的深度值：
 ```
@@ -371,7 +393,7 @@ GL_ALWAYS：
 
 ⚠️对于深度值精度的计算这里概念还是很模糊。
 
-## 16.模板测试
+##  <a name="16">16.模板测试</a>
 对于一个3D物体，我们在不同的视角看去，它都会有一个边缘,如下面两个图片中绿色所示：
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/16-0.png" width="30%"><img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/16-1.png" width="30%">
 举一个我们最常见的关于它的使用场景，当我们玩儿一些RPG游戏的时候，用鼠标去点击一个NPC，这个NPC是一个选中状态，它周边会包围一个光圈，这个光圈一定是包围了当前这个3D的NPC所有的部分。其实就是所谓的物体轮廓。
@@ -448,7 +470,7 @@ glad_glEnable(GL_DEPTH_TEST);
 1.如果我试图后绘制地板，会发现整个地板的纹理消失了，全部为边框立方体的绿色。这是为什么？
 因为这里有两个shader，你之前绘制箱子和地板用的shader，通过glad_glUseProgram进行了激活，当你绘制边框箱子的时候你又激活了另外一个shaderSingleColor。着色器源代码更换了。
 
-## 17.混合
+##  <a name="17">17.混合</a>
 混合其实就是细线物体透明度的一种技术。
 ### 1.部分片段全透明 
 有些图片并不需要半透明，它的alpha通道在某一个片段就是透明的，我们可以直接在片段着色器中通过alpha通道值的判断，然后使用`discard`直接丢弃该片段，不再对它进行处理。
@@ -485,7 +507,7 @@ glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
 
 排序透明物体的一种方法是，从观察者视角获取物体的距离。这可以通过计算摄像机位置向量和物体的位置向量之间的距离所获得。接下来我们把距离和它对应的位置向量存储到一个STL库的map数据结构中。map会自动根据键值(Key)对它的值排序，所以只要我们添加了所有的位置，并以它的距离作为键，它们就会自动根据距离值排序了。
 
-## 18.面剔除
+##  <a name="18">18.面剔除</a>
 只需要通过`glad_glEnable(GL_CULL_FACE);`开启
 `glCullFace`改变需要剔除的面的类型。初始值为GL_BACK
 (*)GL_BACK：只剔除背向面。
@@ -496,7 +518,7 @@ glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
 (*)GL_CW：顺时针环绕顺序。
 
 
-##  <a name="1">关于缓冲区知识的总结和补充</a>
+##  <a name="19">关于缓冲区知识的总结和补充</a>
 
 首先从我们熟悉的顶点缓冲对象（VBO）作为入口吧。
 在CPU定了顶点数据之后，我们需要将它发送给图形管线的第一个处理阶段：顶点着色器，用于在`GPU`上创建`内存`来存储我们的顶点数据。VBO就是负责管理这个内存，他会在GPU内存（显存）中储存大量顶点。使用缓冲对象的优点在于，我们可以一次性的发送一大批数据到显卡上，而顶点着色器对于显卡内存中的顶点访问是个非常快的过程。而CPU把数据发送到显卡相对来说比较慢。
