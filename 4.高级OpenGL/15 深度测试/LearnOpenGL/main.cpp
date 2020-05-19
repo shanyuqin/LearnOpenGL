@@ -54,7 +54,7 @@ int main()
     //    开启深度测试
     glad_glEnable(GL_DEPTH_TEST);
 
-    glad_glDepthFunc(GL_ALWAYS);
+    glad_glDepthFunc(GL_LESS);
     
     Shader shader("depth_test.vs","depth_test.fs");
     float cubeVertices[] = {
@@ -137,7 +137,7 @@ int main()
     glad_glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glad_glBindVertexArray(0);
   
-    unsigned int cubeTexture  = loadTexture("marble.jpg");
+    unsigned int cubeTexture  = loadTexture("container.jpg");
     unsigned int floorTexture = loadTexture("metal.png");
 
     shader.use();
