@@ -53,7 +53,7 @@ int main()
     
     Shader ourShader("model.vs","model.fs");
     Shader lampShader("lamp.vs","lamp.fs");
-    Model ourModel("nanosuit/nanosuit.obj");
+    Model ourModel("objects/cyborg/cyborg.obj");
   
     //添加灯光
     float vertices[] = {

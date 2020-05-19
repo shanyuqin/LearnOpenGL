@@ -34,6 +34,10 @@ uniform vec3 viewPos;
 
 void main()
 {
+    FragColor = texture(texture_ambient1, TexCoords)
+    
+    /**添加光照
+    
         //环境光照
         vec3 ambient = light.ambient * vec3(texture(texture_ambient1, TexCoords));
         
@@ -66,20 +70,7 @@ void main()
 
         FragColor = vec4((ambient + diffuse + specular)*attenuation, 1.0);
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    */
     
     ;
 }
