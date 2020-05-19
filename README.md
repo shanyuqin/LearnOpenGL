@@ -33,7 +33,11 @@ while(!glfwWindowShouldClose(window))
 ```
 glfwWindowShouldClose函数在我们每次循环的开始前检查一次GLFW是否被要求退出
 glfwPollEvents函数检查有没有触发什么事件（比如键盘输入、鼠标移动等）、更新窗口状态，并调用对应的回调函数（可以通过回调方法手动设置）。
-glfwSwapBuffers函数会交换颜色缓冲（它是一个储存着GLFW窗口每一个像素颜色值的大缓冲），它在这一迭代中被用来绘制，并且将会作为输出显示在屏幕上。 
+glfwSwapBuffers函数会交换颜色缓冲（它是一个储存着GLFW窗口每一个像素颜色值的大缓冲），它在这一迭代中被用来绘制，并且将会作为输出显示在屏幕上。
+要想理解`glfwSwapBuffers`的作用，首先要知道一个`双缓冲`的概念。
+对于图像的绘制，他不是一下子整屏幕的绘制出来的，是按照从左到右，从上到下的顺序逐个像素绘制出来的，对于单缓冲而言，图像并不是一下子全屏幕的呈现出来的，而是一步一步生成的。为了解决这个问题，我们使用双缓冲，解决了这个问题，这个方案有两个缓冲区，前台缓冲区和后台缓冲区，所有的渲染都发生在后台缓冲区，渲染完了之后通过`glfwSwapBuffers`来交换两个缓冲区的位置，那么之前的前台缓冲区就变成了下一帧的后台缓冲区。
+
+
 ##  <a name="2">2.画一个橙色三角形</a>
 [参考](https://learnopengl-cn.github.io/01%20Getting%20started/04%20Hello%20Triangle/)
 >顶点数组对象：Vertex Array Object，VAO
@@ -102,7 +106,7 @@ aTexCoord,位置为2，需要2个float来表示，步长为8*sizeof(float)，每
 
 
 #### VAO
-它其实是一个数组里边存储多个VBO。要想使用VAO，要做的只是使用glBindVertexArray绑定VAO。
+它其实是一个数组里边存储多个VBO。要想使用VAO，要做的只是使用glBindVertexArray绑定VAO。提供指定顶点属性数据的一种高效，灵活的手段。
 
 ##  <a name="3">3.着色器</a>
 ### 3.1着色器uniform的使用
@@ -550,7 +554,7 @@ glEnableVertexAttribArray(0);
 这就在`glVertexAttribPointer`调用之前，我们通过`glBindBuffer`绑定的`GL_ARRAY_BUFFER`类型的缓冲VBO来决定的。现在我们已经定义了OpenGL该如何解释顶点数据，接下来需要使用这些顶点数据。而使用的之后我们需要进行顶点属性的启用。即通过`glEnableVertexAttribArray`,参数是顶点数据的位置，即顶点着色器中入参的layout(position = 0)这个`position`,
 
 >顶点数组对象VAO，到底是用来做什么的？
-从字面上看，它是一个数组，它会按照在CPU中定义的顶点数据，按照顺序去存储相对应的VBO。
+从字面上看，它是一个数组，它会按照在CPU中定义的顶点数据，按照顺序去存储相对应的VBO。就是就是提供指定顶点属性数据的一种高效，灵活的手段。
 而我们只需要做的就是在对VBO进行第一步操作之前 先进行绑定`glad_glBindVertexArray(VAO)`。
 绑定之后一个VAO会存储以下内容：
 (*)glEnableVertexAttribArray和glDisableVertexAttribArray的调用。
