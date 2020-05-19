@@ -1,6 +1,6 @@
 # LearnOpenGL
 [LearnOpenGL CN](https://learnopengl-cn.github.io)的学习笔记
-##### <a href="1">关于缓冲区知识的总结和补充</a>
+##### <a href="#1">关于缓冲区知识的总结和补充</a>
 # 入门
 ## 1.环境搭建并创建一个窗口
 下边的逻辑保证我们的程序在我们主动关闭之前，能够不断的绘制图像，接受用户输入。这个while循环能在我们让GLFW退出之前一直保持运行。
