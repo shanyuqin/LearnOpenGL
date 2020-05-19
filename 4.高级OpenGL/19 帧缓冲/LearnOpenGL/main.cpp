@@ -172,25 +172,37 @@ int main()
     unsigned int framebuffer;
     glad_glGenFramebuffers(1, &framebuffer);
     glad_glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    //创建一个颜色附件
+    
     unsigned int textureColorbuffer;
+    //1.附加一个颜色缓冲附件
     glad_glGenTextures(1, &textureColorbuffer);
     glad_glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
     glad_glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
     glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-    glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
-    //为深度和模板创建一个渲染缓冲
-    unsigned int rbo;
-    glad_glGenRenderbuffers(1, &rbo);
-    glad_glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-    glad_glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
-    glad_glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+    //2.附加一个深度和模板缓冲纹理到帧缓冲对象中
+    unsigned int textureDepthbuffer;
+    glad_glGenTextures(1, &textureDepthbuffer);
+    glad_glBindTexture(GL_TEXTURE_2D, textureDepthbuffer);
+    glad_glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
+    glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, textureDepthbuffer, 0);
+    glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glad_glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    
+    //3.为深度和模板创建一个渲染缓冲 将这一部分注释掉其实图像就是一个没有开启深度测试的样子
+//    unsigned int rbo;
+//    glad_glGenRenderbuffers(1, &rbo);
+//    glad_glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+//    glad_glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
+//    glad_glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+    
     //准备工作做完，现在来check一下帧缓冲的完整性
     if (glad_glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         cout<<"ERROR::FRAMEBUFFER:: 帧缓冲不完整!"<<endl;
     }
-    //清除了帧缓冲的绑定，其实可以不写，类似于glad_glBindVertexArray(0)
+
+    //解绑帧缓冲，保证我们不会不小心渲染到错误的帧缓冲上。
     glad_glBindFramebuffer(GL_FRAMEBUFFER,0);
     
     /**********************  本节重点  end  ******************************/

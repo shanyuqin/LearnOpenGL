@@ -573,10 +573,90 @@ glEnableVertexAttribArray(0);
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/补充1-1.png" width="50%">
 OpenGL使用数据的时候其实就是根据这些类型，去找当前绑定到这些类型的数据的。
 
-有绑定就有解绑，解绑的方式就是将`0`作为你想要绑定到当前类型的数据，其实就是等于解绑了，之前看到`15.深度测试`那里进行绑定的时候为什么会有`glad_glBindVertexArray(0);`这种操作了。其实就是对其他数据进行操作的时候 ，仍然需要对当前这种类型进行重新绑定，所以先将之前的数据进行解绑了。但我们并不需要这么麻烦，可以在下一次操作其他数据的时候直接进行新数据的绑定`glad_glBindVertexArray(newVAO)`，`0`这个步骤只是先进行了一个清零的操作。
+有绑定就有解绑，解绑的方式就是将`0`作为你想要绑定到当前类型的数据，其实就是等于解绑了，之前看到<a href="#15">15.深度测试</a>那里进行绑定的时候为什么会有`glad_glBindVertexArray(0);`这种操作了。其实就是对其他数据进行操作的时候 ，仍然需要对当前这种类型进行重新绑定，所以先将之前的数据进行解绑了。但我们并不需要这么麻烦，可以在下一次操作其他数据的时候直接进行新数据的绑定`glad_glBindVertexArray(newVAO)`，`0`这个步骤只是先进行了一个清零的操作。
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/补充1-2.png" width="50%">
 对于这个缓冲类型我觉得说成缓冲目标更好，因为很多物体都有类型，有种n对1的感觉，类型是物体的属性。而说成目标，我觉得是1对1，获取当前目标，就是当前目标存放的数据，后续使用缓冲目标来代替。
 不同的缓冲目标可能在使用时有不同的附加操作，比如之前的纹理在使用纹理的时候需要通过`glad_glglad_glActiveTexture(GL_TEXTURE0)`来激活对应的纹理单元，就好像使用顶点数据需要通过 `glad_glEnableVertexAttribArray(0)`来启用。
 >蓝宝书第八章讲了几种缓冲对象的使用。如像素缓冲PBO，纹理缓冲txBO，帧缓冲FBO
 
 ##  <a name="19">19.帧缓冲</a>
+帧缓冲的概念 ：其实就是对我们看到的一帧画面做的缓冲，而这一帧画面是通过之前涉及到的用于写入颜色值的颜色缓冲，用于写入深度信息的深度缓冲，和允许我们根据一些条件丢弃特定片段的模板缓冲的结合。
+
+我们之前做的所有操作，都是在`默认帧缓冲`的`渲染缓冲`上进行的。默认的帧缓冲是在创建窗口的时候生成和配置的（GLFW帮我们做了。）`渲染缓冲`稍后进行说明。
+
+这个过程说的直白一点儿，就是比如你要交一个画画作业，你先在一张白纸上进行人物轮廓的勾画，然后画身体各个部位，然后处理一些高光阴影，然后上色，最终在这张白纸上完成了这幅画，这时候你去复印了一份，将复印件当成了作业完成了上交。
+
+那么这么做到底有什么用呢？比如我们做一个类似镜子的东西，不使用帧缓冲等于是同一个物体画了两次，而使用帧缓冲，则可以直接把帧缓冲中的数据拿出来渲染。当然还有一些更多的作用，处理完之后其实他就是一张图片以纹理的形式，以窗口的四个顶点组成两个三角形(数据上是6个有两个重复的)图元绘制而成的，这样在片段着色器中可以简单的对其进行处理实现一些特效。
+
+### 创建帧缓冲
+这个步骤看过很多次了只是调用函数根据名字有所更改
+```
+unsigned int fbo;
+glad_glGenFramebuffers(1, &fbo);
+```
+绑定帧缓冲，在绑定之后所有的读取和写入帧缓冲的操作都将作用于当前你绑定的帧缓冲
+```
+glad_glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+//解绑当前帧缓冲，并重新激活默认帧缓冲
+glad_glBindFramebuffer(GL_FRAMEBUFFER, 0);
+```
+当然对于上边的第一个参数我们也可以选择`GL_READ_FRAMEBUFFER`或者`GL_DRAW_FRAMEBUFFER`，让读取目标和写入目标，分别绑定为不同的帧缓冲，但是绝大多数情况下我们用不到。
+
+相比较以前的一些缓冲类型，到这里就可以直接使用了，但是帧缓冲还有一些其他的事情要做，到这里帧缓冲是不完整的，一个完整的帧缓冲需要满足：
+(*)附加至少一个缓冲（颜色、深度或模板缓冲）
+(*)至少有一个颜色附件(Attachment)。
+(*)所有的附件都必须是完整的（保留了内存）。
+(*)每个缓冲都应该有相同的样本数。（样本是什么后续会介绍）。
+
+在完成上述的操作之后通过下面函数来判断是否完整。
+```
+if(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
+```
+之后你进行的所有渲染操作都将会渲染到当前你绑定的帧缓冲的附件中。当你渲染完箱子和地板之后，运行程序，主窗口中并没有你绘制的东西。因为你的箱子和地板并没有绘制到默认帧缓冲中。所以为了主窗口中能够显示，我们还需要做一些操作。
+重新激活默认帧缓冲。然后将上述帧缓冲中的附件，作为新的输入源输入到当前的默认帧缓冲中
+```
+glBindFramebuffer(GL_FRAMEBUFFER, 0);
+[渲染附件]
+```
+### 纹理附件
+其实就是将之前所有的渲染操作，作为一副图像写入到了这个纹理中，之所以选择纹理附件，是因为将纹理附件渲染到默认帧缓冲中，其实就是我们之前说的<a href="#4">4.纹理</a>中的内容，这样在着色器中可以很方便的使用。
+
+为帧缓冲创建纹理附件 和 创建一个普通的纹理附件一样，只不过宽高为屏幕的宽高，然后纹理的data传递了一个NULL，仅仅纷飞了内存，并没有填充。
+```
+glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+```
+然后,将它附加到帧缓冲上
+```
+glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+```
+这里只附加了一个缓冲，如果运行之后，我们会发现运行结果呈现的是一个没有开启深度测试的样子，因为当前这个帧缓冲没有附加，深度缓冲，当然也没有模板缓冲。我们可以在此基础上再附加一个缓冲。
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/19-0.png" width="50%">
+如图所示，只有1没有2，那么它就是一个没有开启深度测试的样子，有1有2就是一个正常的开启了深度测试的样子。
+
+附件类型：
+GL_COLOR_ATTACHMENT0 ：颜色缓冲附件类型，纹理格式是GL_RGB，0是一个位置类似GL_TEXTURE0，这说明我们可以添加多个颜色附件，比如GL_COLOR_ATTACHMENT1，GL_COLOR_ATTACHMENT2
+GL_DEPTH_ATTACHMENT：深度缓冲附件类型，纹理格式是GL_DEPTH_COMPONENT。
+GL_STENCIL_ATTACHMENT：模板缓冲附件类型，纹理格式是GL_STENCIL_INDEX。
+
+### 渲染缓冲对象附件
+对于这部分内容，[原文](https://learnopengl-cn.github.io/04%20Advanced%20OpenGL/05%20Framebuffers/)讲的很透彻了，我这里只写了点儿自己的理解。
+首先纹理其实是一张图，用之前的例子，交上去的作业是一张彩印后的版本，不是原件。
+而渲染缓冲对象，等于是复制了一份一模一样的原件，这里边会有这个画从无到有的所有部分，如何勾画轮廓，如何上色等等。
+这里有一个涉及到渲染缓冲对象的可读不可写的内容，需要看原文理解下。
+另外他的作用就是写入或者复制它的数据到其它缓冲中时是非常快的。因为渲染缓冲对象附加的好处是，它会将数据储存为OpenGL原生的渲染格式。
+由于渲染缓冲对象通常都是只写的，它们会经常用于深度和模板附件，因为大部分时间我们都不需要从深度和模板缓冲中读取值，只关心深度和模板测试。我们需要深度和模板值用于测试，但不需要对它们进行采样。
+创建和绑定
+```
+unsigned int rbo;
+glad_glGenRenderbuffers(1, &rbo);
+glad_glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+```
+创建一个深度和模板渲染缓冲对象可以通过调用glRenderbufferStorage函数来完成：
+```
+glad_glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
+```
+附加这个渲染缓冲对象到帧缓冲上
+```
+glad_glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+```
+此时注释掉上图中的2，就可以得到正常的效果了。
