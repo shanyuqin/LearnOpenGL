@@ -59,7 +59,7 @@ int main()
     
     Shader modelShader("model.vs", "model.fs");
     Shader skyboxShader("skybox.vs","skybox.fs");
-    Model ourModel("objects/nanosuit/nanosuit.obj");
+    Model ourModel("objects/nanosuit_reflection/nanosuit.obj");
     
     float skyboxVertices[] = {
         // positions
@@ -127,7 +127,7 @@ int main()
     unsigned int cubemapTexture = loadCubemap(faces);
     
     modelShader.use();
-    modelShader.setInt("skybox", 0);
+    modelShader.setInt("skybox", 4);
     skyboxShader.use();
     skyboxShader.setInt("skybox", 0);
     
@@ -168,7 +168,7 @@ int main()
         skyboxShader.setMat4("view", glm::mat4(glm::mat3(camera.GetViewMatrix())));
         skyboxShader.setMat4("projection", projection);
         glad_glBindVertexArray(skyboxVAO);
-        glad_glActiveTexture(GL_TEXTURE0);
+        glad_glActiveTexture(GL_TEXTURE3);
         glad_glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
         glad_glDrawArrays(GL_TRIANGLES, 0, 36);
         glad_glBindVertexArray(0);
