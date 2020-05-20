@@ -21,7 +21,7 @@
 ##### <a href="#18">18.面剔除</a>
 ##### <a href="#1800">关于缓冲区知识的总结和补充</a> 
 ##### <a href="#19">19.帧缓冲</a> 
-
+##### <a href="#20">20.立方体贴图</a>  
 # 入门
 ## <a href="#1">1.环境搭建并创建一个窗口</a> 
 下边的逻辑保证我们的程序在我们主动关闭之前，能够不断的绘制图像，接受用户输入。这个while循环能在我们让GLFW退出之前一直保持运行。
@@ -665,3 +665,5 @@ glad_glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_R
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/19-1.png" width="40%">
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/19-2.png" width="40%">
 这个问题通过查阅相关书籍，涉及到抖动和抗锯齿的一些概念，应该是可以解决的。但是单独通过`glad_glEnable(GL_DITHER);`开启抖动没有解决。目前先不管了，后续看到抗锯齿的时候再来处理
+
+## <a name="20">20.立方体贴图</a> 
