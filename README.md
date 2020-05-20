@@ -702,7 +702,6 @@ void main(){
 }
 ```
 ## <a name="21">21.高级数据</a>
-https://learnopengl-cn.github.io/04%20Advanced%20OpenGL/07%20Advanced%20Data/
 ### 高级数据
 介绍了两个新的对VBO的一些操作函数 `glBufferSubData`和`glMapBuffer`
 其中`glMapBuffer`是获取 当前绑定缓冲的内存指针，与`glUnmapBuffer`成对使用，在二者之间通过复制函数`memcpy(ptr, data, sizeof(data));`,将数据复制到缓冲中，并且`glUnmapBuffer`返回`GL_TRUE`，代表 数据复制成功。
@@ -738,3 +737,79 @@ glBindBuffer(GL_COPY_WRITE_BUFFER, vbo2);
 glCopyBufferSubData(GL_ARRAY_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, sizeof(vertexData));
 ```
 ## <a name="22">22.高级GLSL</a>
+### GLSL的内建变量
+#### 顶点着色器内建变量
+gl_PointSize  /  gl_VertexID
+#### 片段着色器内建变量
+gl_FragCoord : x和y分量是片段的窗口空间(Window-space)坐标，其原点为窗口的左下角，z分量等于对应片段的深度值。
+gl_FrontFacing : 当前片段是属于正向面的一部分还是背向面的一部分,返回一个bool
+gl_FragDepth : 修改片段的深度值
+#### 接口块
+```
+//顶点着色器 
+out VS_OUT  //VS_OUT 块名
+{
+    vec2 TexCoords;
+} vs_out;  //vs_out 实例名
+
+//片段着色器
+in VS_OUT   //块名要一样
+{
+    vec2 TexCoords;
+} fs_in;   //实例名可以不一样
+``` 
+#### Uniform缓冲对象
+当使用多个着色器时，一些uniform 变量时相同的，但是我们仍然需要在不同的着色器文件中去定义他们，并且去分别给他们进行传值。
+Uniform缓冲对象允许我们定义一系列在多个着色器中相同的全局Uniform变量
+Uniform缓冲对象的创建和绑定,目标为`GL_UNIFORM_BUFFER`
+```
+unsigned int uboExampleBlock;
+glGenBuffers(1,&uboExampleBlock);
+glBindBuffer(GL_UNIFORM_BUFFER , uboExampleBlock);
+```
+Uniform块
+```
+#version 330 core
+layout (location = 0) in vec3 aPos;
+layout (std140) uniform Matrices  
+{
+    mat4 projection;
+    mat4 view;
+};
+uniform mat4 model;
+void main()
+{
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
+}
+```
+声明了一个叫做Matrices的Uniform块，Uniform块中的变量可以直接访问，不需要加块名作为前缀。
+
+块前边使用`layout (std140) `,是声明了这个块儿的布局方式。
+对于Uniform块布局(std140是一种内存布局方式)对照例子更好理解：
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/22-0.png" width="50%">
+其实就是有一个对齐方式，通过上图中数据的比较16个字节为除了数组以外可以占用的最大空间，加入每一行有16字节的空间，对于基本数据类型，float只占用4个字节，剩余12个字节用空内容来填充，
+第二行要写入一个vec4，占用16个字节，不需要填充直接对齐，而对于一个mat4矩阵，他的每一列，占用16直接空间，等于占用了4行来对齐。
+
+接下来，我们在OpenGL代码中将这些矩阵值存入缓冲中，每个声明了这个Uniform块的着色器都能够访问这些矩阵。
+```
+glBufferData(GL_UNIFORM_BUFFER, 152, NULL, GL_STATIC_DRAW); // 分配152字节的内存
+```
+绑定之后进行了内存分配，第三个参数为NULL，说明值分配了内存没有提供数据。之后使用`glBufferSubData`来更新数据就可以了。
+但是，如何才能让OpenGL知道哪个Uniform缓冲对应的是哪个Uniform块呢？
+1. 先来绑定着色器中的uniform块到一个绑定点
+`glGetUniformBlockIndex`函数，传参着色器程序的ID，和uniform块的名字 得到一个Uniform块的位置值索引。
+`glUniformBlockBinding`函数，传参着色器程序的ID，和上边的位置值索引和一个绑定点。
+```
+unsigned int lights_index = glGetUniformBlockIndex(shaderA.ID, "Lights");   
+glUniformBlockBinding(shaderA.ID, lights_index, 2);
+```
+>openGL4.2之后可以在添加一个布局标示符，显式的设置绑定点`layout(std140, binding = 2) uniform Lights { ... };`这样就不用调用上边的两个函数了。
+2.绑定Uniform缓冲对象到相同的绑定点
+```
+glBindBufferBase(GL_UNIFORM_BUFFER, 2, uboExampleBlock); 
+// 或
+glBindBufferRange(GL_UNIFORM_BUFFER, 2, uboExampleBlock, 16, 152);
+```
+多个着色器中可能有相同的uniform块，都绑定到一个绑定点就可以了，他们是多对一的关系，而Uniform缓冲对象和绑定点是1对1的关系。
+当使用`glBindBufferRange`时，多了两个参数，偏移量(16)和数据大小(152)，这使得多个不同名字的的Uniform块也可以绑定到一个Uniform缓冲对象。
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/22-1.png" width="50%">

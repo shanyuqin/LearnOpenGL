@@ -102,7 +102,7 @@ public:
     void setVec3(const std::string &name, float x, float y, float z) const {
         glad_glUniform3f(glad_glGetUniformLocation(ID, name.c_str()), x, y ,z);
     }
-    void setMatrix4fv(const string &name, const glm::mat4 mat) const {
+    void setMat4fv(const string &name, const glm::mat4 mat) const {
         glad_glUniformMatrix4fv(glad_glGetUniformLocation(ID,name.c_str()), 1, GL_FALSE, &mat[0][0]);
     }
     
