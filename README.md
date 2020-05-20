@@ -813,3 +813,8 @@ glBindBufferRange(GL_UNIFORM_BUFFER, 2, uboExampleBlock, 16, 152);
 多个着色器中可能有相同的uniform块，都绑定到一个绑定点就可以了，他们是多对一的关系，而Uniform缓冲对象和绑定点是1对1的关系。
 当使用`glBindBufferRange`时，多了两个参数，偏移量(16)和数据大小(152)，这使得多个不同名字的的Uniform块也可以绑定到一个Uniform缓冲对象。
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/22-1.png" width="50%">
+
+使用Uniform缓冲对象的好处：
+1. 通过设置一个uniform块来设置多个变量，比通过`glad_glGetUniformLocation`一个一个的设置多个uniform变量要快很多。
+2. 比起在多个着色器中修改同样的uniform，在Uniform缓冲中修改一次会更容易一些
+3. OpenGL限制了它能够处理的uniform数量，使用Uniform缓冲对象时，最大的数量会更高。
