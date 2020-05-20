@@ -24,6 +24,7 @@
 ##### <a href="#20">20.立方体贴图</a>  
 ##### <a href="#21">21.高级数据</a>  
 ##### <a href="#22">22.高级GLSL</a>  
+##### <a href="#23">23.几何着色器</a>  
 # 入门
 ## <a href="#1">1.环境搭建并创建一个窗口</a> 
 下边的逻辑保证我们的程序在我们主动关闭之前，能够不断的绘制图像，接受用户输入。这个while循环能在我们让GLFW退出之前一直保持运行。
@@ -818,3 +819,13 @@ glBindBufferRange(GL_UNIFORM_BUFFER, 2, uboExampleBlock, 16, 152);
 1. 通过设置一个uniform块来设置多个变量，比通过`glad_glGetUniformLocation`一个一个的设置多个uniform变量要快很多。
 2. 比起在多个着色器中修改同样的uniform，在Uniform缓冲中修改一次会更容易一些
 3. OpenGL限制了它能够处理的uniform数量，使用Uniform缓冲对象时，最大的数量会更高。
+
+注意：
+1. 当给对应的uniform块中的变量设置值的时候，顺序一定要和uniform块中的顺序一样
+2. 因为之前说过std140的布局，需要对齐，例子中只是两个矩阵，对于float等基本类型如果出现了，它的偏移量和大小是不是要写成`4*size(float)`如：
+```glad_glBufferSubData(GL_UNIFORM_BUFFER, 4*size(float), 4*size(float), 11.0f);
+```
+3. 还有一个问题就是如过一个块中只有两个float类型的变量，那么它占用的内存是 `2* 4*size(float)` 还是`4*size(float)`
+这个需要在后续确认下。
+## <a name="23">23.几何着色器</a>
+
