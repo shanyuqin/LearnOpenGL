@@ -705,10 +705,10 @@ void main(){
 ## <a name="21">21.高级数据</a>
 ### 高级数据
 介绍了两个新的对VBO的一些操作函数 `glBufferSubData`和`glMapBuffer`
-其中`glMapBuffer`是获取 当前绑定缓冲的内存指针，与`glUnmapBuffer`成对使用，在二者之间通过复制函数`memcpy(ptr, data, sizeof(data));`,将数据复制到缓冲中，并且`glUnmapBuffer`返回`GL_TRUE`，代表 数据复制成功。
+`glMapBuffer`是获取 当前绑定缓冲的内存指针，与`glUnmapBuffer`成对使用，在二者之间通过复制函数`memcpy(ptr, data, sizeof(data));`,将数据复制到缓冲中，并且`glUnmapBuffer`返回`GL_TRUE`，代表 数据复制成功。
 ### 分批顶点属性
 即将每一种属性类型的向量数据打包(Batch)为一个大的区块。原来是123123123123，现在是111122223333。因为有的时候我们只会获取到顶点数组，法向量数组，或者一个纹理坐标数组，我们必须通过一些处理才能将这3个数组组成123123123这种交错形式。分批的方式可以很好的解决这个问题。
-通过`glBufferSubData`函数实现。之前的`glBufferData`，是一下将所有的数据填充到缓冲当中，而`glBufferSubData`是一部分一部分填充，所以它必然需要一个偏移量作为参数。函数的第二个参数就是偏移量。
+通过`glBufferSubData`函数实现。之前的`glBufferData`，是一下将所有的数据填充到缓冲当中，而`glBufferSubData`是一部分一部分填充，所以它必然需要一个偏移量作为参数。函数的第二个参数就是偏移量。并且这个偏移量是相对于起始点的偏移量，比如写入1111的时候偏移量是0，写入2222的偏移量是size(1111)，写入3333的偏移量就是size(1111) + size(2222)。
 ```
 float positions[] = { ... };
 float normals[] = { ... };
@@ -822,10 +822,7 @@ glBindBufferRange(GL_UNIFORM_BUFFER, 2, uboExampleBlock, 16, 152);
 
 注意：
 1. 当给对应的uniform块中的变量设置值的时候，顺序一定要和uniform块中的顺序一样
-2. 因为之前说过std140的布局，需要对齐，例子中只是两个矩阵，对于float等基本类型如果出现了，它的偏移量和大小是不是要写成`4*size(float)`如：
-```glad_glBufferSubData(GL_UNIFORM_BUFFER, 4*size(float), 4*size(float), 11.0f);
-```
-3. 还有一个问题就是如过一个块中只有两个float类型的变量，那么它占用的内存是 `2* 4*size(float)` 还是`4*size(float)`
-这个需要在后续确认下。
+2. 当使用`glad_glBufferSubData`填充数据的时候，这里的偏移量是相对于起始点的，也就是说如果有第三个变量，那么设置的时候偏移量应该写sizeof(第一个变量) + sizeof(第二个变量)
+3. 如果uniform块中有基本数据类型，该怎么填写`glad_glBufferSubData`的参数，比如在uniform块中有一个float，偏移量应该是 在sizeof(第一个变量) + sizeof(第二个变量)的基础上再加上16，但是第四个参数的传值，我在尝试中并没有传值成功。而且，当使用`glad_glBufferSubData`时，我觉得偏移量的计算也不简单。如果有5个变量，调用5次`glad_glBufferSubData`,每次调用偏移量都需要重新添加上一个变量的size。
 ## <a name="23">23.几何着色器</a>
 
