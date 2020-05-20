@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include <cmath>
-#include <map>
 #include "shader.h"
 #include "Camera.h"
 
@@ -15,7 +14,6 @@
 //现在只需要在你的程序中包含stb_image.h并编译就可以了。
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-
 
 using namespace std;
 
@@ -54,73 +52,14 @@ int main()
     
     //    开启深度测试
     glad_glEnable(GL_DEPTH_TEST);
-    glad_glEnable(GL_CULL_FACE);
-    glad_glCullFace(GL_FRONT);//只剔除正面
+    glad_glDepthFunc(GL_LESS);
+    
+    Shader shader(".vs",".fs");
+    
+    unsigned int texture  = loadTexture("");
 
-    Shader shader("cull_face.vs","cull_face.fs");
-    
-    float cubeVertices[] = {
-        // Back face
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // Bottom-left
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, // bottom-right
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // bottom-left
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // top-left
-        // Front face
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-left
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // bottom-right
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f, // top-right
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f, // top-right
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, // top-left
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-left
-        // Left face
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-right
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-left
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-left
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-left
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-right
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-right
-        // Right face
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-left
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-right
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-right
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-left
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-left
-        // Bottom face
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // top-right
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f, // top-left
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // bottom-left
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // bottom-left
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-right
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // top-right
-        // Top face
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // top-left
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // bottom-right
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // bottom-right
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // top-left
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f  // bottom-left
-    };
-    
-    unsigned int VBO,VAO;
-    glad_glGenVertexArrays(1, &VAO);
-    glad_glGenBuffers(1, &VBO);
-    glad_glBindVertexArray(VAO);
-    glad_glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glad_glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
-    glad_glEnableVertexAttribArray(0);
-    glad_glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glad_glEnableVertexAttribArray(1);
-    glad_glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    
-
-    unsigned int cubeTexture  = loadTexture("marble.jpg");
-    
     shader.use();
-    shader.setInt("texture1", 0);
-    
+    shader.setInt("textureName", 0);
     
 //    渲染循环
     while (!glfwWindowShouldClose(window)) {
@@ -132,33 +71,25 @@ int main()
         //      键盘输入
         processInput(window);
         
-       
+        
         glad_glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //渲染逻辑 start ——————————————————————————————————————————
+        //坐标空间转换
         shader.use();
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         shader.setMatrix4fv("view", view);
         shader.setMatrix4fv("projection", projection);
-        
-        // cubes
-        glad_glBindVertexArray(VAO);
-        glad_glActiveTexture(GL_TEXTURE0);
-        glad_glBindTexture(GL_TEXTURE_2D, cubeTexture);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.0f));
-        shader.setMatrix4fv("model", model);
-        glad_glDrawArrays(GL_TRIANGLES, 0, 36);
-        
+       
         
         //渲染逻辑 end ——————————————————————————————————————————
         
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    glad_glDeleteBuffers(1, &VBO);
-    glad_glDeleteVertexArrays(1, &VAO);
+
     
     glfwTerminate();
     return 0;

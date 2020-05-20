@@ -16,7 +16,7 @@
 //#define STB_IMAGE_IMPLEMENTATION
 //#include "stb_image.h"
 
-#include<filesystem>
+
 using namespace std;
 
 GLFWwindow *initWindow();
@@ -127,7 +127,7 @@ int main()
     unsigned int cubemapTexture = loadCubemap(faces);
     
     modelShader.use();
-    modelShader.setInt("skybox", 4);
+    modelShader.setInt("skybox", 3);
     skyboxShader.use();
     skyboxShader.setInt("skybox", 0);
     
@@ -148,12 +148,11 @@ int main()
         
         //模型
         modelShader.use();
-        modelShader.setVec3("viewPos", camera.Position);
+        modelShader.setVec3("cameraPos", camera.Position);
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
         modelShader.setMat4("projection", projection);
         modelShader.setMat4("view", view);
-        modelShader.setVec3("cameraPos", camera.Position);
         
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));

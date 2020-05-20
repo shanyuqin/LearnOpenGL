@@ -22,6 +22,8 @@
 ##### <a href="#1800">关于缓冲区知识的总结和补充</a> 
 ##### <a href="#19">19.帧缓冲</a> 
 ##### <a href="#20">20.立方体贴图</a>  
+##### <a href="#21">21.高级数据</a>  
+##### <a href="#22">22.高级GLSL</a>  
 # 入门
 ## <a href="#1">1.环境搭建并创建一个窗口</a> 
 下边的逻辑保证我们的程序在我们主动关闭之前，能够不断的绘制图像，接受用户输入。这个while循环能在我们让GLFW退出之前一直保持运行。
@@ -667,3 +669,72 @@ glad_glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_R
 这个问题通过查阅相关书籍，涉及到抖动和抗锯齿的一些概念，应该是可以解决的。但是单独通过`glad_glEnable(GL_DITHER);`开启抖动没有解决。目前先不管了，后续看到抗锯齿的时候再来处理
 
 ## <a name="20">20.立方体贴图</a> 
+说下几个重点吧
+立方体贴图的纹理目标为`GL_TEXTURE_CUBE_MAP`。
+绑定`glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);`
+立方体有六个面，需要加载六张纹理图，glad_glTexImage2D函数第一个参数需要分别设置为右左上下后前，来加载六张纹理图。
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/20-0.png" width="40%">
+另外环绕方式需要将第三个维度填上
+```
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+```
+天空盒注意对视图空间进行变换的时候要移除位移对它的影响,方式在基础光照法向量变形的地方有过介绍。
+```
+glm::mat4 view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
+```
+
+对于文末的模型的练习,我思考了很久，当我思考出来后，我真是要疯了，太笨了，之前<a href="#8">8.颜色</a>中就介绍了，一个颜色在另一个颜色影响下显示什么颜色，将这个颜色相乘就可以了，
+我 一直不知道怎么找到镜面光纹理图像的坐标，其实只要将镜面光纹理图像的采样结果 和 天空盒的颜色相乘就可以了。但是对于设置天空盒的纹理单元，我还是不太清楚，对于模型加载器在着色器占了3个纹理单元是怎么得来的？我跟着代码debug的时候，对于不同的网格，纹理数量都是不同的，最后处理的时候，又是根据网格里存储纹理的vector的size来确定到底有多少纹理单元的，为什么它说是3个?
+```
+void main(){
+    vec3 viewDir = normalize(FragPos - cameraPos);//从观察位置指向片段位置
+    //漫反射
+    vec3 diffuse =  vec3(texture(texture_diffuse1 , TexCoords));
+              
+    //镜面高光
+    vec3 norm = normalize(Normal);
+    vec3 reflectDir = reflect(viewDir,norm);
+    vec3 specular =  vec3(texture(texture_specular1 , TexCoords)) ;
+    
+    FragColor = vec4(( diffuse + specular * texture(skybox,reflectDir).rgb), 1.0);
+}
+```
+## <a name="21">21.高级数据</a>
+https://learnopengl-cn.github.io/04%20Advanced%20OpenGL/07%20Advanced%20Data/
+### 高级数据
+介绍了两个新的对VBO的一些操作函数 `glBufferSubData`和`glMapBuffer`
+其中`glMapBuffer`是获取 当前绑定缓冲的内存指针，与`glUnmapBuffer`成对使用，在二者之间通过复制函数`memcpy(ptr, data, sizeof(data));`,将数据复制到缓冲中，并且`glUnmapBuffer`返回`GL_TRUE`，代表 数据复制成功。
+### 分批顶点属性
+即将每一种属性类型的向量数据打包(Batch)为一个大的区块。原来是123123123123，现在是111122223333。因为有的时候我们只会获取到顶点数组，法向量数组，或者一个纹理坐标数组，我们必须通过一些处理才能将这3个数组组成123123123这种交错形式。分批的方式可以很好的解决这个问题。
+通过`glBufferSubData`函数实现。之前的`glBufferData`，是一下将所有的数据填充到缓冲当中，而`glBufferSubData`是一部分一部分填充，所以它必然需要一个偏移量作为参数。函数的第二个参数就是偏移量。
+```
+float positions[] = { ... };
+float normals[] = { ... };
+float texCoords[] = { ... };
+// 填充缓冲
+glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(positions), &positions);
+glBufferSubData(GL_ARRAY_BUFFER, sizeof(positions), sizeof(normals), &normals);
+glBufferSubData(GL_ARRAY_BUFFER, sizeof(positions) + sizeof(normals), sizeof(texCoords), &texCoords);
+```
+除此之外设置顶点属性指针的函数也需要更新,主要是更新步长 和 偏移量两个参数。
+```
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);  
+glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(sizeof(positions)));  
+glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)(sizeof(positions) + sizeof(normals)));
+```
+这种方式和之前我们使用的方式，根据实际情况去选择。
+### 复制缓冲
+```
+void glCopyBufferSubData(GLenum readtarget, GLenum writetarget, GLintptr readoffset, GLintptr writeoffset, GLsizeiptr size);
+```
+readtarget和writetarget参数需要填入复制源和复制目标的缓冲目标,从readtarget中读取size大小的数据，并将其写入writetarget缓冲的writeoffset偏移量处。
+如果我们想读写数据的两个不同缓冲都为顶点数组缓冲，需要另外两个缓冲目标，叫做`GL_COPY_READ_BUFFER`和`GL_COPY_WRITE_BUFFER`,因为不能将readtarget和writetarget同时设置为`GL_ARRAY_BUFFER`,但是也可以只将writetarget缓冲绑定为新的缓冲目标类型之一，如：
+```
+float vertexData[] = { ... };
+glBindBuffer(GL_ARRAY_BUFFER, vbo1);
+glBindBuffer(GL_COPY_WRITE_BUFFER, vbo2);
+glCopyBufferSubData(GL_ARRAY_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, sizeof(vertexData));
+```
+## <a name="22">22.高级GLSL</a>

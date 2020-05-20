@@ -34,12 +34,12 @@ uniform vec3 viewPos;
 
 void main()
 {
-    FragColor = texture(texture_ambient1, TexCoords)
+//    FragColor = texture(texture_diffuse1, TexCoords)+texture(texture_ambient1, TexCoords);
     
-    /**添加光照
+    
     
         //环境光照
-        vec3 ambient = light.ambient * vec3(texture(texture_ambient1, TexCoords));
+        vec3 ambient = light.ambient * vec3(texture(texture_diffuse1, TexCoords));
         
         //漫反射
         vec3 norm = normalize(Normal);
@@ -56,21 +56,24 @@ void main()
         vec3 specular = light.specular * spec * vec3(texture(texture_specular1 , TexCoords)) ;
            
         //聚光 （平滑）
-        float theta = dot(lightDir, normalize(-light.direction));
-        float epsilon = light.cutOff - light.outerCutOff;
-        float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
-    //    将不对环境光做出影响，让它总是能有一点光,否则只要超出聚光的距离，就将显示黑色，
-        ambient  *= intensity;
-        diffuse  *= intensity;
-        specular *= intensity;
+//        float theta = dot(lightDir, normalize(-light.direction));
+//        float epsilon = light.cutOff - light.outerCutOff;
+//        float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
+//    //    将不对环境光做出影响，让它总是能有一点光,否则只要超出聚光的距离，就将显示黑色，
+//        ambient  *= intensity;
+//        diffuse  *= intensity;
+//        specular *= intensity;
     
         //衰减
-        float distance    = length(light.position - FragPos);
-        float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+//        float distance    = length(light.position - FragPos);
+//        float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+//        ambient  *= attenuation;
+//        diffuse  *= attenuation;
+//        specular *= attenuation;
 
-        FragColor = vec4((ambient + diffuse + specular)*attenuation, 1.0);
+        FragColor = vec4((ambient + diffuse + specular), 1.0);
     
-    */
+    
     
     ;
 }
