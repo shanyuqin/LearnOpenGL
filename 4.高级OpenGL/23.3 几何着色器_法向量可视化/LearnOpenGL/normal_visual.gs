@@ -7,18 +7,22 @@ in VS_OUT {
     vec3 normal;
 } gs_in[];
 
-
-const float MAGNITUDE = 0.4;
-
 uniform float time;
 
 void GenerateLine(int index)
 {
     gl_Position = gl_in[index].gl_Position;
     EmitVertex();
-    gl_Position = gl_in[index].gl_Position + vec4(gs_in[index].normal, 0.0) * MAGNITUDE;
+    gl_Position = gl_in[index].gl_Position + vec4(gs_in[index].normal, 0.0) * 0.2;
     EmitVertex();
     EndPrimitive();
+    //在一个或多个EmitVertex调用之后重复调用EndPrimitive能够生成多个图元
+    gl_Position = gl_in[index].gl_Position + vec4(gs_in[index].normal, 0.0) * 5.0;
+    EmitVertex();
+    gl_Position = gl_in[index].gl_Position + vec4(gs_in[index].normal, 0.0) * 6.0;
+    EmitVertex();
+    EndPrimitive();
+
 }
 
 void main() {

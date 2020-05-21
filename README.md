@@ -826,4 +826,65 @@ glBindBufferRange(GL_UNIFORM_BUFFER, 2, uboExampleBlock, 16, 152);
 3. 如果uniform块中有基本数据类型，该怎么填写`glad_glBufferSubData`的参数，比如在uniform块中有一个float，偏移量应该是 在sizeof(第一个变量) + sizeof(第二个变量)的基础上再加上16，但是第四个参数的传值，我在尝试中并没有传值成功。而且，当使用`glad_glBufferSubData`时，我觉得偏移量的计算也不简单。如果有5个变量，调用5次`glad_glBufferSubData`,每次调用偏移量都需要重新添加上一个变量的size。
 >我这里没有传值成功的原因是因为我没有修改分配UBO缓存大小的函数`glad_glBufferData(GL_UNIFORM_BUFFER, 2*sizeof(glm::mat4) + 16, NULL, GL_STATIC_DRAW);` 忘了加16了。
 ## <a name="23">23.几何着色器</a>
+1.几何着色器是顶点和片段着色器之间的一个可选的着色器。
+2.几何着色器的输入是一个图元的一组顶点，这个输入是一个内建的变量，如果输入的图元是GL_TRIANGLES，那么这个数组的size就是3
+```
+in gl_Vertex
+{
+    vec4  gl_Position;
+    float gl_PointSize;
+    float gl_ClipDistance[];
+} gl_in[];
+```
+举一个几何着色器的例子来简单说下
+```
+#version 330 core
+layout (points) in;
+layout (line_strip, max_vertices = 2) out;
 
+void main() {    
+    gl_Position = gl_in[0].gl_Position + vec4(-0.1, 0.0, 0.0, 0.0); 
+    EmitVertex();
+
+    gl_Position = gl_in[0].gl_Position + vec4( 0.1, 0.0, 0.0, 0.0);
+    EmitVertex();
+
+    EndPrimitive();
+}
+```
+### 顶部lzyout修饰符的两行
+第一行：告诉我们输入的变量是哪一种图元。
+    (*)points：绘制GL_POINTS图元时（1）。
+    (*)lines：绘制GL_LINES或GL_LINE_STRIP时（2）
+    (*)lines_adjacency：GL_LINES_ADJACENCY或GL_LINE_STRIP_ADJACENCY（4）
+    (*)triangles：GL_TRIANGLES、GL_TRIANGLE_STRIP或GL_TRIANGLE_FAN（3）
+    (*)triangles_adjacency：GL_TRIANGLES_ADJACENCY或GL_TRIANGLE_STRIP_ADJACENCY（6）
+后边的数字是这个图元，所需要的最少的顶点数。
+第二行：指定了几何着色器输出的图元类型。
+    有三种points   |    line_strip   |    triangle_strip
+
+### main函数中有两个新函数
+#### EmitVertex();
+作用是添加等号左边的我们新生成的一个`gl_Positon`到我们要输出的图元中。其实就是用这些新生成的`gl_Position`来生成我们要输出的图元。
+####  EndPrimitive();
+这个函数的作用就是用上边的新生成的顶点去生成我们要输出的图元，上边的方法，是生成新的顶点。
+
+在一个或多个EmitVertex调用之后重复调用EndPrimitive能够生成多个图元
+比如我改写了法向量的`GenerateLine`函数，来生成两个`line_strip`图元，在原来位置的基础上又在5.0和6.0之间创建了`line_strip`图元。
+```
+void GenerateLine(int index)
+{
+    gl_Position = gl_in[index].gl_Position;
+    EmitVertex();
+    gl_Position = gl_in[index].gl_Position + vec4(gs_in[index].normal, 0.0) * 0.2;
+    EmitVertex();
+    EndPrimitive();
+    //在一个或多个EmitVertex调用之后重复调用EndPrimitive能够生成多个图元
+    gl_Position = gl_in[index].gl_Position + vec4(gs_in[index].normal, 0.0) * 5.0;
+    EmitVertex();
+    gl_Position = gl_in[index].gl_Position + vec4(gs_in[index].normal, 0.0) * 6.0;
+    EmitVertex();
+    EndPrimitive();
+}
+```
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/23-0.png" width="50%">
