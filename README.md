@@ -25,6 +25,7 @@
 ##### <a href="#21">21.高级数据</a>  
 ##### <a href="#22">22.高级GLSL</a>  
 ##### <a href="#23">23.几何着色器</a>  
+##### <a href="#24">24.实例化</a>  
 # 入门
 ## <a href="#1">1.环境搭建并创建一个窗口</a> 
 下边的逻辑保证我们的程序在我们主动关闭之前，能够不断的绘制图像，接受用户输入。这个while循环能在我们让GLFW退出之前一直保持运行。
@@ -888,3 +889,6 @@ void GenerateLine(int index)
 }
 ```
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/23-0.png" width="50%">
+
+## <a name="24">24.实例化</a>
+
