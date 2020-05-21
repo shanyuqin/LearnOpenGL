@@ -26,9 +26,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		9484D54F247599A600937337 /* green.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = green.fs; sourceTree = "<group>"; };
-		9484D550247599B900937337 /* yellow.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = yellow.fs; sourceTree = "<group>"; };
-		9484D551247599CC00937337 /* blue.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = blue.fs; sourceTree = "<group>"; };
 		94AA218A247155D200F2BF66 /* LearnOpenGL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LearnOpenGL; sourceTree = BUILT_PRODUCTS_DIR; };
 		94AA218D247155D200F2BF66 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		94AA21952471565400F2BF66 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
@@ -37,8 +34,9 @@
 		94AA219A2471569700F2BF66 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		94AA219B2471569700F2BF66 /* glad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = glad.c; sourceTree = "<group>"; };
 		94AA219C2471569700F2BF66 /* shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader.h; sourceTree = "<group>"; };
-		94AA219F24717FF600F2BF66 /* advancedGLSL.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = advancedGLSL.vs; sourceTree = "<group>"; };
-		94AA21A02471805700F2BF66 /* red.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = red.fs; sourceTree = "<group>"; };
+		94E607A52476D18D0049490D /* geometry.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = geometry.fs; sourceTree = "<group>"; };
+		94E607A62476D18D0049490D /* geometry.gs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = geometry.gs; sourceTree = "<group>"; };
+		94E607A72476D18D0049490D /* geometry.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = geometry.vs; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,11 +77,9 @@
 				94AA219B2471569700F2BF66 /* glad.c */,
 				94AA219C2471569700F2BF66 /* shader.h */,
 				94AA21992471569700F2BF66 /* stb_image.h */,
-				94AA219F24717FF600F2BF66 /* advancedGLSL.vs */,
-				94AA21A02471805700F2BF66 /* red.fs */,
-				9484D54F247599A600937337 /* green.fs */,
-				9484D550247599B900937337 /* yellow.fs */,
-				9484D551247599CC00937337 /* blue.fs */,
+				94E607A52476D18D0049490D /* geometry.fs */,
+				94E607A62476D18D0049490D /* geometry.gs */,
+				94E607A72476D18D0049490D /* geometry.vs */,
 			);
 			path = LearnOpenGL;
 			sourceTree = "<group>";

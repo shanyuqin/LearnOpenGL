@@ -22,22 +22,25 @@ public:
     unsigned int ID;
 
     // 构造器读取并构建着色器
-    Shader(const GLchar* vertexPath, const GLchar* fragmentPath) {
+    Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath) {
         //1.从文件路径中获取顶点/片段着色器
       
         string vertexCode;
         string fragmentCode;
+        string geometryCode;
         ifstream vShaderFile;
         ifstream fShaderFile;
+        ifstream gShaderFile;
         
         vShaderFile.exceptions(ifstream::failbit | ifstream::badbit);
         fShaderFile.exceptions(ifstream::failbit | ifstream::badbit);
+        gShaderFile.exceptions(ifstream::failbit | ifstream::badbit);
         try {
             //打开文件
             vShaderFile.open(vertexPath);
             fShaderFile.open(fragmentPath);
             //读取文件的缓冲内容到数据流中
-            stringstream vShaderStream,fShaderStream;
+            stringstream vShaderStream,fShaderStream,gShaderStream;
             vShaderStream<<vShaderFile.rdbuf();
             fShaderStream<<fShaderFile.rdbuf();
             //关闭文件处理器
@@ -46,6 +49,15 @@ public:
             //转换数据流到string
             vertexCode = vShaderStream.str();
             fragmentCode = fShaderStream.str();
+            if(geometryPath != nullptr)
+            {
+                gShaderFile.open(geometryPath);
+                std::stringstream gShaderStream;
+                gShaderStream << gShaderFile.rdbuf();
+                gShaderFile.close();
+                geometryCode = gShaderStream.str();
+            }
+            
         } catch (ifstream::failure e) {
             cout<<"着色器文件没有成功读取"<<endl;
             return;
@@ -65,16 +77,31 @@ public:
         glad_glShaderSource(fragmentShader,1,&fShaderCode,NULL);
         glad_glCompileShader(fragmentShader);
         checkCompileErrors(fragmentShader,"FRAGMENT");
+        
+        unsigned int geometryShader;
+        if(geometryPath != nullptr) {
+           const char * gShaderCode = geometryCode.c_str();
+           geometryShader = glad_glCreateShader(GL_GEOMETRY_SHADER);
+           glad_glShaderSource(geometryShader, 1, &gShaderCode, NULL);
+           glad_glCompileShader(geometryShader);
+           checkCompileErrors(geometryShader, "GEOMETRY");
+        }
+        
         //创建着色器程序
         ID = glad_glCreateProgram();
         glad_glAttachShader(ID,vertexShader);
         glad_glAttachShader(ID,fragmentShader);
+        if(geometryPath != nullptr) {
+            glad_glAttachShader(ID, geometryShader);
+        }
         glad_glLinkProgram(ID);
         checkCompileErrors(ID, "PROGRAM");
          
         glad_glDeleteShader(vertexShader);
         glad_glDeleteShader(fragmentShader);
-        
+        if(geometryPath != nullptr) {
+            glad_glDeleteShader(geometryShader);
+        }
     }
     // 使用/激活程序
     void use() {

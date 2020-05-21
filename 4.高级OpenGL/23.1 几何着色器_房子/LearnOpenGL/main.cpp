@@ -54,88 +54,27 @@ int main()
     glad_glEnable(GL_DEPTH_TEST);
     glad_glDepthFunc(GL_LESS);
     
-    Shader redShader("advancedGLSL.vs","red.fs");
-    Shader greenShader("advancedGLSL.vs","green.fs");
-    Shader blueShader("advancedGLSL.vs","blue.fs");
-    Shader yellowShader("advancedGLSL.vs","yellow.fs");
-    float cubeVertices[] = {
-        // positions
-        -0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
+      Shader shader("geometry.vs","geometry.fs","geometry.gs");
+      
+      float points[] = {
+          -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // 左上
+           0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // 右上
+           0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // 右下
+          -0.5f, -0.5f, 1.0f, 1.0f, 0.0f  // 左下
+      };
 
-        -0.5f, -0.5f,  0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
-
-        -0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-
-        -0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f, -0.5f,
-
-        -0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f,
-    };
-    // cube VAO
-    unsigned int cubeVAO, cubeVBO;
-    glad_glGenVertexArrays(1, &cubeVAO);
-    glad_glGenBuffers(1, &cubeVBO);
-    glad_glBindVertexArray(cubeVAO);
-    glad_glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-    glad_glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
-    glad_glEnableVertexAttribArray(0);
-    glad_glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    
-   //************设置uniform缓冲对象************//
-    //绑定着色器的uniform块到绑定点0上
-    unsigned int uniformBlockIndexRed = glad_glGetUniformBlockIndex(redShader.ID, "Matrices");
-    unsigned int uniformBlockIndexGreen = glad_glGetUniformBlockIndex(greenShader.ID, "Matrices");
-    unsigned int uniformBlockIndexBlue = glad_glGetUniformBlockIndex(blueShader.ID, "Matrices");
-    unsigned int uniformBlockIndexYellow = glad_glGetUniformBlockIndex(yellowShader.ID, "Matrices");
-    glad_glUniformBlockBinding(redShader.ID, uniformBlockIndexRed, 0);
-    glad_glUniformBlockBinding(greenShader.ID, uniformBlockIndexGreen, 0);
-    glad_glUniformBlockBinding(blueShader.ID, uniformBlockIndexBlue, 0);
-    glad_glUniformBlockBinding(yellowShader.ID, uniformBlockIndexYellow, 0);
-    //创建uniform缓冲对象
-    unsigned int uboMatrices;
-    glad_glGenBuffers(1, &uboMatrices);
-    glad_glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
-    glad_glBufferData(GL_UNIFORM_BUFFER, 2*sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
-    //先解绑，用到的时候再重新绑定
-    glad_glBindBuffer(GL_UNIFORM_BUFFER, 0);
-    //绑定ubo，到绑定点0
-    glad_glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, 2 * sizeof(glm::mat4));
-    //写入数据 projection投影矩阵数据，投影矩阵是一个固定的，而view矩阵是根据观察的点不同需要实时渲染的。
-    glm::mat4 projection = glm::perspective(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-    glad_glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
-    glad_glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
-    glad_glBindBuffer(GL_UNIFORM_BUFFER, 0);
+      
+      unsigned int VAO, VBO;
+      glad_glGenVertexArrays(1, &VAO);
+      glad_glGenBuffers(1, &VBO);
+      glad_glBindVertexArray(VAO);
+      glad_glBindBuffer(GL_ARRAY_BUFFER, VBO);
+      glad_glBufferData(GL_ARRAY_BUFFER, sizeof(points), &points, GL_STATIC_DRAW);
+      glad_glEnableVertexAttribArray(0);
+      glad_glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+      glad_glEnableVertexAttribArray(1);
+      glad_glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
+      glad_glBindVertexArray(0);
     
 //    渲染循环
     while (!glfwWindowShouldClose(window)) {
@@ -150,47 +89,18 @@ int main()
         glad_glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //渲染逻辑 start ——————————————————————————————————————————
-        glm::mat4 view = camera.GetViewMatrix();
-        glad_glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
-        glad_glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
-        glad_glBindBuffer(GL_UNIFORM_BUFFER, 0);
-        //红
-        glad_glBindVertexArray(cubeVAO);
-        redShader.use();
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-0.75f, 0.75f, 0.0f)); // move top-left
-        redShader.setMat4fv("model", model);
-        glad_glDrawArrays(GL_TRIANGLES, 0, 36);
-        //绿
-        glad_glBindVertexArray(cubeVAO);
-        greenShader.use();
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.75f, 0.75f, 0.0f)); // move top-right
-        greenShader.setMat4fv("model", model);
-        glad_glDrawArrays(GL_TRIANGLES, 0, 36);
-        //蓝
-        glad_glBindVertexArray(cubeVAO);
-        blueShader.use();
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-0.75f, -0.75f, 0.0f)); // move bottom-left
-        blueShader.setMat4fv("model", model);
-        glad_glDrawArrays(GL_TRIANGLES, 0, 36);
-        //黄
-        glad_glBindVertexArray(cubeVAO);
-        yellowShader.use();
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.75f, -0.75f, 0.0f)); // move bottom-right
-        yellowShader.setMat4fv("model", model);
-        glad_glDrawArrays(GL_TRIANGLES, 0, 36);
-       
+        glad_glBindVertexArray(VAO);
+        shader.use();
+        glad_glDrawArrays(GL_POINTS, 0, 4);
+
         
         //渲染逻辑 end ——————————————————————————————————————————
         
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    glad_glDeleteVertexArrays(1, &cubeVAO);
-    glad_glDeleteBuffers(1, &cubeVBO);
+    glad_glDeleteVertexArrays(1, &VAO);
+    glad_glDeleteBuffers(1, &VBO);
     
     glfwTerminate();
     return 0;
