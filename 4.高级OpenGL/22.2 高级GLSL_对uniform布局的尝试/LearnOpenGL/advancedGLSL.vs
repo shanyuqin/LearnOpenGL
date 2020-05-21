@@ -2,9 +2,9 @@
 layout (location = 0) in vec3 aPos;
 
 layout (std140) uniform Matrices {
+    float float1;
     mat4 projection;
     mat4 view;
-    float float1;
 };
 
 uniform mat4 model;

@@ -824,5 +824,6 @@ glBindBufferRange(GL_UNIFORM_BUFFER, 2, uboExampleBlock, 16, 152);
 1. 当给对应的uniform块中的变量设置值的时候，顺序一定要和uniform块中的顺序一样
 2. 当使用`glad_glBufferSubData`填充数据的时候，这里的偏移量是相对于起始点的，也就是说如果有第三个变量，那么设置的时候偏移量应该写sizeof(第一个变量) + sizeof(第二个变量)
 3. 如果uniform块中有基本数据类型，该怎么填写`glad_glBufferSubData`的参数，比如在uniform块中有一个float，偏移量应该是 在sizeof(第一个变量) + sizeof(第二个变量)的基础上再加上16，但是第四个参数的传值，我在尝试中并没有传值成功。而且，当使用`glad_glBufferSubData`时，我觉得偏移量的计算也不简单。如果有5个变量，调用5次`glad_glBufferSubData`,每次调用偏移量都需要重新添加上一个变量的size。
+>我这里没有传值成功的原因是因为我没有修改分配UBO缓存大小的函数`glad_glBufferData(GL_UNIFORM_BUFFER, 2*sizeof(glm::mat4) + 16, NULL, GL_STATIC_DRAW);` 忘了加16了。
 ## <a name="23">23.几何着色器</a>
 

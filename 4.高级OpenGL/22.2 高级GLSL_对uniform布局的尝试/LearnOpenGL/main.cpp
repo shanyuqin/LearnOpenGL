@@ -126,20 +126,19 @@ int main()
     unsigned int uboMatrices;
     glad_glGenBuffers(1, &uboMatrices);
     glad_glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
-    glad_glBufferData(GL_UNIFORM_BUFFER, 2*sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
+    glad_glBufferData(GL_UNIFORM_BUFFER, 2*sizeof(glm::mat4) + 16, NULL, GL_STATIC_DRAW);
     //先解绑，用到的时候再重新绑定
     glad_glBindBuffer(GL_UNIFORM_BUFFER, 0);
-    //绑定ubo，到绑定点0
-    glad_glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, 2 * sizeof(glm::mat4));
+    //绑定ubo，到绑定点0, 两种方法，第二种多了两个参数，偏移量和size，这使得同一个UBO可以绑定多个uniform块
+    glad_glBindBufferBase(GL_UNIFORM_BUFFER, 0, uboMatrices);
+//    glad_glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, 2 * sizeof(glm::mat4) + 16);
     //写入数据 projection投影矩阵数据，投影矩阵是一个固定的，而view矩阵是根据观察的点不同需要实时渲染的。
     glm::mat4 projection = glm::perspective(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
     glad_glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
     
-    float float1 = 0.5f;
-    
-    glad_glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
-    glad_glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) , sizeof(glm::mat4), glm::value_ptr(view));
-    glad_glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) + sizeof(glm::mat4), sizeof(float1), &float1);
+    float float1 = 0.2f;
+    glad_glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(GLfloat), &float1);
+    glad_glBufferSubData(GL_UNIFORM_BUFFER, 16, sizeof(glm::mat4), glm::value_ptr(projection));
     glad_glBindBuffer(GL_UNIFORM_BUFFER, 0);
     
 //    渲染循环
@@ -157,8 +156,7 @@ int main()
         //渲染逻辑 start ——————————————————————————————————————————
         glm::mat4 view = camera.GetViewMatrix();
         glad_glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
-        glad_glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) , sizeof(glm::mat4), glm::value_ptr(view));
-        glad_glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) + sizeof(glm::mat4), sizeof(float1), &float1);
+        glad_glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) + 16 , sizeof(glm::mat4), glm::value_ptr(view));
         glad_glBindBuffer(GL_UNIFORM_BUFFER, 0);
         //红
         glad_glBindVertexArray(cubeVAO);
