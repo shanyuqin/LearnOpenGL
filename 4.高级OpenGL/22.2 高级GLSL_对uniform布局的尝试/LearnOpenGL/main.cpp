@@ -135,9 +135,11 @@ int main()
     glm::mat4 projection = glm::perspective(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
     glad_glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
     
-    GLfloat float1 = 0.5f;
+    float float1 = 0.5f;
     
     glad_glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
+    glad_glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) , sizeof(glm::mat4), glm::value_ptr(view));
+    glad_glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) + sizeof(glm::mat4), sizeof(float1), &float1);
     glad_glBindBuffer(GL_UNIFORM_BUFFER, 0);
     
 //    渲染循环
