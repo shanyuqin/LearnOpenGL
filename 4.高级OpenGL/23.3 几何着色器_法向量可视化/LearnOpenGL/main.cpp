@@ -56,7 +56,8 @@ int main()
     //    开启深度测试
     glad_glEnable(GL_DEPTH_TEST);
     
-    Shader modelShader("model.vs", "model.fs","model.gs");
+    Shader modelShader("model.vs", "model.fs");
+    Shader normalShader("normal_visual.vs", "normal_visual.fs","normal_visual.gs");
     Shader skyboxShader("skybox.vs","skybox.fs",nullptr);
     Model ourModel("objects/nanosuit_reflection/nanosuit.obj");
     
@@ -157,9 +158,15 @@ int main()
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
         modelShader.setMat4fv("model", model);
-        modelShader.setFloat("time", glfwGetTime());
-
         ourModel.Draw(modelShader);
+        
+        //法向量可视化shader
+        normalShader.use();
+        normalShader.setMat4fv("projection", projection);
+        normalShader.setMat4fv("view", view);
+        model = glm::mat4(1.0f);
+        normalShader.setMat4fv("model", model);
+        ourModel.Draw(normalShader);
         
         //skybox
         glad_glDepthFunc(GL_LEQUAL);

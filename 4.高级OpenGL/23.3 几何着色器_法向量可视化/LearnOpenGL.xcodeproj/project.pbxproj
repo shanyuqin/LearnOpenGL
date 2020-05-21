@@ -35,7 +35,9 @@
 		94AA219A2471569700F2BF66 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		94AA219B2471569700F2BF66 /* glad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = glad.c; sourceTree = "<group>"; };
 		94AA219C2471569700F2BF66 /* shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader.h; sourceTree = "<group>"; };
-		94E607A82476D3210049490D /* model.gs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = model.gs; sourceTree = "<group>"; };
+		94E607A92476D8770049490D /* normal_visual.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = normal_visual.vs; sourceTree = "<group>"; };
+		94E607AA2476D8800049490D /* normal_visual.gs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = normal_visual.gs; sourceTree = "<group>"; };
+		94E607AB2476D8870049490D /* normal_visual.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = normal_visual.fs; sourceTree = "<group>"; };
 		94F9FBA72475128C00415852 /* skybox.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = skybox.vs; sourceTree = "<group>"; };
 		94F9FBAA2475128C00415852 /* skybox.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = skybox.fs; sourceTree = "<group>"; };
 		94F9FBAC247515DD00415852 /* bottom.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bottom.jpg; sourceTree = "<group>"; };
@@ -157,7 +159,9 @@
 				94F9FBF224752C0600415852 /* model.h */,
 				94F9FBF324752C0600415852 /* model.fs */,
 				94F9FBF424752C0600415852 /* model.vs */,
-				94E607A82476D3210049490D /* model.gs */,
+				94E607A92476D8770049490D /* normal_visual.vs */,
+				94E607AA2476D8800049490D /* normal_visual.gs */,
+				94E607AB2476D8870049490D /* normal_visual.fs */,
 				94F9FBB324752C0600415852 /* objects */,
 			);
 			path = LearnOpenGL;

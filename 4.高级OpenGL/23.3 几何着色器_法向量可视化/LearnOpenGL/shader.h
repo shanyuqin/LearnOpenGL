@@ -22,7 +22,7 @@ public:
     unsigned int ID;
 
     // 构造器读取并构建着色器
-    Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath) {
+    Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath = nullptr) {
         //1.从文件路径中获取顶点/片段着色器
       
         string vertexCode;
