@@ -26,6 +26,7 @@
 ##### <a href="#22">22.高级GLSL</a>  
 ##### <a href="#23">23.几何着色器</a>  
 ##### <a href="#24">24.实例化</a>  
+##### <a href="#25">25.抗锯齿</a>  
 # 入门
 ## <a href="#1">1.环境搭建并创建一个窗口</a> 
 下边的逻辑保证我们的程序在我们主动关闭之前，能够不断的绘制图像，接受用户输入。这个while循环能在我们让GLFW退出之前一直保持运行。
@@ -944,3 +945,48 @@ for (unsigned int i = 0; i < amount; i++) {
 >顶点属性最大允许的数据大小等于一个vec4。
 >一个mat4本质上是4个vec4，我们需要为这个矩阵预留4个顶点属性。
 >如果将它的位置值location设置为0，矩阵每一列的顶点属性位置值就是0、1、2和3。
+
+## <a name="25">25.抗锯齿</a>
+通常我们将锯齿这些现象称为走样。锯齿边缘的产生和光栅器将顶点数据转化为片段的方式有关。
+目前采用的解决办法叫做多重采样抗锯齿（MSAA）。
+先来了解光栅器的工作方式。
+它位于最终处理过的顶点之后到片段着色器之前所经过的所有的算法与过程的总和。光栅器将一个图元的所有顶点作文输入，并将她转换为一系列的片段。通常情况下，每个像素包含一个采样点，它被用来决定我们的顶点所创造的图元是否遮盖/包含了某个像素，每一个被包含的像素处都会生成一个片段。
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/25-0.png" width="50%">
+如上图所示，有时候图元的边缘的一些部分也包含了像素的一小部分，但是采样点没有被覆盖，那么这个像素处就不会生成片段，最终结果就产生了不光滑的边缘也就是锯齿。
+
+多重采样有着以特定图案排列的多个子采样点，采样点越多，就会使得结果更加精准。那么它的工作方式是什么样的呢？是有几个采样点就对着色器运行多少次来取平均值么？并不是，多次运行着色器，会显著的降低性能。
+真正的工作方式是，无论覆盖多少个子采样点，每个图元中的每个像素只运行一次片段着色器。这个像素着色器使用的顶点数据仍然会和以前一样插值到每个像素的中心。最终的颜色我举一个例子来形容吧。加入一个像素有四个采样点，并且这个像素中1个采样点被图元1遮盖，2个采样点被图元2遮盖，最后一个被图元3遮盖，那么这个像素的颜色最终就是这是个采样点的平均值，也就是 `(1 * 图元1的颜色值 + 2 * 图元1的颜色值 + 1 * 图元3的颜色值)/4`。
+
+OpenGL中我们该怎么做？
+创建窗口之前调用`glfwWindowHint(GLFW_SAMPLES, 4);`设置采样点个数。
+调用`glEnable(GL_MULTISAMPLE);`来启用多重采样，但是一般都是默认开启。
+之所以这么简单是因为现在是对默认帧缓冲的一个操作，GLFW直接替我们做了这些处理。如果我们要使用我们自己的帧缓冲来进行离屏渲染该做些什么？
+同样是两种方式，多重采样纹理附件和多重采样渲染缓冲对象
+### 多重采样纹理附件
+使用`glTexImage2DMultisample`来替代`glTexImage2D`，纹理目标是`GL_TEXTURE_2D_MULTISAPLE`。
+```
+glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, tex);
+//samples是采样数 比如 4
+//最后一个参数GL_TRUE 代表图像将会对每个纹素使用相同的样本位置以及相同数量的子采样点个数。
+glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, SCR_WIDTH, SCR_HEIGHT, GL_TRUE);
+```
+记得使用`glFramebufferTexture2D`绑定附件的时候类型为`GL_TEXTURE_2D_MULTISAPLE`。
+### 多重采样渲染缓冲对象
+指定渲染缓冲的内存存储时替换`glRenderbufferStorage`为`glRenderbufferStorageMultisample`。
+```
+//4是采样数
+glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, width, height);
+```
+### 渲染到多重采样帧缓冲
+渲染到多重采样帧缓冲对象的过程都是自动的。只要我们在帧缓冲绑定时绘制任何东西，光栅器就会负责所有的多重采样运算。我们最终会得到一个多重采样颜色缓冲以及/或深度和模板缓冲。
+
+### 多重采样帧缓冲与非多重采样帧缓冲有区别么
+有！！！！不能直接将多重采样帧缓冲的缓冲图像用于其他计算，比如在着色器中对他们进行采样，进行后期处理。
+如果要进行处理需要使用`glBlitFramebuffer`函数来进行还原。它将一个用4个屏幕空间坐标所定义的源区域复制到一个同样用4个屏幕空间坐标所定义的目标区域中。
+生成一个新的FBO，作为中介帧缓冲对象，将多重采样缓冲还原为一个能在着色器中使用的普通2D纹理。
+```
+glBindFramebuffer(GL_READ_FRAMEBUFFER, multisampledFBO);//多重采样帧缓冲
+glBindFramebuffer(GL_DRAW_FRAMEBUFFER, intermediateFBO);//普通帧缓冲
+//前八个参数你可以理解为两个CGRect
+glBlitFramebuffer(0, 0, SCR_WIDTH, SCR_HEIGHT, 0, 0, SCR_WIDTH, SCR_HEIGHT, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+```
