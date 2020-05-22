@@ -26,6 +26,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		947CBC5C247840600042EF50 /* wood.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wood.png; sourceTree = "<group>"; };
 		94AA218A247155D200F2BF66 /* LearnOpenGL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LearnOpenGL; sourceTree = BUILT_PRODUCTS_DIR; };
 		94AA218D247155D200F2BF66 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		94AA21952471565400F2BF66 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
@@ -76,6 +77,7 @@
 				94AA219B2471569700F2BF66 /* glad.c */,
 				94AA219C2471569700F2BF66 /* shader.h */,
 				94AA21992471569700F2BF66 /* stb_image.h */,
+				947CBC5C247840600042EF50 /* wood.png */,
 				94AA219F24717FF600F2BF66 /* gamma_correction.vs */,
 				94AA21A02471805700F2BF66 /* gamma_correction.fs */,
 			);

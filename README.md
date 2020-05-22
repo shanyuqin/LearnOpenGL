@@ -1014,6 +1014,49 @@ vec3 halfwayDir = normalize(lightDir + viewDir);
 float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess);
 ```
 ## <a name="27">27.Gamma校正</a>
+Gamma也叫灰度系数，每种显示设备都有自己的Gamma值，都不相同，有一个公式：设备输出亮度 = 电压的Gamma次幂，任何设备Gamma基本上都不会等于1，等于1是一种理想的线性状态，这种理想状态是：如果电压和亮度都是在0到1的区间，那么多少电压就等于多少亮度。对于CRT，Gamma通常为2.2，因而，输出亮度 = 输入电压的2.2次幂，你可以从本节第二张图中看到Gamma2.2实际显示出来的总会比预期暗，相反Gamma0.45就会比理想预期亮，如果你讲Gamma0.45叠加到Gamma2.2的显示设备上，便会对偏暗的显示效果做到校正。
+
+### Gamma校正思路
+在最终的颜色输出上应用监视器Gamma的倒数。
+看另一个例子：暗红色(0.5,0.0,0.0)。线性的颜色显示在监视器上相当于降低了2.2次幂的亮度，所以倒数就是1/2.2次幂
+Gamma校正后的暗红色就会成为(0.5,0.0,0.0)1/2.2=(0.5,0.0,0.0)0.45=(0.73,0.0,0.0)。
+校正后的颜色接着被发送给监视器，最终显示出来的颜色是(0.73,0.0,0.0)2.2=(0.5,0.0,0.0)
+
+### gamma校正的方式
+1.开启`GL_FRAMEBUFFER_SRGB`以后，每次像素着色器运行后续帧缓冲，OpenGL将自动执行gamma校正，包括默认帧缓冲。但是这种方式会丧失一些控制权。具体的[参考原文](https://learnopengl-cn.github.io/05%20Advanced%20Lighting/02%20Gamma%20Correction/)。
+```
+glEnable(GL_FRAMEBUFFER_SRGB);
+```
+2.在每个相关像素着色器运行的最后应用gamma校正，所以在发送到帧缓冲前，颜色就被校正了。我们对gamma操作有完全的控制权。
+这个方法有个问题就是为了保持一致，你必须在像素着色器里加上这个gamma校正。如果你有多个着色器，你就必须在每个着色器里都加上gamma校正。
+```
+void main() {
+    float gamma = 2.2;
+    fragColor.rgb = pow(fragColor.rgb, vec3(1.0/gamma));
+}
+```
+### sRGB纹理 
+监视器总是在sRGB空间中显示应用了gamma的颜色，无论什么时候当你在计算机上绘制、编辑或者画出一个图片的时候，你所选的颜色都是根据你在监视器上看到的那种。这实际意味着所有你创建或编辑的图片并不是在线性空间，而是在sRGB空间中。 意思就是当我们基于监视器上看到的情况创建一个图像，我们就已经对颜色值进行了gamma校正，所以再次显示在监视器上就没错。由于我们在渲染中又进行了一次gamma校正，图片就实在太亮了。
+为了解决这个问题，告诉制作者在线性空间创作显然不科学。所以我们需要进行`重校`。把这些sRGB纹理在进行任何颜色值的计算前变回线性空间。
+```
+float gamma = 2.2;
+vec3 diffuseColor = pow(texture(diffuse, texCoords).rgb, vec3(gamma));
+```
+OpenGL给我们提供了另一个方案，`GL_SRGB`和`GL_SRGB_ALPHA`内部纹理格式,来避免我们为每个sRGB空间的纹理做这件事。
+如果我们在OpenGL中创建了一个纹理，把它指定为以上两种sRGB纹理格式其中之一，OpenGL将自动把颜色校正到线性空间中，这样我们所使用的所有颜色值都是在线性空间中的了。
+```
+glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+```
+### 衰减
+衰减因子的计算方程变了，不再是
+
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/12-0.png" width="50%">
+
+而是 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/37-0.png" width="50%">
+
+原来的那个衰减方程在有gamma校正的场景中也仍然有用，因为它可以让我们对衰减拥有更多准确的控制权（不过，在进行gamma校正的场景中当然需要不同的参数）。
+
+
 
 ## <a name="28_1">28.1 阴影——阴影映射</a> 
 ## <a name="28_2">28.2 阴影——点光源阴影</a> 
