@@ -26,6 +26,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		947CBC5C247840600042EF50 /* wood.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wood.png; sourceTree = "<group>"; };
 		94AA218A247155D200F2BF66 /* LearnOpenGL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LearnOpenGL; sourceTree = BUILT_PRODUCTS_DIR; };
 		94AA218D247155D200F2BF66 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		94AA21952471565400F2BF66 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
@@ -34,8 +35,8 @@
 		94AA219A2471569700F2BF66 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		94AA219B2471569700F2BF66 /* glad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = glad.c; sourceTree = "<group>"; };
 		94AA219C2471569700F2BF66 /* shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader.h; sourceTree = "<group>"; };
-		94AA219F24717FF600F2BF66 /* depth_test.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = depth_test.vs; sourceTree = "<group>"; };
-		94AA21A02471805700F2BF66 /* depth_test.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = depth_test.fs; sourceTree = "<group>"; };
+		94AA219F24717FF600F2BF66 /* advanced_lighting.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = advanced_lighting.vs; sourceTree = "<group>"; };
+		94AA21A02471805700F2BF66 /* advanced_lighting.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = advanced_lighting.fs; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,8 +77,9 @@
 				94AA219B2471569700F2BF66 /* glad.c */,
 				94AA219C2471569700F2BF66 /* shader.h */,
 				94AA21992471569700F2BF66 /* stb_image.h */,
-				94AA219F24717FF600F2BF66 /* depth_test.vs */,
-				94AA21A02471805700F2BF66 /* depth_test.fs */,
+				947CBC5C247840600042EF50 /* wood.png */,
+				94AA219F24717FF600F2BF66 /* advanced_lighting.vs */,
+				94AA21A02471805700F2BF66 /* advanced_lighting.fs */,
 			);
 			path = LearnOpenGL;
 			sourceTree = "<group>";

@@ -30,7 +30,8 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 // 屏幕宽高
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-
+bool blinn = false;
+bool blinnKeyPressed = false;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 bool firstMouse = true;
@@ -53,13 +54,41 @@ int main()
     
     //    开启深度测试
     glad_glEnable(GL_DEPTH_TEST);
+    glad_glEnable(GL_BLEND);
+    glad_glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     
-//    Shader shader(".vs",".fs");
-   
-    
-  
+    Shader shader("advanced_lighting.vs","advanced_lighting.fs");
+   float planeVertices[] = {
+          // positions            // normals         // texcoords
+           10.0f, -0.5f,  10.0f,  0.0f, 1.0f, 0.0f,  10.0f,  0.0f,
+          -10.0f, -0.5f,  10.0f,  0.0f, 1.0f, 0.0f,   0.0f,  0.0f,
+          -10.0f, -0.5f, -10.0f,  0.0f, 1.0f, 0.0f,   0.0f, 10.0f,
 
+           10.0f, -0.5f,  10.0f,  0.0f, 1.0f, 0.0f,  10.0f,  0.0f,
+          -10.0f, -0.5f, -10.0f,  0.0f, 1.0f, 0.0f,   0.0f, 10.0f,
+           10.0f, -0.5f, -10.0f,  0.0f, 1.0f, 0.0f,  10.0f, 10.0f
+      };
+    
+    unsigned int VAO,VBO;
+    glad_glGenVertexArrays(1,&VAO);
+    glad_glBindVertexArray(VAO);
+    glad_glGenBuffers(1,&VBO);
+    glad_glBindBuffer(GL_ARRAY_BUFFER,VBO);
+    glad_glBufferData(GL_ARRAY_BUFFER,sizeof(planeVertices), planeVertices ,GL_STATIC_DRAW);
+    glad_glEnableVertexAttribArray(0);
+    glad_glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),(void*)0);
+    glad_glEnableVertexAttribArray(1);
+    glad_glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),(void*)(3 * sizeof(float)));
+    glad_glEnableVertexAttribArray(2);
+    glad_glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),(void*)(6 * sizeof(float)));
+    glad_glBindVertexArray(0);
+    
+    unsigned int floorTexture = loadTexture("wood.png");
+    shader.use();
+    shader.setInt("floorTexture", 0);
+
+    glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
     
 //    渲染循环
     while (!glfwWindowShouldClose(window)) {
@@ -76,15 +105,28 @@ int main()
         glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //渲染逻辑 start ——————————————————————————————————————————
         
+        shader.use();
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+        shader.setMat4("projection", projection);
+        shader.setMat4("view", view);
+        shader.setVec3("viewPos", camera.Position);
+        shader.setVec3("lightPos", lightPos);
+        shader.setInt("blinn", blinn);
         
+        glad_glBindVertexArray(VAO);
+        glad_glActiveTexture(GL_TEXTURE0);
+        glad_glBindTexture(GL_TEXTURE_2D,floorTexture);
+        glad_glDrawArrays(GL_TRIANGLES,0,6);
+        std::cout << (blinn ? "Blinn-Phong" : "Phong") << std::endl;
         //渲染逻辑 end ——————————————————————————————————————————
-        
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
     
    
-
+    glad_glDeleteVertexArrays(1, &VAO);
+    glad_glDeleteBuffers(1, &VBO);
     
     glfwTerminate();
     return 0;
@@ -178,6 +220,14 @@ void processInput(GLFWwindow *window)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS && !blinnKeyPressed) {
+        blinn = !blinn;
+        blinnKeyPressed = true;
+    }
+    if (glfwGetKey(window, GLFW_KEY_B) == GLFW_RELEASE) {
+        blinnKeyPressed = false;
+    }
+    
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)

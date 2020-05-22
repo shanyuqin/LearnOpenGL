@@ -27,6 +27,7 @@
 ##### <a href="#23">23.几何着色器</a>  
 ##### <a href="#24">24.实例化</a>  
 ##### <a href="#25">25.抗锯齿</a>  
+##### <a href="#26">26.高级光照</a>  
 # 入门
 ## <a href="#1">1.环境搭建并创建一个窗口</a> 
 下边的逻辑保证我们的程序在我们主动关闭之前，能够不断的绘制图像，接受用户输入。这个while循环能在我们让GLFW退出之前一直保持运行。
@@ -178,13 +179,16 @@ trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 这里需要记住向量相乘的两个概念点乘和叉乘
 点乘v¯⋅k¯ 计算的是两个向量夹角的余弦值。（v,k都是单位向量）
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/5-0.png" width="50%">
+
 叉乘v¯ x k¯ 只在3D空间中有定义，它需要两个不平行向量作为输入，生成一个正交于两个输入向量的第三个向量
+
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/5-1.png" width="50%">
 
 线性代数的内容可以参考[【官方双语/合集】线性代数的本质 - ](https://www.bilibili.com/video/BV1ys411472E)
 
 ##  <a name="6">6.坐标系统 </a>
 理解局部空间，世界空间，观察空间，裁剪空间，屏幕空间
+
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/6-0.png" width="50%">
 ### 局部空间
 物指体所在的坐标空间，即对象最开始所在的地方。比如我们创建一个房子，那么我们在单独创建这个房子的时候为它定义了一个坐标空间。房子旁边需要有一个花园，那么我们单独创建这个花园的时候又定义了一个坐标空间，房子的坐标空间和花园的坐标空间是完全不相关的。是属于它们二者自身的坐标空间。也就是局部坐标空间。
@@ -193,6 +197,7 @@ trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 ### 观察空间
 如果以人的眼睛为原点，去观察这个房子和花园，那么这个房子和花园的坐标必然会因为你处于的位置不同，而有所变化。比如你在房子的顶部向下观看，那么房子和花园在观察空间的Y坐标肯定是小于0的。当你在房子的底部向上看，Y坐标肯定都是大于0的。这个变换是通过一个观察矩阵来处理的。
 处理的结果，就是将我们观察的位置作为一个原点，通过下边的逻辑构造一个坐标空间，这就是观察空间
+
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/6-1.png" width="50%">
 #### look at
 GLM已经提供了这个。我们要做的只是定义一个摄像机位置，一个目标位置和一个表示世界空间中的上向量的向量(0,1,0)。接着GLM就会创建一个LookAt矩阵，我们可以把它当作我们的观察矩阵：
@@ -276,6 +281,7 @@ void main() {
 法向量的概念：垂直于平面的直线所表示的向量为该平面的法向量。即下图的黄色箭头向量N，它是垂直于平面向外的。
 当我们的光源按照法向量的反方向照射物体的时候反射光更亮，而垂直于法向量照射的时候反射光基本上看不到，也就是说θ越大，反射光的影响越小。
 下图中的FragPos是当前光照射到物体的某一个片段上的位置。
+
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/9-0.png" width="50%">
 
 如何计算？
@@ -353,10 +359,13 @@ FragColor = vec4((ambient + diffuse + specular) * objectColor, 1.0);
 ### 点光源。
 从它的光源位置开始朝着所有方向散射光线。存在一个衰减的定义：随着光线传播距离的增长逐渐削减光的强度。
 计算公式：
+
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/12-0.png" width="50%">
+
 每一个光照模型的计算结果需要乘以这个衰减因子。
 常数项Kc(一般为1.0)、一次项Kl和二次项Kq。 d为片段位置到光源位置的距离通过`length(light.position - fragPos)`函数来计算。
 下边的表提供了一些模拟取值
+
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/12-1.png" width="50%">
 ### 聚光
 聚光是位于环境中某个位置的光源，它只朝一个特定方向而不是所有方向照射光线。这样的结果就是只有在聚光方向的特定半径内的物体才会被照亮，其它的物体都会保持黑暗。聚光很好的例子就是路灯或手电筒。
@@ -376,7 +385,9 @@ Assimp将场景载入为一些列的结点（Node），每个节点包含了场�
 
 编译流程：`brew install assimp`
 执行完后打开下边文件目录进行查看。
+
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/14-0.png" width="50%">
+
 在工程中添加自定义路径${assmip_header}和${assmip_lib}，然后在build setting>header search 和 library search 中添加相应路径
 
 ### 网格类Mesh编写
@@ -396,8 +407,11 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 默认为GL_LESS 在片段深度值小于缓冲的深度值时通过测试.
 当这是为GL_ALWAYS的时候，深度测试将会永远通过，所以最后绘制的片段总是会渲染在 之前绘制的片段的上面。比如我们绘制两个箱子，放在地板上，因为我们是最后绘制地板，如果参数为GL_ALWAYS，那么地板的片段将会覆盖所有的箱子片段。
 GL_LESS:
+
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/15-0.png" width="50%">
+
 GL_ALWAYS：
+
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/15-1.png" width="50%">
 
 
@@ -405,7 +419,9 @@ GL_ALWAYS：
 
 ##  <a name="16">16.模板测试</a>
 对于一个3D物体，我们在不同的视角看去，它都会有一个边缘,如下面两个图片中绿色所示：
+
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/16-0.png" width="30%"><img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/16-1.png" width="30%">
+
 举一个我们最常见的关于它的使用场景，当我们玩儿一些RPG游戏的时候，用鼠标去点击一个NPC，这个NPC是一个选中状态，它周边会包围一个光圈，这个光圈一定是包围了当前这个3D的NPC所有的部分。其实就是所谓的物体轮廓。
 
 上述就是模板测试的概念了。那么具体如何使用？
@@ -491,6 +507,7 @@ glad_glEnable(GL_DEPTH_TEST);
 首先需要开启混合 `glad_glEnable(GL_BLEND)` 。
 它的计算方法如下：
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/17-2.png" width="50%">
+
 混合也有一些相关函数。
 >glBlendFunc(GLenum sfactor, GLenum dfactor)
 (*)sfactor 源因子值。指定了alpha值对源颜色的影响。
@@ -579,7 +596,8 @@ glEnableVertexAttribArray(0);
 OpenGL使用数据的时候其实就是根据这些类型，去找当前绑定到这些类型的数据的。
 
 有绑定就有解绑，解绑的方式就是将`0`作为你想要绑定到当前类型的数据，其实就是等于解绑了，之前看到<a href="#15">15.深度测试</a>那里进行绑定的时候为什么会有`glad_glBindVertexArray(0);`这种操作了。其实就是对其他数据进行操作的时候 ，仍然需要对当前这种类型进行重新绑定，所以先将之前的数据进行解绑了。但我们并不需要这么麻烦，可以在下一次操作其他数据的时候直接进行新数据的绑定`glad_glBindVertexArray(newVAO)`，`0`这个步骤只是先进行了一个清零的操作。
-<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/补充1-2.png" width="50%">
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/补充1-2.png" width="30%">
+
 对于这个缓冲类型我觉得说成缓冲目标更好，因为很多物体都有类型，有种n对1的感觉，类型是物体的属性。而说成目标，我觉得是1对1，获取当前目标，就是当前目标存放的数据，后续使用缓冲目标来代替。
 不同的缓冲目标可能在使用时有不同的附加操作，比如之前的纹理在使用纹理的时候需要通过`glad_glglad_glActiveTexture(GL_TEXTURE0)`来激活对应的纹理单元，就好像使用顶点数据需要通过 `glad_glEnableVertexAttribArray(0)`来启用。
 >蓝宝书第八章讲了几种缓冲对象的使用。如像素缓冲PBO，纹理缓冲txBO，帧缓冲FBO
@@ -636,6 +654,7 @@ glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, text
 ```
 这里只附加了一个缓冲，如果运行之后，我们会发现运行结果呈现的是一个没有开启深度测试的样子，因为当前这个帧缓冲没有附加，深度缓冲，当然也没有模板缓冲。我们可以在此基础上再附加一个缓冲。
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/19-0.png" width="50%">
+
 如图所示，只有1没有2，那么它就是一个没有开启深度测试的样子，有1有2就是一个正常的开启了深度测试的样子。
 
 附件类型：
@@ -669,14 +688,15 @@ glad_glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_R
 我发现我的并不和不使用帧缓冲的效果完全一样，下边两张图上图为使用帧缓冲后的结果，有点儿斜啊。。。。
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/19-1.png" width="40%">
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/19-2.png" width="40%">
-这个问题通过查阅相关书籍，涉及到抖动和抗锯齿的一些概念，应该是可以解决的。但是单独通过`glad_glEnable(GL_DITHER);`开启抖动没有解决。目前先不管了，后续看到抗锯齿的时候再来处理
+
 
 ## <a name="20">20.立方体贴图</a> 
 说下几个重点吧
 立方体贴图的纹理目标为`GL_TEXTURE_CUBE_MAP`。
 绑定`glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);`
 立方体有六个面，需要加载六张纹理图，glad_glTexImage2D函数第一个参数需要分别设置为右左上下后前，来加载六张纹理图。
-<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/20-0.png" width="40%">
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/20-0.png" width="50%">
+
 另外环绕方式需要将第三个维度填上
 ```
 glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -789,7 +809,9 @@ void main()
 
 块前边使用`layout (std140) `,是声明了这个块儿的布局方式。
 对于Uniform块布局(std140是一种内存布局方式)对照例子更好理解：
+
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/22-0.png" width="50%">
+
 其实就是有一个对齐方式，通过上图中数据的比较16个字节为除了数组以外可以占用的最大空间，加入每一行有16字节的空间，对于基本数据类型，float只占用4个字节，剩余12个字节用空内容来填充，
 第二行要写入一个vec4，占用16个字节，不需要填充直接对齐，而对于一个mat4矩阵，他的每一列，占用16直接空间，等于占用了4行来对齐。
 
@@ -815,6 +837,7 @@ glBindBufferRange(GL_UNIFORM_BUFFER, 2, uboExampleBlock, 16, 152);
 ```
 多个着色器中可能有相同的uniform块，都绑定到一个绑定点就可以了，他们是多对一的关系，而Uniform缓冲对象和绑定点是1对1的关系。
 当使用`glBindBufferRange`时，多了两个参数，偏移量(16)和数据大小(152)，这使得多个不同名字的的Uniform块也可以绑定到一个Uniform缓冲对象。
+
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/22-1.png" width="50%">
 
 使用Uniform缓冲对象的好处：
@@ -951,7 +974,9 @@ for (unsigned int i = 0; i < amount; i++) {
 目前采用的解决办法叫做多重采样抗锯齿（MSAA）。
 先来了解光栅器的工作方式。
 它位于最终处理过的顶点之后到片段着色器之前所经过的所有的算法与过程的总和。光栅器将一个图元的所有顶点作文输入，并将她转换为一系列的片段。通常情况下，每个像素包含一个采样点，它被用来决定我们的顶点所创造的图元是否遮盖/包含了某个像素，每一个被包含的像素处都会生成一个片段。
-<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/25-0.png" width="50%">
+
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/25-0.png" width="30%">
+
 如上图所示，有时候图元的边缘的一些部分也包含了像素的一小部分，但是采样点没有被覆盖，那么这个像素处就不会生成片段，最终结果就产生了不光滑的边缘也就是锯齿。
 
 多重采样有着以特定图案排列的多个子采样点，采样点越多，就会使得结果更加精准。那么它的工作方式是什么样的呢？是有几个采样点就对着色器运行多少次来取平均值么？并不是，多次运行着色器，会显著的降低性能。
@@ -998,5 +1023,20 @@ uniform sampler2DMS screenTextureMS;
 使用texelFetch函数就能够获取每个子样本的颜色值了：
 ```
 vec4 colorSample = texelFetch(screenTextureMS, TexCoords, 3);// 第4个子样本
+```
+## <a name="26">26.高级光照</a>
+Blinn-Phong模型不再依赖于反射向量，而是采用了所谓的半程向量(Halfway Vector)，即光线与视线夹角一半方向上的一个单位向量。当半程向量与法线向量越接近时，镜面光分量就越大。
+
+<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/25-0.png" width="50%">
+
+获取半程向量的方法很简单，只需要将光线的方向向量和观察向量加到一起，并将结果正规化(Normalize)就可以了
+```
+vec3 lightDir   = normalize(lightPos - FragPos);
+vec3 viewDir    = normalize(viewPos - FragPos);
+vec3 halfwayDir = normalize(lightDir + viewDir);
+```
+镜面光分量的实际计算
+```
+float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess);
 ```
 
