@@ -1,0 +1,506 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		94AA2103246EC32D00F2BF66 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94AA2102246EC32D00F2BF66 /* OpenGL.framework */; };
+		94AA2105246EC34000F2BF66 /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 94AA2104246EC34000F2BF66 /* libglfw.3.3.dylib */; };
+		94AA212C2470516200F2BF66 /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = 94AA212A2470516200F2BF66 /* glad.c */; };
+		94AA212D2470516200F2BF66 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94AA212B2470516200F2BF66 /* main.cpp */; };
+		94AA2133247058F600F2BF66 /* libassimp.5.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 94AA2131247058F600F2BF66 /* libassimp.5.0.0.dylib */; };
+		94AA2134247058F600F2BF66 /* libIrrXML.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 94AA2132247058F600F2BF66 /* libIrrXML.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		94AA20F5246EC2BD00F2BF66 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		94AA20F7246EC2BD00F2BF66 /* LearnOpenGL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LearnOpenGL; sourceTree = BUILT_PRODUCTS_DIR; };
+		94AA2102246EC32D00F2BF66 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		94AA2104246EC34000F2BF66 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../usr/local/Cellar/glfw/3.3.2/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
+		94AA212A2470516200F2BF66 /* glad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = glad.c; sourceTree = "<group>"; };
+		94AA212B2470516200F2BF66 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		94AA212E247051AE00F2BF66 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
+		94AA212F247051AE00F2BF66 /* shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader.h; sourceTree = "<group>"; };
+		94AA2130247051AE00F2BF66 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
+		94AA2131247058F600F2BF66 /* libassimp.5.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libassimp.5.0.0.dylib; path = ../../../../../../usr/local/Cellar/assimp/5.0.1/lib/libassimp.5.0.0.dylib; sourceTree = "<group>"; };
+		94AA2132247058F600F2BF66 /* libIrrXML.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libIrrXML.dylib; path = ../../../../../../usr/local/Cellar/assimp/5.0.1/lib/libIrrXML.dylib; sourceTree = "<group>"; };
+		94AA213524705CC400F2BF66 /* mesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mesh.h; sourceTree = "<group>"; };
+		94AA213624706F7400F2BF66 /* model.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = model.h; sourceTree = "<group>"; };
+		94AA21392470858800F2BF66 /* model.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = model.vs; sourceTree = "<group>"; };
+		94AA213A2470858800F2BF66 /* model.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = model.fs; sourceTree = "<group>"; };
+		94F9FB3C2473CDF400415852 /* hand_showroom_refl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hand_showroom_refl.png; sourceTree = "<group>"; };
+		94F9FB3D2473CDF400415852 /* body_showroom_ddn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = body_showroom_ddn.png; sourceTree = "<group>"; };
+		94F9FB3E2473CDF400415852 /* helmet_showroom_ddn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = helmet_showroom_ddn.png; sourceTree = "<group>"; };
+		94F9FB3F2473CDF400415852 /* arm_showroom_ddn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arm_showroom_ddn.png; sourceTree = "<group>"; };
+		94F9FB402473CDF400415852 /* arm_showroom_spec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arm_showroom_spec.png; sourceTree = "<group>"; };
+		94F9FB412473CDF400415852 /* leg_dif.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leg_dif.png; sourceTree = "<group>"; };
+		94F9FB422473CDF400415852 /* arm_showroom_refl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arm_showroom_refl.png; sourceTree = "<group>"; };
+		94F9FB432473CDF400415852 /* cell_body_alpha.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cell_body_alpha.png; sourceTree = "<group>"; };
+		94F9FB442473CDF400415852 /* hand_showroom_spec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hand_showroom_spec.png; sourceTree = "<group>"; };
+		94F9FB452473CDF400415852 /* glass_ddn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = glass_ddn.png; sourceTree = "<group>"; };
+		94F9FB462473CDF400415852 /* glass_refl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = glass_refl.png; sourceTree = "<group>"; };
+		94F9FB472473CDF400415852 /* cell_hand_alpha.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cell_hand_alpha.png; sourceTree = "<group>"; };
+		94F9FB482473CDF400415852 /* nanosuit.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = nanosuit.mtl; sourceTree = "<group>"; };
+		94F9FB492473CDF400415852 /* body_dif.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = body_dif.png; sourceTree = "<group>"; };
+		94F9FB4A2473CDF400415852 /* hand_showroom_ddn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hand_showroom_ddn.png; sourceTree = "<group>"; };
+		94F9FB4B2473CDF400415852 /* body_showroom_refl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = body_showroom_refl.png; sourceTree = "<group>"; };
+		94F9FB4C2473CDF400415852 /* glass_dif.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = glass_dif.png; sourceTree = "<group>"; };
+		94F9FB4D2473CDF400415852 /* arm_dif.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arm_dif.png; sourceTree = "<group>"; };
+		94F9FB4E2473CDF400415852 /* cell_leg_alpha.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cell_leg_alpha.png; sourceTree = "<group>"; };
+		94F9FB4F2473CDF400415852 /* helmet_diff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = helmet_diff.png; sourceTree = "<group>"; };
+		94F9FB502473CDF400415852 /* nanosuit.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = nanosuit.obj; sourceTree = "<group>"; };
+		94F9FB512473CDF400415852 /* leg_showroom_refl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leg_showroom_refl.png; sourceTree = "<group>"; };
+		94F9FB522473CDF400415852 /* cell_helmet_alpha.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cell_helmet_alpha.png; sourceTree = "<group>"; };
+		94F9FB532473CDF400415852 /* leg_showroom_ddn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leg_showroom_ddn.png; sourceTree = "<group>"; };
+		94F9FB542473CDF400415852 /* helmet_showroom_refl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = helmet_showroom_refl.png; sourceTree = "<group>"; };
+		94F9FB552473CDF400415852 /* cell_arm_alpha.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cell_arm_alpha.png; sourceTree = "<group>"; };
+		94F9FB562473CDF400415852 /* helmet_showroom_spec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = helmet_showroom_spec.png; sourceTree = "<group>"; };
+		94F9FB572473CDF400415852 /* leg_showroom_spec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leg_showroom_spec.png; sourceTree = "<group>"; };
+		94F9FB582473CDF400415852 /* cell_ddn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cell_ddn.png; sourceTree = "<group>"; };
+		94F9FB592473CDF400415852 /* body_showroom_spec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = body_showroom_spec.png; sourceTree = "<group>"; };
+		94F9FB5A2473CDF400415852 /* back.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = back.jpg; sourceTree = "<group>"; };
+		94F9FB5B2473CDF400415852 /* front.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = front.jpg; sourceTree = "<group>"; };
+		94F9FB5C2473CDF400415852 /* hand_dif.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hand_dif.png; sourceTree = "<group>"; };
+		94F9FB5E2473CDF400415852 /* mars.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mars.png; sourceTree = "<group>"; };
+		94F9FB5F2473CDF400415852 /* planet.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = planet.obj; sourceTree = "<group>"; };
+		94F9FB602473CDF400415852 /* source.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = source.txt; sourceTree = "<group>"; };
+		94F9FB612473CDF400415852 /* planet.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = planet.mtl; sourceTree = "<group>"; };
+		94F9FB632473CDF400415852 /* rock.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rock.obj; sourceTree = "<group>"; };
+		94F9FB642473CDF400415852 /* rock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rock.png; sourceTree = "<group>"; };
+		94F9FB652473CDF400415852 /* rock.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rock.mtl; sourceTree = "<group>"; };
+		94F9FB672473CDF400415852 /* source_attribution.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = source_attribution.txt; sourceTree = "<group>"; };
+		94F9FB682473CDF400415852 /* backpack.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = backpack.obj; sourceTree = "<group>"; };
+		94F9FB692473CDF400415852 /* diffuse.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = diffuse.jpg; sourceTree = "<group>"; };
+		94F9FB6A2473CDF400415852 /* specular.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = specular.jpg; sourceTree = "<group>"; };
+		94F9FB6B2473CDF400415852 /* normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = normal.png; sourceTree = "<group>"; };
+		94F9FB6C2473CDF400415852 /* ao.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ao.jpg; sourceTree = "<group>"; };
+		94F9FB6D2473CDF400415852 /* roughness.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = roughness.jpg; sourceTree = "<group>"; };
+		94F9FB6E2473CDF400415852 /* backpack.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = backpack.mtl; sourceTree = "<group>"; };
+		94F9FB702473CDF400415852 /* cyborg.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cyborg.obj; sourceTree = "<group>"; };
+		94F9FB712473CDF400415852 /* cyborg.blend1 */ = {isa = PBXFileReference; lastKnownFileType = file; path = cyborg.blend1; sourceTree = "<group>"; };
+		94F9FB722473CDF400415852 /* cyborg.blend */ = {isa = PBXFileReference; lastKnownFileType = file; path = cyborg.blend; sourceTree = "<group>"; };
+		94F9FB732473CDF400415852 /* cyborg_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyborg_normal.png; sourceTree = "<group>"; };
+		94F9FB742473CDF400415852 /* cyborg_diffuse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyborg_diffuse.png; sourceTree = "<group>"; };
+		94F9FB752473CDF400415852 /* cyborg_specular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyborg_specular.png; sourceTree = "<group>"; };
+		94F9FB762473CDF400415852 /* cyborg.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cyborg.mtl; sourceTree = "<group>"; };
+		94F9FB772473CDF400415852 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		94AA20F4246EC2BD00F2BF66 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				94AA2133247058F600F2BF66 /* libassimp.5.0.0.dylib in Frameworks */,
+				94AA2134247058F600F2BF66 /* libIrrXML.dylib in Frameworks */,
+				94AA2105246EC34000F2BF66 /* libglfw.3.3.dylib in Frameworks */,
+				94AA2103246EC32D00F2BF66 /* OpenGL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		94AA20EE246EC2BD00F2BF66 = {
+			isa = PBXGroup;
+			children = (
+				94AA20F9246EC2BD00F2BF66 /* LearnOpenGL */,
+				94AA20F8246EC2BD00F2BF66 /* Products */,
+				94AA2101246EC32D00F2BF66 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		94AA20F8246EC2BD00F2BF66 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				94AA20F7246EC2BD00F2BF66 /* LearnOpenGL */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		94AA20F9246EC2BD00F2BF66 /* LearnOpenGL */ = {
+			isa = PBXGroup;
+			children = (
+				94AA213A2470858800F2BF66 /* model.fs */,
+				94AA21392470858800F2BF66 /* model.vs */,
+				94AA212A2470516200F2BF66 /* glad.c */,
+				94AA2130247051AE00F2BF66 /* stb_image.h */,
+				94AA212E247051AE00F2BF66 /* Camera.h */,
+				94AA212F247051AE00F2BF66 /* shader.h */,
+				94AA213524705CC400F2BF66 /* mesh.h */,
+				94AA213624706F7400F2BF66 /* model.h */,
+				94AA212B2470516200F2BF66 /* main.cpp */,
+				94F9FB3A2473CDF400415852 /* objects */,
+			);
+			path = LearnOpenGL;
+			sourceTree = "<group>";
+		};
+		94AA2101246EC32D00F2BF66 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				94AA2131247058F600F2BF66 /* libassimp.5.0.0.dylib */,
+				94AA2132247058F600F2BF66 /* libIrrXML.dylib */,
+				94AA2104246EC34000F2BF66 /* libglfw.3.3.dylib */,
+				94AA2102246EC32D00F2BF66 /* OpenGL.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		94F9FB3A2473CDF400415852 /* objects */ = {
+			isa = PBXGroup;
+			children = (
+				94F9FB3B2473CDF400415852 /* nanosuit */,
+				94F9FB5D2473CDF400415852 /* planet */,
+				94F9FB622473CDF400415852 /* rock */,
+				94F9FB662473CDF400415852 /* backpack */,
+				94F9FB6F2473CDF400415852 /* cyborg */,
+			);
+			path = objects;
+			sourceTree = "<group>";
+		};
+		94F9FB3B2473CDF400415852 /* nanosuit */ = {
+			isa = PBXGroup;
+			children = (
+				94F9FB3C2473CDF400415852 /* hand_showroom_refl.png */,
+				94F9FB3D2473CDF400415852 /* body_showroom_ddn.png */,
+				94F9FB3E2473CDF400415852 /* helmet_showroom_ddn.png */,
+				94F9FB3F2473CDF400415852 /* arm_showroom_ddn.png */,
+				94F9FB402473CDF400415852 /* arm_showroom_spec.png */,
+				94F9FB412473CDF400415852 /* leg_dif.png */,
+				94F9FB422473CDF400415852 /* arm_showroom_refl.png */,
+				94F9FB432473CDF400415852 /* cell_body_alpha.png */,
+				94F9FB442473CDF400415852 /* hand_showroom_spec.png */,
+				94F9FB452473CDF400415852 /* glass_ddn.png */,
+				94F9FB462473CDF400415852 /* glass_refl.png */,
+				94F9FB472473CDF400415852 /* cell_hand_alpha.png */,
+				94F9FB482473CDF400415852 /* nanosuit.mtl */,
+				94F9FB492473CDF400415852 /* body_dif.png */,
+				94F9FB4A2473CDF400415852 /* hand_showroom_ddn.png */,
+				94F9FB4B2473CDF400415852 /* body_showroom_refl.png */,
+				94F9FB4C2473CDF400415852 /* glass_dif.png */,
+				94F9FB4D2473CDF400415852 /* arm_dif.png */,
+				94F9FB4E2473CDF400415852 /* cell_leg_alpha.png */,
+				94F9FB4F2473CDF400415852 /* helmet_diff.png */,
+				94F9FB502473CDF400415852 /* nanosuit.obj */,
+				94F9FB512473CDF400415852 /* leg_showroom_refl.png */,
+				94F9FB522473CDF400415852 /* cell_helmet_alpha.png */,
+				94F9FB532473CDF400415852 /* leg_showroom_ddn.png */,
+				94F9FB542473CDF400415852 /* helmet_showroom_refl.png */,
+				94F9FB552473CDF400415852 /* cell_arm_alpha.png */,
+				94F9FB562473CDF400415852 /* helmet_showroom_spec.png */,
+				94F9FB572473CDF400415852 /* leg_showroom_spec.png */,
+				94F9FB582473CDF400415852 /* cell_ddn.png */,
+				94F9FB592473CDF400415852 /* body_showroom_spec.png */,
+				94F9FB5A2473CDF400415852 /* back.jpg */,
+				94F9FB5B2473CDF400415852 /* front.jpg */,
+				94F9FB5C2473CDF400415852 /* hand_dif.png */,
+			);
+			path = nanosuit;
+			sourceTree = "<group>";
+		};
+		94F9FB5D2473CDF400415852 /* planet */ = {
+			isa = PBXGroup;
+			children = (
+				94F9FB5E2473CDF400415852 /* mars.png */,
+				94F9FB5F2473CDF400415852 /* planet.obj */,
+				94F9FB602473CDF400415852 /* source.txt */,
+				94F9FB612473CDF400415852 /* planet.mtl */,
+			);
+			path = planet;
+			sourceTree = "<group>";
+		};
+		94F9FB622473CDF400415852 /* rock */ = {
+			isa = PBXGroup;
+			children = (
+				94F9FB632473CDF400415852 /* rock.obj */,
+				94F9FB642473CDF400415852 /* rock.png */,
+				94F9FB652473CDF400415852 /* rock.mtl */,
+			);
+			path = rock;
+			sourceTree = "<group>";
+		};
+		94F9FB662473CDF400415852 /* backpack */ = {
+			isa = PBXGroup;
+			children = (
+				94F9FB672473CDF400415852 /* source_attribution.txt */,
+				94F9FB682473CDF400415852 /* backpack.obj */,
+				94F9FB692473CDF400415852 /* diffuse.jpg */,
+				94F9FB6A2473CDF400415852 /* specular.jpg */,
+				94F9FB6B2473CDF400415852 /* normal.png */,
+				94F9FB6C2473CDF400415852 /* ao.jpg */,
+				94F9FB6D2473CDF400415852 /* roughness.jpg */,
+				94F9FB6E2473CDF400415852 /* backpack.mtl */,
+			);
+			path = backpack;
+			sourceTree = "<group>";
+		};
+		94F9FB6F2473CDF400415852 /* cyborg */ = {
+			isa = PBXGroup;
+			children = (
+				94F9FB702473CDF400415852 /* cyborg.obj */,
+				94F9FB712473CDF400415852 /* cyborg.blend1 */,
+				94F9FB722473CDF400415852 /* cyborg.blend */,
+				94F9FB732473CDF400415852 /* cyborg_normal.png */,
+				94F9FB742473CDF400415852 /* cyborg_diffuse.png */,
+				94F9FB752473CDF400415852 /* cyborg_specular.png */,
+				94F9FB762473CDF400415852 /* cyborg.mtl */,
+				94F9FB772473CDF400415852 /* LICENSE.txt */,
+			);
+			path = cyborg;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		94AA20F6246EC2BD00F2BF66 /* LearnOpenGL */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 94AA20FE246EC2BD00F2BF66 /* Build configuration list for PBXNativeTarget "LearnOpenGL" */;
+			buildPhases = (
+				94AA20F3246EC2BD00F2BF66 /* Sources */,
+				94AA20F4246EC2BD00F2BF66 /* Frameworks */,
+				94AA20F5246EC2BD00F2BF66 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LearnOpenGL;
+			productName = LearnOpenGL;
+			productReference = 94AA20F7246EC2BD00F2BF66 /* LearnOpenGL */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		94AA20EF246EC2BD00F2BF66 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1140;
+				ORGANIZATIONNAME = ShanYuQin;
+				TargetAttributes = {
+					94AA20F6246EC2BD00F2BF66 = {
+						CreatedOnToolsVersion = 11.4.1;
+					};
+				};
+			};
+			buildConfigurationList = 94AA20F2246EC2BD00F2BF66 /* Build configuration list for PBXProject "LearnOpenGL" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 94AA20EE246EC2BD00F2BF66;
+			productRefGroup = 94AA20F8246EC2BD00F2BF66 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				94AA20F6246EC2BD00F2BF66 /* LearnOpenGL */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		94AA20F3246EC2BD00F2BF66 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				94AA212D2470516200F2BF66 /* main.cpp in Sources */,
+				94AA212C2470516200F2BF66 /* glad.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		94AA20FC246EC2BD00F2BF66 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		94AA20FD246EC2BD00F2BF66 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		94AA20FF246EC2BD00F2BF66 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = (
+					"${assimp_header}",
+					"${glm_header}",
+					"${glfw_header}",
+					"${glad_header}",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"${assimp_lib}",
+					"${glfw_lib}",
+					/usr/local/Cellar/assimp/5.0.1/lib,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		94AA2100246EC2BD00F2BF66 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = (
+					"${assimp_header}",
+					"${glm_header}",
+					"${glfw_header}",
+					"${glad_header}",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"${assimp_lib}",
+					"${glfw_lib}",
+					/usr/local/Cellar/assimp/5.0.1/lib,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		94AA20F2246EC2BD00F2BF66 /* Build configuration list for PBXProject "LearnOpenGL" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				94AA20FC246EC2BD00F2BF66 /* Debug */,
+				94AA20FD246EC2BD00F2BF66 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		94AA20FE246EC2BD00F2BF66 /* Build configuration list for PBXNativeTarget "LearnOpenGL" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				94AA20FF246EC2BD00F2BF66 /* Debug */,
+				94AA2100246EC2BD00F2BF66 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 94AA20EF246EC2BD00F2BF66 /* Project object */;
+}
