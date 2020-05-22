@@ -36,9 +36,6 @@
 		94AA219C2471569700F2BF66 /* shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader.h; sourceTree = "<group>"; };
 		94AA219F24717FF600F2BF66 /* depth_test.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = depth_test.vs; sourceTree = "<group>"; };
 		94AA21A02471805700F2BF66 /* depth_test.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = depth_test.fs; sourceTree = "<group>"; };
-		94AA21A12471812400F2BF66 /* marble.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = marble.jpg; sourceTree = "<group>"; };
-		94AA21A22471812400F2BF66 /* metal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = metal.png; sourceTree = "<group>"; };
-		94F9FB7D24744AC300415852 /* container.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = container.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,9 +78,6 @@
 				94AA21992471569700F2BF66 /* stb_image.h */,
 				94AA219F24717FF600F2BF66 /* depth_test.vs */,
 				94AA21A02471805700F2BF66 /* depth_test.fs */,
-				94AA21A12471812400F2BF66 /* marble.jpg */,
-				94AA21A22471812400F2BF66 /* metal.png */,
-				94F9FB7D24744AC300415852 /* container.jpg */,
 			);
 			path = LearnOpenGL;
 			sourceTree = "<group>";
