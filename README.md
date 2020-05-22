@@ -891,4 +891,56 @@ void GenerateLine(int index)
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/23-0.png" width="50%">
 
 ## <a name="24">24.实例化</a>
+实例化能够让我们使用一个渲染调用来绘制多个物体，来节省每次绘制物体时CPU -> GPU的通信（// 绑定VAO，绑定纹理，设置uniform等），它只需要一次即可。如果想使用实例化渲染，我们只需要将`glDrawArrays`和`glDrawElements`的渲染调用分别改为`glDrawArraysInstanced`和`glDrawElementsInstanced`就可以了。只需要多传一个实例数量就可以了。
+但是如果不对着色器进行出来吃，其实它多绘制出来多少个实例，坐标都是一样的，都是在同一个位置进行重叠，我们只能看见一个物体。
+顶点着色器有一个内建变量`gl_InstanceID`，从0开始每个实例变量渲染时递增1。这样我们就可以建立一个位置数组，将ID与位置对应起来。
 
+```
+glEnableVertexAttribArray(2);
+glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+glBindBuffer(GL_ARRAY_BUFFER, 0);   
+glVertexAttribDivisor(2, 1);
+```
+`glVertexAttribDivisor(2,1)`函数的理解:就是更新顶点数据，
+第一个参数2：是需要更新顶点属性的位置。
+第二个参数1：是一个除数，默认是0，代表顶点着色器的每次迭代时更新顶点属性，每切换一个顶点就更新。如果数字不为0，用N来代表的话，就是每N个实例更新一次属性。但是它只更新等钱设置的顶点属性
+
+在绘制100个四方形的时候你可能会出现的问题：
+1.只在中间绘制出一个四边形。 查看是否在绑定实例位置的VBO前，调用了`glad_glBindVertexArray(0);`这会解绑VAO，导致实例的VBO没有绑定到VAO上。
+2.屏幕闪屏，出现各种类似卡带的效果，我是因为复制工程，删除代码的时候误删了 `glClearColor`方法。
+
+对于小行星带的矩阵变换的计算 需要好好理解，数学知识比较多
+```
+unsigned int amount = 1000;
+glm::mat4 * modelMat = new glm::mat4(amount);
+srand(glfwGetTime())//初始化随机种子
+float radius = 50.0;
+float offset = 2.5f;
+for (unsigned int i = 0; i < amount; i++) {
+    glm::mat4 model = glm::mat4(1.0);
+    
+    //这个计算需要好好理解
+    float angle = (float)i / float(amount) * 360.0f;
+    float displacement = (rand() % (int)(2 * offset *100)) / 100.0f - offset;
+    float x = sin(angle) * radius + displacement;
+    displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+    float y = displacement * 0.4f; // 让行星带的高度比x和z的宽度要小
+    displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+    float z = cos(angle) * radius + displacement;
+    model = glm::translate(model, glm::vec3(x, y, z));
+    // 2. 缩放：在 0.05 和 0.25f 之间缩放
+    float scale = (rand() % 20) / 100.0f + 0.05;
+    model = glm::scale(model, glm::vec3(scale));
+    // 3. 旋转：绕着一个（半）随机选择的旋转轴向量进行随机的旋转
+    float rotAngle = (rand() % 360);
+    model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
+    // 4. 添加到矩阵的数组中
+    modelMat[i] = model;
+}
+```
+
+这里有一个关于顶点属性的tip：
+>顶点属性最大允许的数据大小等于一个vec4。
+>一个mat4本质上是4个vec4，我们需要为这个矩阵预留4个顶点属性。
+>如果将它的位置值location设置为0，矩阵每一列的顶点属性位置值就是0、1、2和3。
