@@ -990,3 +990,13 @@ glBindFramebuffer(GL_DRAW_FRAMEBUFFER, intermediateFBO);//普通帧缓冲
 //前八个参数你可以理解为两个CGRect
 glBlitFramebuffer(0, 0, SCR_WIDTH, SCR_HEIGHT, 0, 0, SCR_WIDTH, SCR_HEIGHT, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 ```
+### 自定义抗锯齿算法
+要想获取每个子样本的颜色值，你需要将纹理uniform采样器设置为sampler2DMS，而不是平常使用的sampler2D：
+```
+uniform sampler2DMS screenTextureMS;
+```
+使用texelFetch函数就能够获取每个子样本的颜色值了：
+```
+vec4 colorSample = texelFetch(screenTextureMS, TexCoords, 3);// 第4个子样本
+```
+
