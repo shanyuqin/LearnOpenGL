@@ -663,6 +663,14 @@ glad_glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_R
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/19-1.png" width="40%">
 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/19-2.png" width="40%">
 
+关于帧缓冲完整性的一些补充：
+有些时候我们可能只需要给帧缓冲添加一个深度缓冲的附件，而不需要添加颜色缓冲，然而不包含颜色缓冲的帧缓冲对象是不完整的。
+这时候我们可以显示的告诉OpenGL我们不用任何颜色数据进行渲染。通过将调用glDrawBuffer和glReadBuffer把读和绘制缓冲设置为GL_NONE来做这件事。
+```
+glDrawBuffer(GL_NONE);
+glReadBuffer(GL_NONE);
+```
+
 
 ## <a name="20">20.立方体贴图</a> 
 说下几个重点吧
@@ -1048,17 +1056,17 @@ OpenGL给我们提供了另一个方案，`GL_SRGB`和`GL_SRGB_ALPHA`内部纹�
 glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 ```
 ### 衰减
-衰减因子的计算方程变了，不再是
-
-<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/12-0.png" width="50%">
+衰减因子的计算方程变了，不再是<img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/12-0.png" width="50%">
 
 而是 <img src="https://raw.githubusercontent.com/shanyuqin/LearnOpenGL/master/ReadMeImage/37-0.png" width="50%">
 
 原来的那个衰减方程在有gamma校正的场景中也仍然有用，因为它可以让我们对衰减拥有更多准确的控制权（不过，在进行gamma校正的场景中当然需要不同的参数）。
 
+## <a name="28_1">28.1 阴影——阴影映射</a>
 
 
-## <a name="28_1">28.1 阴影——阴影映射</a> 
+
+
 ## <a name="28_2">28.2 阴影——点光源阴影</a> 
 ## <a name="29">29 法线贴图</a> 
 ## <a name="30">30 视差贴图</a> 
